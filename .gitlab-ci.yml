@@ -1,0 +1,31 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  tags: 
+    - docker
+  image: node:10.16.3
+  script:
+    - npm install
+    - npm run-script build
+  cache:
+    key: build-cache-frontend
+    paths:
+    - node_modules/
+  artifacts:
+    paths:
+      - dist/
+  
+deploy:
+  stage: deploy
+  only:
+    - master
+  tags:
+    - shell
+  script:
+    - docker build -t visualcepfrontend:0.1 .
+    - docker kill visualcepfrontend || true
+    - docker rm visualcepfrontend || true
+    - docker run -p 8080:80 --restart=always -d --name=visualcepfrontend visualcepfrontendl:0.1

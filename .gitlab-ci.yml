@@ -9,7 +9,7 @@ build:
   image: node:10.16.3
   script:
     - npm install
-    - ng build --prod
+    - npm run-script build_prod
   cache:
     key: build-cache-frontend
     paths:

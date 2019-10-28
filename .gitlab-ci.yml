@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  tags: 
+  tags:
     - docker
   image: node:10.16.3
   script:
@@ -17,7 +17,7 @@ build:
   artifacts:
     paths:
       - dist/
-  
+
 deploy:
   stage: deploy
   only:
@@ -25,7 +25,7 @@ deploy:
   tags:
     - shell
   script:
-    - docker build -t visualcepfrontend:0.1 .
-    - docker kill visualcepfrontend || true
-    - docker rm visualcepfrontend || true
-    - docker run -p 8080:80 --restart=always -d --name=visualcepfrontend visualcepfrontend:0.1
+    - docker build -t visual-cep-pattern_frontend:0.1 .
+    - docker kill visual-cep-pattern_frontend || true
+    - docker rm visual-cep-pattern_frontend || true
+    - docker run -p 8080:80 --restart=always -d --name=visual-cep-pattern_frontend visual-cep-pattern_frontend:0.1

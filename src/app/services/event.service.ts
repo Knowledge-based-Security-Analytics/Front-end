@@ -10,30 +10,58 @@ import { Observable } from 'rxjs';
 export class EventService {
 
   constructor(private apollo: Apollo) {
-    console.log("constr");
-    
+
   }
 
-  public async getStatements(statementDef: StatementDef): Promise<Statement[]>{
-      return new Promise(resolve=>{ 
-        this.apollo.query({
-          query: gql`
+  public async getStatements(statementDef: StatementDef): Promise<Statement[]> {
+    return new Promise(resolve => {
+      this.apollo.query({
+        query: gql`
             {
               statements{
                 ${this.statementDefToGql(statementDef)}
               }
             }
           `
-      }).subscribe(result =>{
+      }).subscribe(result => {
         resolve((result.data as any).statements);
       })
     });
   }
 
-  public statementDefToGql(statementDef: StatementDef): string{
+  /**
+   * @returns {Promise<string>} The ID of the deployed Statement
+   */
+  public pushStatement(name: string, deploymentMode: string, eventType: boolean, eplStatement: string, blocklyXml: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.apollo.mutate({
+        mutation: gql`
+          mutation {
+            deployStatement(
+              data: {
+                name: "${name}"
+                deploymentMode: "${deploymentMode}"
+                eventType: ${eventType}
+                eplStatement: "${eplStatement}"
+                blocklyXml: "${blocklyXml}"
+              }
+           ){deploymentId}
+          }
+        `
+      }).subscribe(
+        result => {
+          resolve((result as any).data.deployStatement.deploymentId);
+        },
+        error => {
+          reject(error);
+        });
+    });
+  }
+
+  public statementDefToGql(statementDef: StatementDef): string {
     let statementString: string = "";
-    Object.keys(statementDef).forEach(key =>{
-      if(statementDef[key]){
+    Object.keys(statementDef).forEach(key => {
+      if (statementDef[key]) {
         statementString += key + "\n";
       }
     })

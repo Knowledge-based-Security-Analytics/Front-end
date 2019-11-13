@@ -6,7 +6,7 @@ import { Statement, StatementDef } from '../models/statemet';
 @Injectable({
   providedIn: 'root'
 })
-export class EventService {
+export class StatementService {
 
   constructor(private apollo: Apollo) {
 
@@ -58,7 +58,7 @@ export class EventService {
   }
 
   /**
-   * @returns {Promise<string>} The ID of the deployed Statement
+   * @returns {Promise<string>} The ID of the updated Statement
    */
   public updateStatement(deploymentId: string, name: string, deploymentMode: string, eventType: boolean, eplStatement: string, blocklyXml: string): Promise<string> {
     return new Promise((resolve, reject) => {

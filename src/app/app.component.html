@@ -1,26 +1,18 @@
 <div class="wrapper">
-  
-  <!-- Toolbar -->
-  <app-toolbar (debugging)="toggleChanged($event)"></app-toolbar>
+  <!-- Toolbar --> <app-toolbar (debugging)="toggleChanged($event)"></app-toolbar>
 
   <mat-divider></mat-divider>
 
   <div class="content" fxLayout="row">
-
     <div id="editor" fxFlex="1 1 70%">
-      <!-- Blockly -->
-      <app-blockly *ngIf="!debugging"></app-blockly>
-      <!-- Debugger -->
-      <app-debugger *ngIf="debugging"></app-debugger>
+      <!-- Blockly --> <app-blockly *ngIf="!debugging"></app-blockly>
+      <!-- Debugger --> <app-debugger *ngIf="debugging"></app-debugger>
     </div>
 
     <div id="overview" fxFlex="1 1 30%">
-      <!-- Statement Overview -->
-      <app-overview></app-overview>
+      <!-- Statement Overview --> <app-overview></app-overview>
     </div>
-
   </div>
-
 </div>
 
 <router-outlet></router-outlet>

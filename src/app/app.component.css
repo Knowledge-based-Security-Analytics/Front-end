@@ -1,0 +1,24 @@
+.wrapper {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    height: 100%;
+}
+
+#overview {
+    /*background-color: aquamarine;*/
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+}
+
+#editor {
+    /*background-color: bisque;*/
+    padding-left: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+}

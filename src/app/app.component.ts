@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'visual-cep-frontend';
+
+  debugging = false;
+
+  toggleChanged(debugging: boolean): void {
+    this.debugging = debugging;
+  }
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Statement, StatementDef } from '../models/statemet';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +50,36 @@ export class EventService {
       }).subscribe(
         result => {
           resolve((result as any).data.deployStatement.deploymentId);
+        },
+        error => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * @returns {Promise<string>} The ID of the deployed Statement
+   */
+  public updateStatement(deploymentId: string, name: string, deploymentMode: string, eventType: boolean, eplStatement: string, blocklyXml: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.apollo.mutate({
+        mutation: gql`
+          mutation {
+            redeployStatement(
+              data: {
+                name: "${name}"
+                deploymentMode: "${deploymentMode}"
+                eventType: ${eventType}
+                deploymentId: "${deploymentId}"
+                eplStatement: "${eplStatement}"
+                blocklyXml: "${blocklyXml}"
+              }
+           ){deploymentId}
+          }
+        `
+      }).subscribe(
+        result => {
+          resolve((result as any).data.redeployStatement.deploymentId);
         },
         error => {
           reject(error);

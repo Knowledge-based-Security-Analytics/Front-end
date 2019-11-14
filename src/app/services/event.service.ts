@@ -87,6 +87,26 @@ export class StatementService {
     });
   }
 
+  public async dropStatement(deploymentId: string): Promise<boolean>{
+    return new Promise((resolve, reject) => {
+      this.apollo.mutate({
+        mutation: gql`
+          mutation {
+            undeployStatement(
+                deploymentId: "${deploymentId}"
+           )
+          }
+        `
+      }).subscribe(
+        result => {
+          resolve((result as any).data.undeployStatement);
+        },
+        error => {
+          reject(error);
+        });
+    });
+  }
+
   public statementDefToGql(statementDef: StatementDef): string {
     let statementString: string = "";
     Object.keys(statementDef).forEach(key => {

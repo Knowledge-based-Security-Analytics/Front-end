@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as Blockly from 'blockly';
+
+declare var Blockly: any;
 
 @Component({
   selector: 'app-blockly',
@@ -7,46 +8,50 @@ import * as Blockly from 'blockly';
   styleUrls: ['./blockly.component.css']
 })
 export class BlocklyComponent implements OnInit {
+  private selectStatements: any[] = [];
+  private createStatements: any[] = [];
+  private insertStatements: any[] = [];
+  statement: any;
+  statementFunctionName: String = 'Create statement';
+  messageHistory = [];
+  public workspacePlayground: any;
+  public toolbox: String =
+    '<xml id="toolbox" style="display: none">' +
+    '<category name="COMMANDS">' +
+    '<block type="select"></block>' +
+    '<block type="create"></block>' +
+    '<block type="insert_into"></block>' +
+    '<block type="context"></block>' +
+    '</category>' +
+    '<category name="FIELDS">' +
+    '<block type="existing_tables"></block>' +
+    '<block type="attributes"></block>' +
+    '<block type="where"></block>' +
+    '<block type="where_attributes"></block>' +
+    '<block type="table_column"></block>' +
+    '<block type="time_window"></block>' +
+    '<block type="length_window"></block>' +
+    '<block type="output"></block>' +
+    '</category>' +
+    '<category name="AGGREGATION">' +
+      '<block type="group_by"></block>' +
+      '<block type="order_by"></block>' +
+      '<block type="limit"></block>' +
+      '<block type="having"></block>' +
+      '<block type="average"></block>' +
+      '<block type="max"></block>' +
+      '<block type="min"></block>' +
+      '<block type="count"></block>' +
+      '<block type="sum"></block>' +
+    '</category>' +
+    '</xml>';
 
   constructor() { }
 
   ngOnInit() {
     const blocklyDiv = document.getElementById('blocklyDiv');
-
-    Blockly.inject(blocklyDiv, {
-      readOnly: false,
-      move: {
-        scrollbars: true,
-        drag: true,
-        wheel: true
-      },
-      toolbox: `
-        <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox-simple" style="display: none">
-          <block type="controls_ifelse"></block>
-          <block type="logic_compare"></block>
-          <block type="logic_operation"></block>
-          <block type="controls_repeat_ext">
-              <value name="TIMES">
-                  <shadow type="math_number">
-                      <field name="NUM">10</field>
-                  </shadow>
-              </value>
-          </block>
-          <block type="logic_operation"></block>
-          <block type="logic_negate"></block>
-          <block type="logic_boolean"></block>
-          <block type="logic_null" disabled="true"></block>
-          <block type="logic_ternary"></block>
-          <block type="text_charAt">
-              <value name="VALUE">
-                  <block type="variables_get">
-                      <field name="VAR">text</field>
-                  </block>
-              </value>
-          </block>
-        </xml> 
-      `
-    } as Blockly.BlocklyOptions);
+    this.workspacePlayground = Blockly.inject(blocklyDiv,
+    {toolbox: this.toolbox});
   }
 
 }

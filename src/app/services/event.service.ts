@@ -31,16 +31,16 @@ export class StatementService {
   /**
    * @returns {Promise<string>} The ID of the deployed Statement
    */
-  public pushStatement(name: string, deploymentMode: string, eventType: boolean, eplStatement: string, blocklyXml: string): Promise<string> {
+  public async pushStatement(eplStatement: string, blocklyXml: string, name?: string, deploymentMode?: string, eventType?: boolean): Promise<string> {
     return new Promise((resolve, reject) => {
       this.apollo.mutate({
         mutation: gql`
           mutation {
             deployStatement(
               data: {
-                name: "${name}"
-                deploymentMode: "${deploymentMode}"
-                eventType: ${eventType}
+                ${name?`name: "${name}"`:""}
+                ${deploymentMode?`deploymentMode: "${deploymentMode}"`:""}
+                ${eventType!=undefined?`eventType: ${eventType}`:""}
                 eplStatement: "${eplStatement}"
                 blocklyXml: "${blocklyXml}"
               }
@@ -60,19 +60,19 @@ export class StatementService {
   /**
    * @returns {Promise<string>} The ID of the updated Statement
    */
-  public updateStatement(deploymentId: string, name: string, deploymentMode: string, eventType: boolean, eplStatement: string, blocklyXml: string): Promise<string> {
+  public async updateStatement(deploymentId: string, name?: string, deploymentMode?: string, eventType?: boolean, eplStatement?: string, blocklyXml?: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.apollo.mutate({
         mutation: gql`
           mutation {
             redeployStatement(
               data: {
-                name: "${name}"
-                deploymentMode: "${deploymentMode}"
-                eventType: ${eventType}
+                ${name?`name: "${name}"`:""}
+                ${deploymentMode?`deploymentMode: "${deploymentMode}"`:""}
+                ${eventType!=undefined?`eventType: ${eventType}`:""}
                 deploymentId: "${deploymentId}"
-                eplStatement: "${eplStatement}"
-                blocklyXml: "${blocklyXml}"
+                ${eplStatement?`eplStatement: "${eplStatement}"`:""}
+                ${blocklyXml?`blocklyXml: "${blocklyXml}"`:""}
               }
            ){deploymentId}
           }

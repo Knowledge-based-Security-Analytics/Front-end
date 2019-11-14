@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Statement, StatementDef } from '../models/statemet';
+import { DocumentNode } from 'apollo-link';
 
 @Injectable({
   providedIn: 'root'
@@ -32,74 +33,58 @@ export class StatementService {
    * @returns {Promise<string>} The ID of the deployed Statement
    */
   public async pushStatement(eplStatement: string, blocklyXml: string, name?: string, deploymentMode?: string, eventType?: boolean): Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.apollo.mutate({
-        mutation: gql`
-          mutation {
-            deployStatement(
-              data: {
-                ${name?`name: "${name}"`:""}
-                ${deploymentMode?`deploymentMode: "${deploymentMode}"`:""}
-                ${eventType!=undefined?`eventType: ${eventType}`:""}
-                eplStatement: "${eplStatement}"
-                blocklyXml: "${blocklyXml}"
-              }
-           ){deploymentId}
+    let gqlString = gql`
+      mutation {
+        deployStatement(
+          data: {
+            ${name?`name: "${name}"`:""}
+            ${deploymentMode?`deploymentMode: "${deploymentMode}"`:""}
+            ${eventType!=undefined?`eventType: ${eventType}`:""}
+            eplStatement: "${eplStatement}"
+            blocklyXml: "${blocklyXml}"
           }
-        `
-      }).subscribe(
-        result => {
-          resolve((result as any).data.deployStatement.deploymentId);
-        },
-        error => {
-          reject(error);
-        });
-    });
+        ){deploymentId}
+      }`
+    return (await this.mutate(gqlString)).deployStatement.deploymentId
   }
 
   /**
    * @returns {Promise<string>} The ID of the updated Statement
    */
   public async updateStatement(deploymentId: string, name?: string, deploymentMode?: string, eventType?: boolean, eplStatement?: string, blocklyXml?: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.apollo.mutate({
-        mutation: gql`
-          mutation {
-            redeployStatement(
-              data: {
-                ${name?`name: "${name}"`:""}
-                ${deploymentMode?`deploymentMode: "${deploymentMode}"`:""}
-                ${eventType!=undefined?`eventType: ${eventType}`:""}
-                deploymentId: "${deploymentId}"
-                ${eplStatement?`eplStatement: "${eplStatement}"`:""}
-                ${blocklyXml?`blocklyXml: "${blocklyXml}"`:""}
-              }
-           ){deploymentId}
+    let gqlString = gql`
+      mutation {
+        redeployStatement(
+          data: {
+            ${name?`name: "${name}"`:""}
+            ${deploymentMode?`deploymentMode: "${deploymentMode}"`:""}
+            ${eventType!=undefined?`eventType: ${eventType}`:""}
+            deploymentId: "${deploymentId}"
+            ${eplStatement?`eplStatement: "${eplStatement}"`:""}
+            ${blocklyXml?`blocklyXml: "${blocklyXml}"`:""}
           }
-        `
-      }).subscribe(
-        result => {
-          resolve((result as any).data.redeployStatement.deploymentId);
-        },
-        error => {
-          reject(error);
-        });
-    });
+        ){deploymentId}
+      }`;
+    return (await this.mutate(gqlString)).redeployStatement.deploymentId;
   }
 
-  public async dropStatement(deploymentId: string): Promise<boolean>{
+  public async dropStatement(deploymentId: string): Promise<boolean> {
+    let gqlString = gql`
+        mutation {
+          undeployStatement(
+              deploymentId: "${deploymentId}"
+          )
+        }`;
+    return (await this.mutate(gqlString)).undeployStatement
+  }
+
+  public async mutate(gqlString: DocumentNode): Promise<any>{
     return new Promise((resolve, reject) => {
       this.apollo.mutate({
-        mutation: gql`
-          mutation {
-            undeployStatement(
-                deploymentId: "${deploymentId}"
-           )
-          }
-        `
+        mutation: gqlString
       }).subscribe(
         result => {
-          resolve((result as any).data.undeployStatement);
+          resolve((result as any).data);
         },
         error => {
           reject(error);

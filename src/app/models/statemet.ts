@@ -1,4 +1,4 @@
-export interface Statement{
+export interface Statement {
     deploymentId?: string;
     deploymentDependencies?: string[];
     deploymentMode?: string;
@@ -8,7 +8,7 @@ export interface Statement{
     eventType?: boolean;
 }
 
-export class StatementDef{
+export class StatementDef {
     deploymentId?: boolean;
     deploymentDependencies?: boolean;
     deploymentMode?: boolean;

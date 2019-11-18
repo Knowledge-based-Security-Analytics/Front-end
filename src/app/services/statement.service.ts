@@ -80,7 +80,7 @@ export class StatementService {
     return (await this.mutate(gqlString)).undeployStatement;
   }
 
-  public async mutate(gqlString: DocumentNode): Promise<any> {
+  private async mutate(gqlString: DocumentNode): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apollo.mutate({
         mutation: gqlString
@@ -94,7 +94,7 @@ export class StatementService {
     });
   }
 
-  public statementDefToGql(statementDef: StatementDef): string {
+  private statementDefToGql(statementDef: StatementDef): string {
     let statementString = '';
     Object.keys(statementDef).forEach(key => {
       if (statementDef[key]) {

@@ -1,3 +1,4 @@
+import { GraphQLUtils } from './graphql_utils';
 import { Injectable } from '@angular/core';
 import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -19,7 +20,7 @@ export class StatementService {
         query: gql`
             {
               statements{
-                ${this.statementDefToGql(statementDef)}
+                ${GraphQLUtils.statementDefToGql(statementDef)}
               }
             }
           `
@@ -46,7 +47,7 @@ export class StatementService {
           }
         ){deploymentId}
       }`;
-    return (await this.mutate(gqlString)).deployStatement.deploymentId;
+    return (await GraphQLUtils.mutate(gqlString, this.apollo)).deployStatement.deploymentId;
   }
 
   /**
@@ -67,7 +68,7 @@ export class StatementService {
           }
         ){deploymentId}
       }`;
-    return (await this.mutate(gqlString)).redeployStatement.deploymentId;
+    return (await GraphQLUtils.mutate(gqlString, this.apollo)).redeployStatement.deploymentId;
   }
 
   public async dropStatement(deploymentId: string): Promise<boolean> {
@@ -77,31 +78,7 @@ export class StatementService {
               deploymentId: "${deploymentId}"
           )
         }`;
-    return (await this.mutate(gqlString)).undeployStatement;
-  }
-
-  private async mutate(gqlString: DocumentNode): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.apollo.mutate({
-        mutation: gqlString
-      }).subscribe(
-        result => {
-          resolve((result as any).data);
-        },
-        error => {
-          reject(error);
-        });
-    });
-  }
-
-  private statementDefToGql(statementDef: StatementDef): string {
-    let statementString = '';
-    Object.keys(statementDef).forEach(key => {
-      if (statementDef[key]) {
-        statementString += key + '\n';
-      }
-    });
-    return statementString;
+    return (await GraphQLUtils.mutate(gqlString, this.apollo)).undeployStatement;
   }
 }
 

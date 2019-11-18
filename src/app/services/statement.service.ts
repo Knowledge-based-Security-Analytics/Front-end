@@ -14,8 +14,12 @@ export class StatementService {
 
   }
 
-  public async getStatements(statementDef: StatementDef, filter?: {deploymentId?: string, name?: string,
-                             deploymentMode?: string, eventType?: boolean}): Promise<Statement[]> {
+  public async getStatements(statementDef: StatementDef,
+                             filter?: {deploymentId?: string,
+                                       name?: string,
+                                       deploymentMode?: string,
+                                       eventType?: boolean}
+                            ): Promise<Statement[]> {
     if (!filter) {
       filter = {};
     }

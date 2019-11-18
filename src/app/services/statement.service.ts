@@ -14,12 +14,18 @@ export class StatementService {
 
   }
 
-  public async getStatements(statementDef: StatementDef): Promise<Statement[]> {
+  public async getStatements(statementDef: StatementDef, filter?: {deploymentId?: string, name?: string,
+                             deploymentMode?: string, eventType?: boolean}): Promise<Statement[]> {
+    if (!filter) {
+      filter = {};
+    }
     return new Promise(resolve => {
       this.apollo.query({
         query: gql`
             {
-              statements{
+              statements(deploymentId: "${filter.deploymentId ? filter.deploymentId : ''}", name: "${filter.name ? filter.name : ''}",
+                         deploymentMode: "${filter.deploymentMode ? filter.deploymentMode : ''}",
+                         ${filter.eventType ? 'eventType: ' + filter.eventType : ''}){
                 ${GraphQLUtils.statementDefToGql(statementDef)}
               }
             }

@@ -29,7 +29,7 @@ export class EventStreamService {
     });
   }
 
-  public async getTopics(): Promise<string[]>{
+  public async getTopics(): Promise<string[]> {
     return new Promise(resolve => {
       this.apollo.query({
         query: gql`
@@ -43,7 +43,7 @@ export class EventStreamService {
     });
   }
 
-  public async pushTopic(name: string): Promise<boolean>{
+  public async pushTopic(name: string): Promise<boolean> {
     const gqlString = gql`
     mutation {
       createTopic(
@@ -53,7 +53,7 @@ export class EventStreamService {
     return (await GraphQLUtils.mutate(gqlString, this.apollo)).createTopic;
   }
 
-  public async dropTopic(name: string): Promise<boolean>{
+  public async dropTopic(name: string): Promise<boolean> {
     const gqlString = gql`
     mutation {
       deleteTopic(

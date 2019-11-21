@@ -1,3 +1,4 @@
+import { StatementService } from './services/statement.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -30,7 +31,9 @@ import { MaterialModule } from './shared/material/material.module';
     GraphQLModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    StatementService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

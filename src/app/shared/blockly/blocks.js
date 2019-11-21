@@ -3,7 +3,7 @@ const attributes_star = [['*','*'],['RESOURCE', 'resource'], ['IP', 'ip'], ['URL
 const previousNext_select = ['average', 'attributes', 'max','count', 'min', 'sum', 'fmax', 'maxever', 'fmaxever', 'median', 'fmin', 'minever', 'fminever', 'stddev'];
 const data_types = [['String', 'string'], ['Boolean', 'boolean'], ['Integer', 'integer'], ['Long', 'long'], ['Double', 'double'], ['Float', 'float',]];
 const having_attributes = ['average', 'max','count', 'min', 'sum', 'attributes'];
-console.log('test');
+
 async function getEventTypes() {
    let eventTypes = await (await fetch('http://localhost:8080/api/eventtypes')).json();
    var typeArray = [];
@@ -13,8 +13,40 @@ async function getEventTypes() {
    return await typeArray;
 }
 
+Blockly.Blocks['new_event_type'] = {
+  init() {
+    this.appendDummyInput()
+        .appendField("Create ")
+        .appendField(new Blockly.FieldDropdown([["atomic","simple_type"], ["complex","complex_type"]]), "event_type")
+        .appendField(" event ");
+    this.appendValueInput("type_name");
+    this.setInputsInline(true)
+    this.appendStatementInput("attributes")
+        .setCheck("new_event_attribute");
+    this.setColour('20');
+  }
+}
+
+Blockly.Blocks['new_event_attribute'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("add")
+        .appendField(new Blockly.FieldDropdown([["numeric","Number"], ["textual","String"], ["binary","Boolean"]]), "attribute_type")
+        .appendField("variable named");
+    this.appendValueInput("attribute_name")
+        .setCheck(null);
+    this.appendDummyInput()
+        .appendField("as list?")
+        .appendField(new Blockly.FieldCheckbox("FALSE"), "attribute_list_type");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, ["new_event_type", "new_event_attribute"]);
+    this.setNextStatement(true, "new_event_attribute");
+    this.setColour(40);
+  }
+};
+
 Blockly.Blocks['select'] = {
-  init: function () {
+  init() {
     this.appendDummyInput().appendField('Select');
     this.appendStatementInput('SELECT')
       .setCheck(['attributes', 'average']);

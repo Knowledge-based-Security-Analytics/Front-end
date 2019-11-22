@@ -1,3 +1,14 @@
+Blockly.EPL['new_event_type'] = function(block) {
+  let basicAttributes = `complex boolean, id int, timestamp string`;
+  if (block.getFieldValue('EVENT_TYPE') === 'COMPLEX_TYPE') { basicAttributes = `${basicAttributes}, duration float, componentsJson string`; }
+  const specificAttributes = Blockly.EPL.statementToCode(block, 'ATTRIBUTES');
+  return `@JsonSchema(dynamic=true) create json schema ${block.getFieldValue('TYPE_NAME')} (${basicAttributes + specificAttributes})`;
+}
+
+Blockly.EPL['new_event_attribute'] = function(block) {
+  return `, ${block.getFieldValue('ATTRIBUTE_NAME')} ${block.getFieldValue('ATTRIBUTE_TYPE')}`;
+}
+
 Blockly.EPL['select'] = function(block) {
   return 'SELECT' + Blockly.EPL.statementToCode(block, 'SELECT') + 'FROM' + Blockly.EPL.statementToCode(block, 'FROM');
 };

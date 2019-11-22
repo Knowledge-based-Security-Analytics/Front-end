@@ -13,6 +13,7 @@ import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { StatementComponent } from './components/overview/statement/statement.component';
+import { HighlightModule } from 'ngx-highlightjs';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { StatementComponent } from './components/overview/statement/statement.co
     MaterialModule,
     FlexLayoutModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+    HighlightModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -27,7 +27,7 @@ export class OverviewComponent implements OnInit {
     }, 1000);
   }
 
-  private dropStatement(i: number) {
+  public dropStatement(i: number) {
     console.log(i);
     this.statementService.dropStatement(this.statements[i].deploymentId).then(result => {
       if (result) {

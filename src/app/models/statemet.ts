@@ -6,6 +6,7 @@ export interface Statement {
     name?: string;
     blocklyXml?: string;
     eventType?: boolean;
+    alertCount?: number;
 }
 
 export class StatementDef {

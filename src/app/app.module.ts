@@ -12,6 +12,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
+import { StatementComponent } from './components/overview/statement/statement.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { MaterialModule } from './shared/material/material.module';
     BlocklyComponent,
     DebuggerComponent,
     OverviewComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    StatementComponent
   ],
   imports: [
     BrowserModule,

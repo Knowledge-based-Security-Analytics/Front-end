@@ -64,7 +64,7 @@ export class BlocklyComponent implements OnInit {
     return this.workspacePlayground;
   }
 
-  protected async createStatement(): Promise<void> {
+  public async createStatement(): Promise<void> {
     this.statement = this.updateStatement(this.statement);
     this.statement.deploymentId = await this.stmtService.pushStatement(
       this.statement.eplStatement,

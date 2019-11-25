@@ -9,7 +9,7 @@ import { StatementDef } from './statement-def';
 @Injectable({
   providedIn: 'root'
 })
-export class StatementService {
+export class GraphQLStatementService {
 
   constructor(private apollo: Apollo) {
   }

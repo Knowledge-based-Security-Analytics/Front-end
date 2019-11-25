@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
-import { StatementService } from 'src/app/shared/graphql/graphql_statement.service';
+import { StatementService } from 'src/app/services/statement.service';
 
 @Component({
   selector: 'app-overview',
@@ -13,7 +13,7 @@ export class OverviewComponent implements OnInit {
   constructor(private statementService: StatementService) { }
 
   ngOnInit() {
-    this.statementService.getStatements({name: true, eplStatement: true, deploymentId: true}).then(statements => {
+    this.statementService.getStatements().then(statements => {
       this.statements = statements;
     });
 
@@ -29,10 +29,6 @@ export class OverviewComponent implements OnInit {
 
   public dropStatement(i: number) {
     console.log(i);
-    this.statementService.dropStatement(this.statements[i].deploymentId).then(result => {
-      if (result) {
-        this.statements.splice(i, 1);
-      }
-    });
+    this.statementService.dropStatement(this.statements[i].deploymentId);
   }
 }

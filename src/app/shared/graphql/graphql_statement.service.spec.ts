@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { StatementService } from './graphql_statement.service';
+import { StatementService } from 'src/app/services/statement.service';
 
 describe('StatementService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

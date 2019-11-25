@@ -3,15 +3,16 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Observable } from 'rxjs';
 import { GraphQLUtils } from './graphql_utils';
+import { Event } from '../../models/event';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EventStreamService {
+export class GraphQLEventStreamService {
 
   constructor(private apollo: Apollo) {}
 
-  public subscribeTopic(topic: string): Observable<any> {
+  public subscribeTopic(topic: string): Observable<Event> {
     return new Observable(subscriber => {
       this.apollo.subscribe({
         query: gql`
@@ -22,7 +23,10 @@ export class EventStreamService {
             }
           }`
       }).subscribe(
-        data => {subscriber.next((data as any).data.subscribeKafkaTopic); },
+        data => {
+          subscriber.next({jsonString: (data as any).data.subscribeKafkaTopic.jsonString,
+                           timestamp: new Date((data as any).data.subscribeKafkaTopic.timestamp)});
+        },
         error => {subscriber.error(error); },
         () => {subscriber.complete(); }
       );

@@ -2,8 +2,9 @@ import { GraphQLUtils } from './graphql_utils';
 import { Injectable } from '@angular/core';
 import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { Statement, StatementDef } from '../models/statemet';
 import { DocumentNode } from 'apollo-link';
+import { Statement } from 'src/app/models/statemet';
+import { StatementDef } from './statement-def';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,6 @@ import { DocumentNode } from 'apollo-link';
 export class StatementService {
 
   constructor(private apollo: Apollo) {
-
   }
 
   public async getStatements(statementDef: StatementDef,

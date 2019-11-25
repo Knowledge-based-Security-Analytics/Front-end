@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
-import { StatementService } from 'src/app/services/statement.service';
+import { StatementService } from 'src/app/shared/graphql/graphql_statement.service';
 
 @Component({
   selector: 'app-overview',

@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import { EventStreamService } from './graphql_event-stream.service';
 
-import { StatementService } from './statement.service';
-
-describe('StatementService', () => {
+describe('EventStreamService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: StatementService = TestBed.get(StatementService);
+    const service: EventStreamService = TestBed.get(EventStreamService);
     expect(service).toBeTruthy();
   });
 });

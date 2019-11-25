@@ -1,6 +1,6 @@
 import { DocumentNode } from 'graphql';
 import { Apollo } from 'apollo-angular';
-import { StatementDef } from '../models/statemet';
+import { StatementDef } from './statement-def';
 
 export class GraphQLUtils {
   public static async mutate(gqlString: DocumentNode, apollo: Apollo): Promise<any> {

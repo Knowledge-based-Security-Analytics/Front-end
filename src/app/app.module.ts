@@ -9,7 +9,7 @@ import { DebuggerComponent } from './components/debugger/debugger.component';
 import { OverviewComponent } from './components/overview/overview.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { GraphQLModule } from './graphql.module';
+import { GraphQLModule } from './shared/graphql/graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { StatementComponent } from './components/overview/statement/statement.component';

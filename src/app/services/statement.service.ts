@@ -1,42 +1,28 @@
-import { GraphQLUtils } from './graphql_utils';
+import { Statement } from 'src/app/models/statemet';
+import { GraphQLStatementService } from './../shared/graphql/graphql_statement.service';
 import { Injectable } from '@angular/core';
-import { Apollo, QueryRef } from 'apollo-angular';
-import gql from 'graphql-tag';
-import { Statement, StatementDef } from '../models/statemet';
-import { DocumentNode } from 'apollo-link';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatementService {
+  private statements: Statement[];
 
-  constructor(private apollo: Apollo) {
+  constructor(private graphqlStatementService: GraphQLStatementService) { }
 
-  }
 
-  public async getStatements(statementDef: StatementDef,
-                             filter?: {deploymentId?: string,
-                                       name?: string,
-                                       deploymentMode?: string,
-                                       eventType?: boolean}
-                            ): Promise<Statement[]> {
-    if (!filter) {
-      filter = {};
-    }
-    return new Promise(resolve => {
-      this.apollo.query({
-        query: gql`
-            {
-              statements(deploymentId: "${filter.deploymentId ? filter.deploymentId : ''}", name: "${filter.name ? filter.name : ''}",
-                         deploymentMode: "${filter.deploymentMode ? filter.deploymentMode : ''}",
-                         ${filter.eventType ? 'eventType: ' + filter.eventType : ''}){
-                ${GraphQLUtils.statementDefToGql(statementDef)}
-              }
-            }
-          `
-      }).subscribe(result => {
-        resolve((result.data as any).statements);
-      });
+  public async getStatements(): Promise<Statement[]> {
+    return new Promise(async resolve => {
+      if (!this.statements) {
+        this.statements = await this.graphqlStatementService.getStatements({deploymentId: true,
+                                                          deploymentDependencies: true,
+                                                          deploymentMode: true,
+                                                          eplStatement: true,
+                                                          name: true,
+                                                          blocklyXml: true,
+                                                          eventType: true});
+      }
+      resolve(this.statements);
     });
   }
 
@@ -45,19 +31,10 @@ export class StatementService {
    */
   public async pushStatement(eplStatement: string, blocklyXml: string, name?: string,
                              deploymentMode?: string, eventType?: boolean): Promise<string> {
-    const gqlString = gql`
-      mutation {
-        deployStatement(
-          data: {
-            ${name ? `name: "${name}"` : ''}
-            ${deploymentMode ? `deploymentMode: "${deploymentMode}"` : ''}
-            ${eventType !== undefined ? `eventType: ${eventType}` : ''}
-            eplStatement: "${eplStatement}"
-            blocklyXml: "${blocklyXml}"
-          }
-        ){deploymentId}
-      }`;
-    return (await GraphQLUtils.mutate(gqlString, this.apollo)).deployStatement.deploymentId;
+    return this.graphqlStatementService.pushStatement(eplStatement, blocklyXml, name, deploymentMode, eventType).then(deploymentId => {
+      this.statements.push({deploymentId, eplStatement, blocklyXml, name, deploymentMode, eventType});
+      return deploymentId;
+    });
   }
 
   /**
@@ -65,30 +42,22 @@ export class StatementService {
    */
   public async updateStatement(deploymentId: string, name?: string, deploymentMode?: string,
                                eventType?: boolean, eplStatement?: string, blocklyXml?: string): Promise<string> {
-    const gqlString = gql`
-      mutation {
-        redeployStatement(
-          data: {
-            ${name ? `name: "${name}"` : ''}
-            ${deploymentMode ? `deploymentMode: "${deploymentMode}"` : ''}
-            ${eventType !== undefined ? `eventType: ${eventType}` : ''}
-            deploymentId: "${deploymentId}"
-            ${eplStatement ? `eplStatement: "${eplStatement}"` : ''}
-            ${blocklyXml ? `blocklyXml: "${blocklyXml}"` : ''}
-          }
-        ){deploymentId}
-      }`;
-    return (await GraphQLUtils.mutate(gqlString, this.apollo)).redeployStatement.deploymentId;
+    return this.graphqlStatementService.updateStatement(deploymentId, name, deploymentMode, eventType, eplStatement, blocklyXml)
+    .then(id => {
+      const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);
+      this.statements[i] = ({deploymentId: id, eplStatement, blocklyXml, name, deploymentMode, eventType});
+      return id;
+    });
   }
 
   public async dropStatement(deploymentId: string): Promise<boolean> {
-    const gqlString = gql`
-        mutation {
-          undeployStatement(
-              deploymentId: "${deploymentId}"
-          )
-        }`;
-    return (await GraphQLUtils.mutate(gqlString, this.apollo)).undeployStatement;
+    return this.graphqlStatementService.dropStatement(deploymentId)
+    .then(success => {
+      if (success) {
+        const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);
+        this.statements.splice(i, 1);
+      }
+      return success;
+    });
   }
 }
-

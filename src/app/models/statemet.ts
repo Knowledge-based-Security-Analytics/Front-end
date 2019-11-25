@@ -6,14 +6,5 @@ export interface Statement {
     name?: string;
     blocklyXml?: string;
     eventType?: boolean;
-}
-
-export class StatementDef {
-    deploymentId?: boolean;
-    deploymentDependencies?: boolean;
-    deploymentMode?: boolean;
-    eplStatement?: boolean;
-    name?: boolean;
-    blocklyXml?: boolean;
-    eventType?: boolean;
+    alertCount?: number;
 }

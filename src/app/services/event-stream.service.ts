@@ -1,65 +1,46 @@
+import { GraphQLEventStreamService } from './../shared/graphql/graphql_event-stream.service';
+import { Event } from './../models/event';
 import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
 import { Observable } from 'rxjs';
-import { GraphQLUtils } from './graphql_utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventStreamService {
+  private topics: string[];
 
-  constructor(private apollo: Apollo) {}
+  constructor(private graphQLEventStreamService: GraphQLEventStreamService) { }
 
-  public subscribeTopic(topic: string): Observable<any> {
-    return new Observable(subscriber => {
-      this.apollo.subscribe({
-        query: gql`
-          subscription {
-            subscribeKafkaTopic(topic: "${topic}") {
-              jsonString
-              timestamp
-            }
-          }`
-      }).subscribe(
-        data => {subscriber.next((data as any).data.subscribeKafkaTopic); },
-        error => {subscriber.error(error); },
-        () => {subscriber.complete(); }
-      );
-    });
+  public subscribeTopic(topic: string): Observable<Event> {
+    return this.graphQLEventStreamService.subscribeTopic(topic);
   }
 
   public async getTopics(): Promise<string[]> {
-    return new Promise(resolve => {
-      this.apollo.query({
-        query: gql`
-            {
-              topics
-            }
-          `
-      }).subscribe(result => {
-        resolve((result.data as any).topics);
-      });
+    return new Promise(async resolve => {
+      if (!this.topics) {
+        this.topics = await this.graphQLEventStreamService.getTopics();
+      }
+      resolve(this.topics);
     });
   }
 
   public async pushTopic(name: string): Promise<boolean> {
-    const gqlString = gql`
-    mutation {
-      createTopic(
-          topic: "${name}"
-      )
-    }`;
-    return (await GraphQLUtils.mutate(gqlString, this.apollo)).createTopic;
+    return this.graphQLEventStreamService.pushTopic(name).then(success => {
+      if (success) {
+        this.topics.push(name);
+      }
+      return success;
+    });
   }
 
   public async dropTopic(name: string): Promise<boolean> {
-    const gqlString = gql`
-    mutation {
-      deleteTopic(
-          topic: "${name}"
-      )
-    }`;
-    return (await GraphQLUtils.mutate(gqlString, this.apollo)).deleteTopic;
+    return this.graphQLEventStreamService.dropTopic(name)
+    .then(success => {
+      if (success) {
+        const i = this.topics.findIndex(topic => topic === name);
+        this.topics.splice(i, 1);
+      }
+      return success;
+    });
   }
 }

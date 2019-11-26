@@ -21,7 +21,11 @@ export class StatementService {
                                                           name: true,
                                                           blocklyXml: true,
                                                           eventType: true});
+        this.statements.forEach(statement => {
+          this.parseStatement(statement);
+        });
       }
+      console.log(this.statements);
       resolve(this.statements);
     });
   }
@@ -59,5 +63,19 @@ export class StatementService {
       }
       return success;
     });
+  }
+
+  private parseStatement(statement: Statement) {
+    if (!statement.eplStatement) {
+      return;
+    }
+    if (!statement.eplParsed) {
+      statement.eplParsed = {};
+    }
+
+    if (statement.eplStatement.includes('@JsonSchema')) {
+      statement.eplParsed.name = statement.eplStatement.match(/schema.*\(/)[0];
+      statement.eplParsed.name = statement.eplParsed.name.slice(7, statement.eplParsed.name.length - 2);
+    }
   }
 }

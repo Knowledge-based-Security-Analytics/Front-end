@@ -3,7 +3,7 @@ const attributes_star = [['*','*'],['RESOURCE', 'resource'], ['IP', 'ip'], ['URL
 const previousNext_select = ['average', 'attributes', 'max','count', 'min', 'sum', 'fmax', 'maxever', 'fmaxever', 'median', 'fmin', 'minever', 'fminever', 'stddev'];
 const data_types = [['String', 'string'], ['Boolean', 'boolean'], ['Integer', 'integer'], ['Long', 'long'], ['Double', 'double'], ['Float', 'float',]];
 const having_attributes = ['average', 'max','count', 'min', 'sum', 'attributes'];
-console.log('test');
+
 async function getEventTypes() {
    let eventTypes = await (await fetch('http://localhost:8080/api/eventtypes')).json();
    var typeArray = [];
@@ -13,8 +13,37 @@ async function getEventTypes() {
    return await typeArray;
 }
 
+Blockly.Blocks['new_event_type'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Event Type:")
+        .appendField(new Blockly.FieldDropdown([["atomic","SIMPLE_TYPE"], ["complex","COMPLEX_TYPE"]]), "EVENT_TYPE")
+        .appendField(new Blockly.FieldTextInput("type_name"), "TYPE_NAME");
+    this.appendStatementInput("ATTRIBUTES")
+        .setCheck("new_event_attribute");
+    this.setColour(20);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['new_event_attribute'] = {
+  init() {
+    this.appendDummyInput()
+        .appendField("Attribute:")
+        .appendField(new Blockly.FieldTextInput("name"), "ATTRIBUTE_NAME")
+        .appendField(", Type: ")
+        .appendField(new Blockly.FieldDropdown([["numeric (int)","int"], ["numeric (float)","double"], ["textual","string"], ["binary","boolean"]]), "ATTRIBUTE_TYPE");
+    this.setPreviousStatement(true, ["new_event_type", "new_event_attribute"]);
+    this.setNextStatement(true, "new_event_type");
+    this.setColour(40);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
 Blockly.Blocks['select'] = {
-  init: function () {
+  init: function() {
     this.appendDummyInput().appendField('Select');
     this.appendStatementInput('SELECT')
       .setCheck(['attributes', 'average']);

@@ -1,9 +1,9 @@
-<div class="blockly-content" fxLayout="column" fxLayoutGap="10px">
-    <div fxFlex="1 1 5%" >
+<div class="blockly-content" fxLayout="column" fxLayoutGap="10px" >
+    <div fxFlex="1 1 5%">
         <mat-form-field>
-            <input matInput class="form-control" placeholder="Statement Name">
+          <input matInput placeholder="Statement name" [(ngModel)]="statement.name">
         </mat-form-field>
+        <button mat-raised-button (click)="createStatement()">Save</button>
     </div>
-
-    <div fxFlex="1 1 95%" id="blocklyDiv" style="height: 100%;"></div>
+    <div fxFlex="1 1 100%" id="blocklyDiv" style="height: 90%;"></div>
 </div>

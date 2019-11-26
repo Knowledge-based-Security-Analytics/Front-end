@@ -13,7 +13,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatChipsModule} from '@angular/material/chips';
 
-
 @NgModule({
   declarations: [],
   exports: [

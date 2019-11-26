@@ -10,9 +10,6 @@ declare var Blockly: any;
   styleUrls: ['./blockly.component.css']
 })
 export class BlocklyComponent implements OnInit {
-  private selectStatements: Statement[] = [];
-  private createStatements: Statement[] = [];
-  private insertStatements: Statement[] = [];
   statement: Statement;
   statementFunctionName = 'Create statement';
   messageHistory = [];
@@ -26,6 +23,9 @@ export class BlocklyComponent implements OnInit {
         <label text="Existing types"></label>
       </category>
       <sep gap="8"></sep>
+      <category name="CONDITION" colour="200">
+
+      </category>
     </xml>`;
 
   constructor( private stmtService: StatementService ) { }
@@ -72,6 +72,7 @@ export class BlocklyComponent implements OnInit {
       this.statement.name,
       this.statement.deploymentMode,
       this.statement.eventType);
+    Blockly.getMainWorkspace().clear();
     alert('Successfully deployed statement with deploymentId ' + this.statement.deploymentId);
   }
 

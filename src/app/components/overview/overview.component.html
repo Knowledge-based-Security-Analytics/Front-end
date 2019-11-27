@@ -4,7 +4,7 @@
   <ng-container *ngFor="let statement of statements; let i = index" >
     <mat-expansion-panel [hideToggle]="false" *ngIf="(statement.eplParsed.type == 'pattern')">
       <mat-expansion-panel-header [collapsedHeight]="'62px'">
-        <mat-panel-title>{{statement.name}}</mat-panel-title>
+        <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
         <mat-panel-description>
           <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
         </mat-panel-description>
@@ -31,7 +31,7 @@
   <ng-container *ngFor="let statement of statements; let i = index" >
     <mat-expansion-panel [hideToggle]="false" *ngIf="(statement.eplParsed.type == 'schema')">
       <mat-expansion-panel-header [collapsedHeight]="'62px'">
-        <mat-panel-title>{{statement.name}}</mat-panel-title>
+        <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
         <mat-panel-description>
           <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
         </mat-panel-description>

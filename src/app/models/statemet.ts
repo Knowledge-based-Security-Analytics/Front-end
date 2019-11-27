@@ -12,4 +12,6 @@ export interface Statement {
 
 export interface EPLParsed {
   name?: string;
+  type?: string;
+  attributes?: {[key: string]: string};
 }

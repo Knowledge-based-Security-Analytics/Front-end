@@ -1,6 +1,7 @@
 import { Statement } from 'src/app/models/statemet';
 import { GraphQLStatementService } from './../shared/graphql/graphql_statement.service';
 import { Injectable } from '@angular/core';
+import { type } from 'os';
 
 @Injectable({
   providedIn: 'root'
@@ -74,8 +75,24 @@ export class StatementService {
     }
 
     if (statement.eplStatement.includes('@JsonSchema')) {
+      statement.eplParsed.type = 'schema';
+
       statement.eplParsed.name = statement.eplStatement.match(/schema.*\(/)[0];
       statement.eplParsed.name = statement.eplParsed.name.slice(7, statement.eplParsed.name.length - 2);
+
+      statement.eplParsed.attributes = {};
+      let eventDef = statement.eplStatement.match(/schema.*\(.*\)/)[0];
+      eventDef = eventDef.match(/\(.*\)/)[0];
+      eventDef = eventDef.slice(1, eventDef.length - 1);
+      let attributes: string[] = [];
+      attributes = eventDef.split(',');
+      attributes.forEach(attribute => {
+        attribute = attribute.trim();
+        const keyValue = attribute.split(' ');
+        statement.eplParsed.attributes[keyValue[0].trim()] = keyValue[1].trim();
+      });
+    } else if (statement.eplStatement.includes('@KafkaOutput')) {
+      statement.eplParsed.type = 'pattern';
     }
   }
 }

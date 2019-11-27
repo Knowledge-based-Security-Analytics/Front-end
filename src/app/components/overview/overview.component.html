@@ -1,7 +1,8 @@
-Statements:
+<h3>Patterns:</h3>
 <mat-accordion displayMode="default" [multi]="false"
                [hideToggle]="false">
-    <mat-expansion-panel [hideToggle]="false" *ngFor="let statement of statements; let i = index">
+  <ng-container *ngFor="let statement of statements; let i = index" >
+    <mat-expansion-panel [hideToggle]="false" *ngIf="(statement.eplParsed.type == 'pattern')">
       <mat-expansion-panel-header [collapsedHeight]="'62px'">
         <mat-panel-title>{{statement.name}}</mat-panel-title>
         <mat-panel-description>
@@ -21,5 +22,33 @@ Statements:
             </button>
         </mat-action-row>
     </mat-expansion-panel>
+  </ng-container>
+</mat-accordion><br />
+
+<h3>Schemas:</h3>
+<mat-accordion displayMode="default" [multi]="false"
+               [hideToggle]="false">
+  <ng-container *ngFor="let statement of statements; let i = index" >
+    <mat-expansion-panel [hideToggle]="false" *ngIf="(statement.eplParsed.type == 'schema')">
+      <mat-expansion-panel-header [collapsedHeight]="'62px'">
+        <mat-panel-title>{{statement.name}}</mat-panel-title>
+        <mat-panel-description>
+          <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+          <app-statement [statement] = "statement"></app-statement>
+        <mat-action-row>
+            <button mat-icon-button matTooltip="show details">
+              <mat-icon>info</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="edit statement">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+        </mat-action-row>
+    </mat-expansion-panel>
+  </ng-container>
 </mat-accordion>
 

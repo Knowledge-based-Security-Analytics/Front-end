@@ -16,6 +16,7 @@ import { MaterialModule } from './shared/material/material.module';
 import { FormsModule } from '@angular/forms';
 import { StatementComponent } from './components/overview/statement/statement.component';
 import { HighlightModule } from 'ngx-highlightjs';
+import { SortFilterDialogComponent } from './components/overview/sort-filter-dialog/sort-filter-dialog.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { HighlightModule } from 'ngx-highlightjs';
     DebuggerComponent,
     OverviewComponent,
     ToolbarComponent,
-    StatementComponent
+    StatementComponent,
+    SortFilterDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +38,9 @@ import { HighlightModule } from 'ngx-highlightjs';
     GraphQLModule,
     HttpClientModule,
     HighlightModule
+  ],
+  entryComponents: [
+    SortFilterDialogComponent
   ],
   providers: [
     StatementService,

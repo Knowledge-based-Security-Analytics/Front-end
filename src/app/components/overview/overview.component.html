@@ -1,54 +1,56 @@
-<h3>Patterns:</h3>
-<mat-accordion displayMode="default" [multi]="false"
-               [hideToggle]="false">
-  <ng-container *ngFor="let statement of statements; let i = index" >
-    <mat-expansion-panel [hideToggle]="false" *ngIf="(statement.eplParsed.type == 'pattern')">
-      <mat-expansion-panel-header [collapsedHeight]="'62px'">
-        <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
-        <mat-panel-description>
-          <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>1</mat-chip></mat-chip-list>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-          <app-statement [statement] = "statement"></app-statement>
-        <mat-action-row>
-            <button mat-icon-button matTooltip="show details">
-              <mat-icon>info</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="edit statement">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-        </mat-action-row>
-    </mat-expansion-panel>
-  </ng-container>
-</mat-accordion><br />
+<div class="statement-overview">
+  <button mat-icon-button class="filter-button" (click)="openSortFilterDialog()"><mat-icon>filter_list</mat-icon></button>
+  <h3>Patterns:</h3>
+  <mat-accordion displayMode="default" [multi]="false"
+                [hideToggle]="false">
+    <ng-container *ngFor="let statement of statements; let i = index" >
+      <mat-expansion-panel [hideToggle]="false" *ngIf="statement.visible && (statement.eplParsed.type == 'pattern')">
+        <mat-expansion-panel-header [collapsedHeight]="'62px'">
+          <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
+          <mat-panel-description>
+            <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+            <app-statement [statement] = "statement"></app-statement>
+          <mat-action-row>
+              <button mat-icon-button matTooltip="show details">
+                <mat-icon>info</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="edit statement">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+          </mat-action-row>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion><br />
 
-<h3>Schemas:</h3>
-<mat-accordion displayMode="default" [multi]="false"
-               [hideToggle]="false">
-  <ng-container *ngFor="let statement of statements; let i = index" >
-    <mat-expansion-panel [hideToggle]="false" *ngIf="(statement.eplParsed.type == 'schema')">
-      <mat-expansion-panel-header [collapsedHeight]="'62px'">
-        <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
-        <mat-panel-description>
-          <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-          <app-statement [statement] = "statement"></app-statement>
-        <mat-action-row>
-            <button mat-icon-button matTooltip="show details">
-              <mat-icon>info</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="edit statement">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-        </mat-action-row>
-    </mat-expansion-panel>
-  </ng-container>
-</mat-accordion>
-
+  <h3>Schemas:</h3>
+  <mat-accordion displayMode="default" [multi]="false"
+                [hideToggle]="false">
+    <ng-container *ngFor="let statement of statements; let i = index" >
+      <mat-expansion-panel [hideToggle]="false" *ngIf="statement.visible && (statement.eplParsed.type == 'schema')">
+        <mat-expansion-panel-header [collapsedHeight]="'62px'">
+          <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
+          <mat-panel-description>
+            <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+            <app-statement [statement] = "statement"></app-statement>
+          <mat-action-row>
+              <button mat-icon-button matTooltip="show details">
+                <mat-icon>info</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="edit statement">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+          </mat-action-row>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+</div>

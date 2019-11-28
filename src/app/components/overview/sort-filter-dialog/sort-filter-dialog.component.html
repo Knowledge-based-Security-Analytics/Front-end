@@ -1,0 +1,14 @@
+<div mat-dialog-content>
+  <h1 mat-dialog-title>Sort</h1>
+    <mat-form-field>
+      <mat-select placeholder="Sort" [(value)]="sortSelected">
+        <mat-option>None</mat-option>
+        <mat-option value="byName">By Name</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <h1 mat-dialog-title>Filter</h1>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]>Cancel</button>
+  <button mat-button cdkFocusInitial (click)="onOkClicked()">Ok</button>
+</div>

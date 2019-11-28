@@ -13,35 +13,6 @@ async function getEventTypes() {
    return await typeArray;
 }
 
-Blockly.Blocks['new_event_type'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("Event Type:")
-        .appendField(new Blockly.FieldDropdown([["atomic","SIMPLE_TYPE"], ["complex","COMPLEX_TYPE"]]), "EVENT_TYPE")
-        .appendField(new Blockly.FieldTextInput("type_name"), "TYPE_NAME");
-    this.appendStatementInput("ATTRIBUTES")
-        .setCheck("new_event_attribute");
-    this.setColour(20);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
-Blockly.Blocks['new_event_attribute'] = {
-  init() {
-    this.appendDummyInput()
-        .appendField("Attribute:")
-        .appendField(new Blockly.FieldTextInput("name"), "ATTRIBUTE_NAME")
-        .appendField(", Type: ")
-        .appendField(new Blockly.FieldDropdown([["numeric (int)","int"], ["numeric (float)","double"], ["textual","string"], ["binary","boolean"]]), "ATTRIBUTE_TYPE");
-    this.setPreviousStatement(true, ["new_event_type", "new_event_attribute"]);
-    this.setNextStatement(true, "new_event_type");
-    this.setColour(40);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
-
 Blockly.Blocks['select'] = {
   init: function() {
     this.appendDummyInput().appendField('Select');

@@ -16,15 +16,32 @@ export class BlocklyComponent implements OnInit {
   public workspacePlayground: any;
   public toolbox = `
     <xml id="toolbox" style="display: none">
-      <category name ="EVENT" colour="20">
+      <category name ="EVENT TYPES" colour="20">
         <label text="Create new type"></label>
-        <block type="new_event_type"></block>
-        <block type="new_event_attribute"></block>
+        <block type="type"></block>
+        <sep gap="8"></sep>
+        <block type="attribute_definition"></block>
         <label text="Existing types"></label>
       </category>
       <sep gap="8"></sep>
-      <category name="CONDITION" colour="200">
-
+      <category name="EVENT" colour="200">
+        <block type="event"></block>
+        <sep gap="32"></sep>
+        <block type="event_pattern"></block>
+        <sep gap="32"></sep>
+        <block type="event_pattern_and"></block>
+        <sep gap="8"></sep>
+        <block type="event_pattern_or"></block>
+        <sep gap="8"></sep>
+        <block type="event_pattern_not"></block>
+        <sep gap="8"></sep>
+        <block type="event_pattern_repeat"></block>
+      </category>
+      <category name="CONDITION" colour="100">
+        <block type="condition"></block>
+      </category>
+      <category name="ACTION" colour="300">
+        <block type="action"></block>
       </category>
     </xml>`;
 
@@ -61,6 +78,9 @@ export class BlocklyComponent implements OnInit {
           wheel: false,
         }
       });
+    this.workspacePlayground.addChangeListener(() => {
+      document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspacePlayground);
+    });
     return this.workspacePlayground;
   }
 

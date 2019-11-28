@@ -6,7 +6,7 @@
       <mat-expansion-panel-header [collapsedHeight]="'62px'">
         <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
         <mat-panel-description>
-          <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
+          <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>1</mat-chip></mat-chip-list>
         </mat-panel-description>
       </mat-expansion-panel-header>
           <app-statement [statement] = "statement"></app-statement>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sort-filter-dialog',
@@ -8,27 +8,22 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class SortFilterDialogComponent implements OnInit {
   public filter: FilterOptions = {};
-  public sort: SortOptions = {};
+  public sort: string;
 
-  public sortSelected: string;
-
-  constructor(public dialogRef: MatDialogRef<SortFilterDialogComponent>) { }
+  constructor(public dialogRef: MatDialogRef<SortFilterDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.filter = data.filter;
+    this.sort = data.sort;
+  }
 
   ngOnInit() {
   }
 
   onOkClicked() {
-    if (this.sortSelected) {
-      this.sort[this.sortSelected] = true;
-    }
     this.dialogRef.close({filter: this.filter, sort: this.sort});
   }
 }
 
-export interface SortOptions {
-  byName?: boolean;
-}
-
 export interface FilterOptions {
-  deploymentMode?: string;
+  dev?: boolean;
+  prod?: boolean;
 }

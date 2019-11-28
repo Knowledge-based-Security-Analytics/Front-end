@@ -1,12 +1,14 @@
 <div mat-dialog-content>
   <h1 mat-dialog-title>Sort</h1>
     <mat-form-field>
-      <mat-select placeholder="Sort" [(value)]="sortSelected">
+      <mat-select placeholder="Sort" [(value)]="sort">
         <mat-option>None</mat-option>
         <mat-option value="byName">By Name</mat-option>
       </mat-select>
   </mat-form-field>
   <h1 mat-dialog-title>Filter</h1>
+  <mat-checkbox [(ngModel)]="filter.dev">Show dev Statements</mat-checkbox><br />
+  <mat-checkbox [(ngModel)]="filter.prod">Show prod Statements</mat-checkbox>
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]>Cancel</button>

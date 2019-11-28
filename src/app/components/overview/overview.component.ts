@@ -1,4 +1,4 @@
-import { SortFilterDialogComponent, FilterOptions, SortOptions } from './sort-filter-dialog/sort-filter-dialog.component';
+import { SortFilterDialogComponent, FilterOptions} from './sort-filter-dialog/sort-filter-dialog.component';
 import { Component, OnInit } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
 import { StatementService } from 'src/app/services/statement.service';
@@ -10,19 +10,19 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
   styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
+  private rawStatements: Statement[];
   public statements: OverwiewStatement[];
 
   public filter: FilterOptions = {};
-  public sort: SortOptions = {};
+  public sort: string;
 
   constructor(private statementService: StatementService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.statementService.statementsObservable.subscribe(statements => {
       console.log(statements);
-      this.statements = statements.map(statement => Object.assign({}, statement));
-      this.filterStatements();
-      this.sortStatements();
+      this.rawStatements = statements;
+      this.resetLocalStatements();
     });
     this.statementService.getStatements();
 
@@ -45,18 +45,19 @@ export class OverviewComponent implements OnInit {
 
   public filterStatements() {
     this.statements.forEach(statement => {
-      statement.visible = true;
+      statement.visible = false;
 
-      if (this.filter.deploymentMode) {
-        if (statement.deploymentMode !== this.filter.deploymentMode) {
-          statement.visible = false;
-        }
+      if (this.filter.dev && statement.deploymentMode === 'dev') {
+        statement.visible = true;
+      }
+      if (this.filter.prod && statement.deploymentMode === 'prod') {
+        statement.visible = true;
       }
     });
   }
 
   public sortStatements() {
-    if (this.sort.byName) {
+    if (this.sort === 'byName') {
       this.statements.sort((a, b) => {
         if (a.name < b.name) {
           return 1;
@@ -71,13 +72,25 @@ export class OverviewComponent implements OnInit {
 
   public openSortFilterDialog() {
     const dialogRef = this.dialog.open(SortFilterDialogComponent, {
+        data: {
+          sort: this.sort,
+          filter: this.filter
+        }
     });
     dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
       this.sort = result.sort;
       this.filter = result.filter;
-      this.sortStatements();
-      this.filterStatements();
+      this.resetLocalStatements();
     });
+  }
+
+  private resetLocalStatements() {
+    this.statements = this.rawStatements.map(statement => Object.assign({}, statement));
+    this.filterStatements();
+    this.sortStatements();
   }
 }
 

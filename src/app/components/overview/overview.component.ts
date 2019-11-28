@@ -8,17 +8,22 @@ import { StatementService } from 'src/app/services/statement.service';
   styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
-  public statements: Statement[];
+  public statements: OverwiewStatement[];
 
   constructor(private statementService: StatementService) { }
 
   ngOnInit() {
-    this.statementService.getStatements().then(statements => {
-      this.statements = statements;
+    this.statementService.statementsObservable.subscribe(statements => {
+      console.log(statements);
+      this.statements = statements.map(statement => Object.assign({}, statement));
     });
+    this.statementService.getStatements();
 
     setInterval(() => {
       const i = Math.floor(Math.random() * Math.floor(this.statements.length));
+      if (this.statements.length === 0) {
+        return;
+      }
       if (!this.statements[i].alertCount) {
         this.statements[i].alertCount = 0;
       }
@@ -28,7 +33,14 @@ export class OverviewComponent implements OnInit {
   }
 
   public dropStatement(i: number) {
-    console.log(i);
     this.statementService.dropStatement(this.statements[i].deploymentId);
   }
+
+  public filterStatements(filter: {dev?: boolean}) {
+
+  }
+}
+
+interface OverwiewStatement extends Statement {
+  visible?: boolean;
 }

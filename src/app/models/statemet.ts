@@ -7,4 +7,11 @@ export interface Statement {
     blocklyXml?: string;
     eventType?: boolean;
     alertCount?: number;
+    eplParsed?: EPLParsed;
+}
+
+export interface EPLParsed {
+  name?: string;
+  type?: string;
+  attributes?: {[key: string]: string};
 }

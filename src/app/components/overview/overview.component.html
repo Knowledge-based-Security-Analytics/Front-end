@@ -1,6 +1,6 @@
-<div class="statement-overview">
+<div class="statement-overview mat-typography">
   <button mat-icon-button class="filter-button" (click)="openSortFilterDialog()"><mat-icon>filter_list</mat-icon></button>
-  <h3>Patterns:</h3>
+  <h2>Patterns:</h2>
   <mat-accordion displayMode="default" [multi]="false"
                 [hideToggle]="false">
     <ng-container *ngFor="let statement of statements; let i = index" >
@@ -24,12 +24,9 @@
               </button>
           </mat-action-row>
       </mat-expansion-panel>
-    </ng-container>
-  </mat-accordion><br />
+    </ng-container><br />
 
-  <h3>Schemas:</h3>
-  <mat-accordion displayMode="default" [multi]="false"
-                [hideToggle]="false">
+  <h2>Schemas:</h2>
     <ng-container *ngFor="let statement of statements; let i = index" >
       <mat-expansion-panel [hideToggle]="false" *ngIf="statement.visible && (statement.eplParsed.type == 'schema')">
         <mat-expansion-panel-header [collapsedHeight]="'62px'">

@@ -13,7 +13,10 @@ export class OverviewComponent implements OnInit {
   private rawStatements: Statement[];
   public statements: OverwiewStatement[];
 
-  public filter: FilterOptions = {};
+  public filter: FilterOptions = {
+    prod: true,
+    dev: true
+  };
   public sort: string;
 
   constructor(private statementService: StatementService, private dialog: MatDialog) { }
@@ -27,14 +30,16 @@ export class OverviewComponent implements OnInit {
     this.statementService.getStatements();
 
     setInterval(() => {
-      const i = Math.floor(Math.random() * Math.floor(this.statements.length));
-      if (this.statements.length === 0) {
+      const i = Math.floor(Math.random() * Math.floor(this.rawStatements.length));
+      if (this.rawStatements.length === 0) {
         return;
       }
-      if (!this.statements[i].alertCount) {
+      if (!this.rawStatements[i].alertCount) {
+        this.rawStatements[i].alertCount = 0;
         this.statements[i].alertCount = 0;
       }
       const c = Math.floor(Math.random() * Math.floor(100));
+      this.rawStatements[i].alertCount += c;
       this.statements[i].alertCount += c;
     }, 1000);
   }
@@ -72,10 +77,10 @@ export class OverviewComponent implements OnInit {
 
   public openSortFilterDialog() {
     const dialogRef = this.dialog.open(SortFilterDialogComponent, {
-        data: {
-          sort: this.sort,
-          filter: this.filter
-        }
+      data: {
+        sort: this.sort,
+        filter: this.filter
+      }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {

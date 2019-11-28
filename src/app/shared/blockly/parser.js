@@ -9,6 +9,53 @@ Blockly.EPL['new_event_attribute'] = function(block) {
   return `, ${block.getFieldValue('ATTRIBUTE_NAME')} ${block.getFieldValue('ATTRIBUTE_TYPE')}`;
 }
 
+Blockly.EPL['event_pattern'] = function(block) {
+  return `select * from pattern [${Blockly.EPL.statementToCode(block, 'EVENT_PATTERN')}]`;
+}
+
+Blockly.EPL['event'] = function(block) {
+  return `${block.getFieldValue('EVENT_ALIAS')}=${block.getFieldValue('EVENT_TYPE')}${Blockly.EPL.statementToCode(block, 'CONDITION')}${block.nextConnection.targetConnection ? ' -> ' : ''}`;
+}
+
+Blockly.EPL['event_pattern_repeat'] = function(block) {
+  return `[${block.getFieldValue('COUNT')}] (${Blockly.EPL.statementToCode(block, 'EVENTS')})${block.nextConnection.targetConnection ? ' -> ' : ''}`;
+}
+
+Blockly.EPL['event_pattern_not'] = function(block) {
+  return `NOT(${Blockly.EPL.statementToCode(block, 'EVENTS')})${block.nextConnection.targetConnection ? ' -> ' : ''}`;
+}
+
+Blockly.EPL['event_pattern_or'] = function(block) {
+  return `(${Blockly.EPL.statementToCode(block, 'EVENTS_1')} OR ${Blockly.EPL.statementToCode(block, 'EVENTS_2')})${block.nextConnection.targetConnection ? ' -> ' : ''}`;
+}
+
+Blockly.EPL['event_pattern_and'] = function(block) {
+  return `(${Blockly.EPL.statementToCode(block, 'EVENTS_1')} AND ${Blockly.EPL.statementToCode(block, 'EVENTS_2')})${block.nextConnection.targetConnection ? ' -> ' : ''}`;
+}
+
+Blockly.EPL['condition'] = function(block) {
+  return `(${Blockly.EPL.statementToCode(block, 'CONDITIONS')})`;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Blockly.EPL['select'] = function(block) {
   return 'SELECT' + Blockly.EPL.statementToCode(block, 'SELECT') + 'FROM' + Blockly.EPL.statementToCode(block, 'FROM');
 };

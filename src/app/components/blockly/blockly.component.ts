@@ -1,6 +1,8 @@
+import { BlocklyParser } from './scripts/blocklyParser';
 import { StatementService } from './../../services/statement.service';
 import { Statement } from './../../models/statemet';
 import { Component, OnInit } from '@angular/core';
+import { BlocklyBlocks } from './scripts/blocklyBlocks';
 
 declare var Blockly: any;
 
@@ -10,9 +12,9 @@ declare var Blockly: any;
   styleUrls: ['./blockly.component.css']
 })
 export class BlocklyComponent implements OnInit {
-  statement: Statement;
-  statementFunctionName = 'Create statement';
-  messageHistory = [];
+  private statement: Statement;
+  private blocklyParser: BlocklyParser;
+  private blocklyBlocks: BlocklyBlocks;
   public workspacePlayground: any;
   public toolbox = `
     <xml id="toolbox" style="display: none">
@@ -45,11 +47,16 @@ export class BlocklyComponent implements OnInit {
       </category>
     </xml>`;
 
-  constructor( private stmtService: StatementService ) { }
+  constructor( private stmtService: StatementService ) {
+    this.blocklyParser = new BlocklyParser(this.stmtService);
+    this.blocklyBlocks = new BlocklyBlocks(this.stmtService);
+  }
 
   ngOnInit() {
     this.initStatement();
-    this.createBlocks();
+    this.blocklyBlocks.initBlocks();
+    this.blocklyParser.initParsers();
+    this.initBlockly();
   }
 
   private initStatement(): void {
@@ -64,7 +71,7 @@ export class BlocklyComponent implements OnInit {
     };
   }
 
-  private createBlocks(): BlocklyComponent {
+  private initBlockly(): BlocklyComponent {
     const blocklyDiv = document.getElementById( 'blocklyDiv' );
     this.workspacePlayground = Blockly.inject(
       blocklyDiv,
@@ -81,6 +88,7 @@ export class BlocklyComponent implements OnInit {
     this.workspacePlayground.addChangeListener(() => {
       document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspacePlayground);
     });
+
     return this.workspacePlayground;
   }
 

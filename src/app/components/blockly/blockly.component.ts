@@ -12,7 +12,7 @@ declare var Blockly: any;
   styleUrls: ['./blockly.component.css']
 })
 export class BlocklyComponent implements OnInit {
-  private statement: Statement;
+  public statement: Statement;
   private blocklyParser: BlocklyParser;
   private blocklyBlocks: BlocklyBlocks;
   public workspacePlayground: any;

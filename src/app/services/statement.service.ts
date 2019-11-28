@@ -2,31 +2,31 @@ import { Statement } from 'src/app/models/statemet';
 import { GraphQLStatementService } from './../shared/graphql/graphql_statement.service';
 import { Injectable } from '@angular/core';
 import { type } from 'os';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatementService {
-  private statements: Statement[];
+  private statements: Statement[] = [];
+  public statementsObservable = new BehaviorSubject<Statement[]>(this.statements);
 
   constructor(private graphqlStatementService: GraphQLStatementService) { }
 
 
   public async getStatements(): Promise<Statement[]> {
     return new Promise(async resolve => {
-      if (!this.statements) {
-        this.statements = await this.graphqlStatementService.getStatements({deploymentId: true,
-                                                          deploymentDependencies: true,
-                                                          deploymentMode: true,
-                                                          eplStatement: true,
-                                                          name: true,
-                                                          blocklyXml: true,
-                                                          eventType: true});
-        this.statements.forEach(statement => {
-          this.parseStatement(statement);
-        });
-      }
-      console.log(this);
+      this.statements = await this.graphqlStatementService.getStatements({deploymentId: true,
+                                                        deploymentDependencies: true,
+                                                        deploymentMode: true,
+                                                        eplStatement: true,
+                                                        name: true,
+                                                        blocklyXml: true,
+                                                        eventType: true});
+      this.statements.forEach(statement => {
+        this.parseStatement(statement);
+      });
+      this.statementsChanged();
       resolve(this.statements);
     });
   }
@@ -40,6 +40,7 @@ export class StatementService {
       const statement: Statement = {deploymentId, eplStatement, blocklyXml, name, deploymentMode, eventType};
       this.parseStatement(statement);
       const i = this.statements.push(statement);
+      this.statementsChanged();
       return deploymentId;
     });
   }
@@ -55,6 +56,7 @@ export class StatementService {
       const statementNew: Statement = {deploymentId: id, eplStatement, blocklyXml, name, deploymentMode, eventType};
       this.parseStatement(statementNew);
       this.statements[i] = statementNew;
+      this.statementsChanged();
       return id;
     });
   }
@@ -65,6 +67,7 @@ export class StatementService {
       if (success) {
         const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);
         this.statements.splice(i, 1);
+        this.statementsChanged();
       }
       return success;
     });
@@ -98,5 +101,9 @@ export class StatementService {
     } else if (statement.eplStatement.includes('@KafkaOutput')) {
       statement.eplParsed.type = 'pattern';
     }
+  }
+
+  private statementsChanged() {
+    this.statementsObservable.next(this.statements);
   }
 }

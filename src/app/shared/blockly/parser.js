@@ -1,11 +1,11 @@
-Blockly.EPL['new_event_type'] = function(block) {
+Blockly.EPL['type'] = function(block) {
   let basicAttributes = `complex boolean, id int, timestamp string`;
   if (block.getFieldValue('EVENT_TYPE') === 'COMPLEX_TYPE') { basicAttributes = `${basicAttributes}, duration float, componentsJson string`; }
   const specificAttributes = Blockly.EPL.statementToCode(block, 'ATTRIBUTES');
   return `@JsonSchema(dynamic=true) create json schema ${block.getFieldValue('TYPE_NAME')} (${basicAttributes + specificAttributes})`;
 }
 
-Blockly.EPL['new_event_attribute'] = function(block) {
+Blockly.EPL['attribute_definition'] = function(block) {
   return `, ${block.getFieldValue('ATTRIBUTE_NAME')} ${block.getFieldValue('ATTRIBUTE_TYPE')}`;
 }
 
@@ -35,6 +35,10 @@ Blockly.EPL['event_pattern_and'] = function(block) {
 
 Blockly.EPL['condition'] = function(block) {
   return `(${Blockly.EPL.statementToCode(block, 'CONDITIONS')})`;
+}
+
+Blockly.EPL['action'] = function(block) {
+  return `(${Blockly.EPL.statementToCode(block, 'ACTIONS')})`
 }
 
 

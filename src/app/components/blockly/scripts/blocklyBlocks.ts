@@ -1,12 +1,19 @@
 import { StatementService } from './../../../services/statement.service';
+import { EPLParsed } from 'src/app/models/statemet';
 
 declare var Blockly: any;
+export let statements: EPLParsed[];
+export let eventTypes: string[] = [];
 
 export class BlocklyBlocks {
   private stmtService: StatementService;
 
   constructor(stmtService: StatementService) {
     this.stmtService = stmtService;
+    this.stmtService.statementsObservable.subscribe( newStatements => {
+      statements = newStatements.filter(statement => statement.eventType).map(statement => statement.eplParsed);
+      statements.map(statement => eventTypes.push(statement.name));
+    });
   }
 
   public initBlocks(): void {
@@ -54,9 +61,10 @@ export class BlocklyBlocks {
   private initPatternBlocks(): void {
     Blockly.Blocks.event = {
       init() {
+        const dropDownData = eventTypes.map(type => [type, type]);
         this.appendDummyInput()
           .appendField('Event')
-          .appendField(new Blockly.FieldDropdown([['option', 'OPTIONNAME'], ['option', 'OPTIONNAME']]), 'EVENT_TYPE')
+          .appendField(new Blockly.FieldDropdown(dropDownData), 'EVENT_TYPE')
           .appendField('as')
           .appendField(new Blockly.FieldTextInput('default'), 'EVENT_ALIAS');
         this.appendValueInput('CONDITION')

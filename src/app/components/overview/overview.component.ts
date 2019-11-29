@@ -14,7 +14,6 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit() {
     this.statementService.statementsObservable.subscribe(statements => {
-      console.log(statements);
       this.statements = statements.map(statement => Object.assign({}, statement));
     });
     this.statementService.getStatements();

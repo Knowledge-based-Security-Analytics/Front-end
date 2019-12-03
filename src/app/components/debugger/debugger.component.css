@@ -17,3 +17,14 @@ mat-grid-list {
   font-size: 15px;
 }
 
+:host /deep/ .mat-list-item-content {
+  padding: 0!important;
+  font-family: monospace;
+  font-size: 15px;
+  height: auto;
+}
+
+.mat-list-item {
+  height: auto !important;
+  margin: 8px 0px;
+}

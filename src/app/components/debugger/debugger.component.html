@@ -1,104 +1,20 @@
 <mat-grid-list cols="3" rowHeight="100%">
   <mat-grid-tile>
     <mat-grid-tile-header><h3>Logs</h3></mat-grid-tile-header>
-    <div class="debug-textarea">
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdfsa<br>
-      asdf
-    </div>
+    <mat-list class="debug-textarea" dense>
+      <mat-list-item *ngFor="let log of logs">{{log}}</mat-list-item>
+    </mat-list>
   </mat-grid-tile>
   <mat-grid-tile>
     <mat-grid-tile-header><h3>Events</h3></mat-grid-tile-header>
-    <div class="debug-textarea">
-      asdfsa<br>
-      asdf
-    </div>
+    <mat-list class="debug-textarea" dense>
+        <mat-list-item *ngFor="let event of events">{{event}}</mat-list-item>
+      </mat-list>
   </mat-grid-tile>
   <mat-grid-tile>
     <mat-grid-tile-header><h3>Incidents</h3></mat-grid-tile-header>
-    <div class="debug-textarea">
-      asdfsa<br>
-      asdf
-    </div>
+    <mat-list class="debug-textarea" dense>
+        <mat-list-item *ngFor="let incident of incidents">{{incident}}</mat-list-item>
+      </mat-list>
   </mat-grid-tile>
 </mat-grid-list>

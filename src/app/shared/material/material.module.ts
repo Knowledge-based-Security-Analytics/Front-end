@@ -12,6 +12,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatChipsModule} from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [],
@@ -28,7 +32,11 @@ import {MatChipsModule} from '@angular/material/chips';
     MatIconModule,
     MatTooltipModule,
     MatBadgeModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCheckboxModule
   ]
 })
 export class MaterialModule { }

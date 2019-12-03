@@ -1,5 +1,6 @@
 @import '~highlight.js/styles/github.css';
 @import "~@fortawesome/fontawesome-free/css/all.css";
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

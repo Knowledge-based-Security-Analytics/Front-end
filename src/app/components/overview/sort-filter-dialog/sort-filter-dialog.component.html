@@ -1,14 +1,19 @@
 <mat-dialog-content class="mat-typography">
   <h3 mat-dialog-title>Sort</h3>
     <mat-form-field>
-      <mat-select placeholder="Sort" [(value)]="sort">
+      <mat-select placeholder="Sort by" [(value)]="sort">
         <mat-option>None</mat-option>
-        <mat-option value="byName">By Name</mat-option>
+        <mat-option value="byName">name</mat-option>
+        <mat-option value="byDeploymentId">deployment id</mat-option>
+        <mat-option value="byAlertCount">alert count</mat-option>
+        <mat-option value="byDeploymentMode">deployment mode</mat-option>
       </mat-select>
   </mat-form-field><br /><br />
   <h3 mat-dialog-title>Filter</h3>
   <mat-checkbox [(ngModel)]="filter.dev">Show dev Statements</mat-checkbox><br />
-  <mat-checkbox [(ngModel)]="filter.prod">Show prod Statements</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filter.prod">Show prod Statements</mat-checkbox><br />
+  <mat-checkbox [(ngModel)]="filter.schema">Show schemas</mat-checkbox><br />
+  <mat-checkbox [(ngModel)]="filter.pattern">Show patterns</mat-checkbox>
 </mat-dialog-content>
 <mat-dialog-actions align='end'>
   <button mat-button [mat-dialog-close]>Cancel</button>

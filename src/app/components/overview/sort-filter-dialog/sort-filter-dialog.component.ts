@@ -26,4 +26,6 @@ export class SortFilterDialogComponent implements OnInit {
 export interface FilterOptions {
   dev?: boolean;
   prod?: boolean;
+  pattern?: boolean;
+  schema?: boolean;
 }

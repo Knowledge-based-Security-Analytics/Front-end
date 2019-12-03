@@ -15,7 +15,9 @@ export class OverviewComponent implements OnInit {
 
   public filter: FilterOptions = {
     prod: true,
-    dev: true
+    dev: true,
+    pattern: true,
+    schema: true
   };
   public sort: string;
 
@@ -41,6 +43,7 @@ export class OverviewComponent implements OnInit {
       const c = Math.floor(Math.random() * Math.floor(100));
       this.rawStatements[i].alertCount += c;
       this.statements[i].alertCount += c;
+      this.sortStatements();
     }, 1000);
   }
 
@@ -50,13 +53,19 @@ export class OverviewComponent implements OnInit {
 
   public filterStatements() {
     this.statements.forEach(statement => {
-      statement.visible = false;
+      statement.visible = true;
 
-      if (this.filter.dev && statement.deploymentMode === 'dev') {
-        statement.visible = true;
+      if (!this.filter.dev && statement.deploymentMode === 'dev') {
+        statement.visible = false;
       }
-      if (this.filter.prod && statement.deploymentMode === 'prod') {
-        statement.visible = true;
+      if (!this.filter.prod && statement.deploymentMode === 'prod') {
+        statement.visible = false;
+      }
+      if (!this.filter.pattern && statement.eplParsed.type === 'pattern') {
+        statement.visible = false;
+      }
+      if (!this.filter.schema && statement.eplParsed.type === 'schema') {
+        statement.visible = false;
       }
     });
   }
@@ -64,10 +73,38 @@ export class OverviewComponent implements OnInit {
   public sortStatements() {
     if (this.sort === 'byName') {
       this.statements.sort((a, b) => {
-        if (a.name < b.name) {
+        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+          return -1;
+        }
+        if (a.name.toLowerCase() > b.name.toLowerCase()) {
           return 1;
         }
-        if (a.name > b.name) {
+        return 0;
+      });
+    } else if (this.sort === 'byAlertCount') {
+      this.statements.sort((a, b) => {
+        return b.alertCount - a.alertCount;
+      });
+    } else if (this.sort === 'byAlertCount') {
+      this.statements.sort((a, b) => {
+        return b.alertCount - a.alertCount;
+      });
+    } else if (this.sort === 'byDeploymentId') {
+      this.statements.sort((a, b) => {
+        if (a.deploymentId < b.deploymentId) {
+          return -1;
+        }
+        if (a.deploymentId > b.deploymentId) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (this.sort === 'byDeploymentMode') {
+      this.statements.sort((a, b) => {
+        if (a.deploymentMode < b.deploymentMode) {
+          return 1;
+        }
+        if (a.deploymentMode > b.deploymentMode) {
           return -1;
         }
         return 0;
@@ -79,7 +116,7 @@ export class OverviewComponent implements OnInit {
     const dialogRef = this.dialog.open(SortFilterDialogComponent, {
       data: {
         sort: this.sort,
-        filter: this.filter
+        filter: Object.assign({}, this.filter)
       }
     });
     dialogRef.afterClosed().subscribe(result => {

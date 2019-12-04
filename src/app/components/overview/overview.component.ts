@@ -85,6 +85,15 @@ export class OverviewComponent implements OnInit {
       });
     } else if (this.sort === 'byAlertCount') {
       this.statements.sort((a, b) => {
+        if (!a.alertCount && !b.alertCount) {
+          return 0;
+        }
+        if (!b.alertCount) {
+          return -1;
+        }
+        if (!a.alertCount) {
+          return 1;
+        }
         return b.alertCount - a.alertCount;
       });
     }  else if (this.sort === 'byDeploymentId') {
@@ -137,9 +146,13 @@ export class OverviewComponent implements OnInit {
     this.debug.emit(statement);
   }
 
-  public onAlert(count, position) {
-    // this.statements[position].alertCount = count;
-    // this.sortStatements();
+  public onAlert(count: number, alertedStatement: Statement) {
+    for (const statement of this.rawStatements) {
+      if (statement.deploymentId === alertedStatement.deploymentId) {
+        statement.alertCount = alertedStatement.alertCount;
+      }
+    }
+    this.sortStatements();
   }
 }
 

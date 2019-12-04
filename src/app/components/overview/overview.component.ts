@@ -1,5 +1,5 @@
 import { SortFilterDialogComponent, FilterOptions} from './sort-filter-dialog/sort-filter-dialog.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
 import { StatementService } from 'src/app/services/statement.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
@@ -10,8 +10,10 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
   styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
+  @Output() debug = new EventEmitter<Statement>();
+
   private rawStatements: Statement[];
-  public statements: OverwiewStatement[];
+  public statements: OverviewStatement[];
 
   public filter: FilterOptions = {
     prod: true,
@@ -31,20 +33,20 @@ export class OverviewComponent implements OnInit {
     });
     this.statementService.getStatements();
 
-    setInterval(() => {
-      const i = Math.floor(Math.random() * Math.floor(this.rawStatements.length));
-      if (this.rawStatements.length === 0) {
-        return;
-      }
-      if (!this.rawStatements[i].alertCount) {
-        this.rawStatements[i].alertCount = 0;
-        this.statements[i].alertCount = 0;
-      }
-      const c = Math.floor(Math.random() * Math.floor(100));
-      this.rawStatements[i].alertCount += c;
-      this.statements[i].alertCount += c;
-      this.sortStatements();
-    }, 1000);
+    // setInterval(() => {
+    //   const i = Math.floor(Math.random() * Math.floor(this.rawStatements.length));
+    //   if (this.rawStatements.length === 0) {
+    //     return;
+    //   }
+    //   if (!this.rawStatements[i].alertCount) {
+    //     this.rawStatements[i].alertCount = 0;
+    //     this.statements[i].alertCount = 0;
+    //   }
+    //   const c = Math.floor(Math.random() * Math.floor(100));
+    //   this.rawStatements[i].alertCount += c;
+    //   this.statements[i].alertCount += c;
+    //   this.sortStatements();
+    // }, 1000);
   }
 
   public dropStatement(i: number) {
@@ -85,11 +87,7 @@ export class OverviewComponent implements OnInit {
       this.statements.sort((a, b) => {
         return b.alertCount - a.alertCount;
       });
-    } else if (this.sort === 'byAlertCount') {
-      this.statements.sort((a, b) => {
-        return b.alertCount - a.alertCount;
-      });
-    } else if (this.sort === 'byDeploymentId') {
+    }  else if (this.sort === 'byDeploymentId') {
       this.statements.sort((a, b) => {
         if (a.deploymentId < b.deploymentId) {
           return -1;
@@ -134,8 +132,17 @@ export class OverviewComponent implements OnInit {
     this.filterStatements();
     this.sortStatements();
   }
+
+  public onDebug(statement: Statement) {
+    this.debug.emit(statement);
+  }
+
+  public onAlert(count, position) {
+    // this.statements[position].alertCount = count;
+    // this.sortStatements();
+  }
 }
 
-interface OverwiewStatement extends Statement {
+interface OverviewStatement extends Statement {
   visible?: boolean;
 }

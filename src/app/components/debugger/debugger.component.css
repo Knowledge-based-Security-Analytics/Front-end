@@ -28,3 +28,13 @@ mat-grid-list {
   height: auto !important;
   margin: 8px 0px;
 }
+
+.event-name {
+  font-size: 10px;
+  color: #666;
+  align-self: start;
+}
+
+.event-body {
+  word-break: break-word;
+}

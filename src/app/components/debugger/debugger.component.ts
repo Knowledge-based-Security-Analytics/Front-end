@@ -29,9 +29,11 @@ export class DebuggerComponent implements OnInit {
       const eventsLog = [];
       this.events.unshift(eventsLog);
       for (const statementIt of statementsIt) {
-        this.eventStreamService.subscribeTopic(statementIt.eplParsed.name).subscribe((event) => {
-          eventsLog.unshift(i + event.jsonString);
-        });
+        (statement => {
+          this.eventStreamService.subscribeTopic(statementIt.eplParsed.name).subscribe((event) => {
+            eventsLog.unshift({name: statement.eplParsed.name, body: event.jsonString});
+          });
+        })(statementIt);
         statementsIt.length = 0;
         for (const deploymentId of statementIt.deploymentDependencies) {
           statementsIt.push(this.statementService.getStatement(deploymentId));

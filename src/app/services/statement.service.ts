@@ -111,7 +111,6 @@ export class StatementService {
 
       statement.eplParsed.name = statement.eplStatement.match(/\'.*\'/)[0];
       statement.eplParsed.name = statement.eplParsed.name.slice(1, statement.eplParsed.name.length - 1);
-      console.log(statement);
     }
   }
 

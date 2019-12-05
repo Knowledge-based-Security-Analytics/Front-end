@@ -14,18 +14,7 @@ export class DebuggerComponent implements OnInit {
 
   public events: string[][] = [];
 
-  constructor(private eventStreamService: EventStreamService, private statementService: StatementService) {
-    // this.eventStreamService.subscribeTopic('LogEvent').subscribe(event => {
-    //   console.log(event);
-    //   this.logs.unshift(i + event.jsonString);
-    //   i++;
-    // });
-    // this.eventStreamService.subscribeTopic('PortScanEvent').subscribe(event => {
-    //   console.log(event);
-    //   this.events.unshift(i + event.jsonString);
-    //   i++;
-    // });
-  }
+  constructor(private eventStreamService: EventStreamService, private statementService: StatementService) {}
 
   ngOnInit() {
     this.subscribeTopics();
@@ -40,11 +29,8 @@ export class DebuggerComponent implements OnInit {
       const eventsLog = [];
       this.events.unshift(eventsLog);
       for (const statementIt of statementsIt) {
-        console.log('subscribe to ' + statementIt.eplParsed.name);
-        console.log(i);
         this.eventStreamService.subscribeTopic(statementIt.eplParsed.name).subscribe((event) => {
           eventsLog.unshift(i + event.jsonString);
-          console.log(this.events);
         });
         statementsIt.length = 0;
         for (const deploymentId of statementIt.deploymentDependencies) {

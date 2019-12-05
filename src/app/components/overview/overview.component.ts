@@ -27,26 +27,10 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit() {
     this.statementService.statementsObservable.subscribe(statements => {
-      console.log(statements);
       this.rawStatements = statements;
       this.resetLocalStatements();
     });
     this.statementService.getStatements();
-
-    // setInterval(() => {
-    //   const i = Math.floor(Math.random() * Math.floor(this.rawStatements.length));
-    //   if (this.rawStatements.length === 0) {
-    //     return;
-    //   }
-    //   if (!this.rawStatements[i].alertCount) {
-    //     this.rawStatements[i].alertCount = 0;
-    //     this.statements[i].alertCount = 0;
-    //   }
-    //   const c = Math.floor(Math.random() * Math.floor(100));
-    //   this.rawStatements[i].alertCount += c;
-    //   this.statements[i].alertCount += c;
-    //   this.sortStatements();
-    // }, 1000);
   }
 
   public dropStatement(i: number) {

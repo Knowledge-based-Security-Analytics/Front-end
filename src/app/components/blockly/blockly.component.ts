@@ -15,7 +15,7 @@ export class BlocklyComponent implements OnInit {
   public statement: Statement;
   private blocklyParser: BlocklyParser;
   private blocklyBlocks: BlocklyBlocks;
-  public workspacePlayground: any;
+  public workspace: any;
   public toolbox = `
     <xml id="toolbox" style="display: none">
       <category name ="EVENT TYPES" colour="20">
@@ -25,7 +25,7 @@ export class BlocklyComponent implements OnInit {
         <block type="attribute_definition"></block>
         <label text="Existing types"></label>
       </category>
-      <sep gap="8"></sep>
+      <sep></sep>
       <category name="EVENT" colour="200">
         <block type="event"></block>
         <sep gap="32"></sep>
@@ -44,6 +44,10 @@ export class BlocklyComponent implements OnInit {
       </category>
       <category name="ACTION" colour="300">
         <block type="action"></block>
+      </category>
+      <sep></sep>
+      <category name="ALIASES" colour="300">
+        <button text="Add event alias" callbackKey="addEventAliasCallback"></button>
       </category>
     </xml>`;
 
@@ -73,7 +77,7 @@ export class BlocklyComponent implements OnInit {
 
   private initBlockly(): BlocklyComponent {
     const blocklyDiv = document.getElementById( 'blocklyDiv' );
-    this.workspacePlayground = Blockly.inject(
+    this.workspace = Blockly.inject(
       blocklyDiv,
       {
         toolbox: this.toolbox,
@@ -85,11 +89,15 @@ export class BlocklyComponent implements OnInit {
           wheel: false,
         }
       });
-    this.workspacePlayground.addChangeListener(() => {
-      document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspacePlayground);
+    this.workspace.addChangeListener(() => {
+      document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspace);
     });
 
-    return this.workspacePlayground;
+    this.workspace.registerButtonCallback('addEventAliasCallback', () => {
+      console.log('TEST');
+    });
+
+    return this.workspace;
   }
 
   public async createStatement(): Promise<void> {
@@ -105,8 +113,8 @@ export class BlocklyComponent implements OnInit {
   }
 
   private updateStatement(statement: Statement): Statement {
-    statement.eplStatement = Blockly.EPL.workspaceToCode(this.workspacePlayground);
-    statement.blocklyXml = Blockly.Xml.workspaceToDom(this.workspacePlayground).outerHTML.replace(/\\([\s\S])|(")/g, "\\$1$2");
+    statement.eplStatement = Blockly.EPL.workspaceToCode(this.workspace);
+    statement.blocklyXml = Blockly.Xml.workspaceToDom(this.workspace).outerHTML.replace(/\\([\s\S])|(")/g, "\\$1$2");
     statement.eventType = this.statement.eplStatement.includes('create json schema');
     return statement;
   }

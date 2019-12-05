@@ -2,17 +2,17 @@ import { StatementService } from './../../../services/statement.service';
 import { EPLParsed } from 'src/app/models/statemet';
 
 declare var Blockly: any;
-export let statements: EPLParsed[];
-export let eventTypes: string[] = [];
 
 export class BlocklyBlocks {
   private stmtService: StatementService;
+  private statements: EPLParsed[];
+  private eventTypes: string[] = [];
 
   constructor(stmtService: StatementService) {
     this.stmtService = stmtService;
     this.stmtService.statementsObservable.subscribe( newStatements => {
-      statements = newStatements.filter(statement => statement.eventType).map(statement => statement.eplParsed);
-      statements.map(statement => eventTypes.push(statement.name));
+      this.statements = newStatements.filter(statement => statement.eventType).map(statement => statement.eplParsed);
+      this.statements.map(statement => this.eventTypes.push(statement.name));
     });
   }
 
@@ -21,6 +21,7 @@ export class BlocklyBlocks {
     this.initPatternBlocks();
     this.initConditionBlocks();
     this.initActionBlocks();
+    this.initVariableBlocks();
   }
 
   private initEventTypeBlocks(): void {
@@ -34,7 +35,6 @@ export class BlocklyBlocks {
             .setCheck('attribute_definition');
         this.setColour(20);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
 
@@ -45,23 +45,23 @@ export class BlocklyBlocks {
             .appendField(new Blockly.FieldTextInput('name'), 'ATTRIBUTE_NAME')
             .appendField(', Type: ')
             .appendField(new Blockly.FieldDropdown([
-              ['numeric (int)', 'int'],
-              ['numeric (float)', 'double'],
-              ['textual', 'string'],
-              ['binary', 'boolean']]), 'ATTRIBUTE_TYPE');
+              ['Integer', 'int'],
+              ['Float', 'double'],
+              ['Text', 'string'],
+              ['Boolean', 'boolean']]), 'ATTRIBUTE_TYPE');
         this.setPreviousStatement(true, 'attribute_definition');
         this.setNextStatement(true, 'attribute_definition');
         this.setColour(40);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
   }
 
   private initPatternBlocks(): void {
+    const env: any = this;
     Blockly.Blocks.event = {
       init() {
-        const dropDownData = eventTypes.map(type => [type, type]);
+        const dropDownData = env.eventTypes.map((type: any) => [type, type]);
         this.appendDummyInput()
           .appendField('Event')
           .appendField(new Blockly.FieldDropdown(dropDownData), 'EVENT_TYPE')
@@ -75,7 +75,6 @@ export class BlocklyBlocks {
         this.setNextStatement(true, 'event');
         this.setColour(230);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
 
@@ -89,7 +88,6 @@ export class BlocklyBlocks {
         this.setNextStatement(true, 'action');
         this.setColour(200);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
 
@@ -106,7 +104,6 @@ export class BlocklyBlocks {
         this.setNextStatement(true, 'event_pattern_structure');
         this.setColour(220);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
 
@@ -123,7 +120,6 @@ export class BlocklyBlocks {
         this.setNextStatement(true, 'event_pattern_structure');
         this.setColour(220);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
 
@@ -138,7 +134,6 @@ export class BlocklyBlocks {
         this.setNextStatement(true, ['event', 'event_pattern_structure']);
         this.setColour(220);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
 
@@ -155,7 +150,6 @@ export class BlocklyBlocks {
         this.setNextStatement(true, ['event', 'event_pattern_structure']);
         this.setColour(220);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
   }
@@ -170,14 +164,15 @@ export class BlocklyBlocks {
         this.setOutput(true, 'condition');
         this.setColour(100);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
   }
 
   private initActionBlocks(): void {
+    const env: any = this;
     Blockly.Blocks.action = {
       init() {
+        console.log(env.stmtService);
         this.appendDummyInput()
           .appendField('Action');
         this.appendStatementInput('ACTIONS')
@@ -186,8 +181,11 @@ export class BlocklyBlocks {
         this.setPreviousStatement(true, 'action');
         this.setColour(300);
         this.setTooltip('');
-        this.setHelpUrl('');
       }
     };
+  }
+
+  private initVariableBlocks(): void {
+    const env: any = this;
   }
 }

@@ -8,15 +8,8 @@ import { EventEmitter } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
 
-  @Output() debugging = new EventEmitter<boolean>();
-
   constructor() { }
 
   ngOnInit() {
   }
-
-  toggleChange(event: any) {
-    this.debugging.emit(event.checked);
-  }
-
 }

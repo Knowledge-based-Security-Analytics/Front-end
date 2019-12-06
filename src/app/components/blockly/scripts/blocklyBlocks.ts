@@ -1,12 +1,46 @@
-import { StatementService } from './../../../services/statement.service';
+import { StatementService } from 'src/app/services/statement.service';
 import { EPLParsed } from 'src/app/models/statemet';
 
 declare var Blockly: any;
 
 export class BlocklyBlocks {
+  public workspace: any;
+
   private stmtService: StatementService;
   private statements: EPLParsed[];
   private eventTypes: string[] = [];
+  private eventAliases: string[] = [];
+  private toolbox = `
+    <xml id="toolbox" style="display: none">
+      <category name ="EVENT SCHEMAS" colour="20">
+        <label text="Create new schema"></label>
+        <block type="type"></block>
+        <sep gap="8"></sep>
+        <block type="attribute_definition"></block>
+        <label text="Existing schemas"></label>
+      </category>
+      <category name="ALIASES" custom="ALIASES" colour="65"></category>
+      <sep></sep>
+      <category name="EVENT" colour="200">
+        <block type="event"></block>
+        <sep gap="32"></sep>
+        <block type="event_pattern"></block>
+        <sep gap="32"></sep>
+        <block type="event_pattern_and"></block>
+        <sep gap="8"></sep>
+        <block type="event_pattern_or"></block>
+        <sep gap="8"></sep>
+        <block type="event_pattern_not"></block>
+        <sep gap="8"></sep>
+        <block type="event_pattern_repeat"></block>
+      </category>
+      <category name="CONDITION" colour="100">
+        <block type="condition"></block>
+      </category>
+      <category name="ACTION" colour="300">
+        <block type="action"></block>
+      </category>
+    </xml>`;
 
   constructor(stmtService: StatementService) {
     this.stmtService = stmtService;
@@ -16,7 +50,27 @@ export class BlocklyBlocks {
     });
   }
 
-  public initBlocks(): void {
+  public initBlockly(): void {
+    const blocklyDiv = document.getElementById( 'blocklyDiv' );
+    this.workspace = Blockly.inject(
+      blocklyDiv,
+      {
+        toolbox: this.toolbox,
+        grid: { spacing: 20, length: 3, colour: '#ccc', snap: true },
+        trashcan: true,
+        scrollbars: false,
+        zoom: {
+          controls: true,
+          wheel: false,
+        }
+      });
+    this.initChangeListeners();
+    this.initButtonCallbacks();
+    this.initCategoryCallbacks();
+    this.initBlocks();
+  }
+
+  private initBlocks(): void {
     this.initEventTypeBlocks();
     this.initPatternBlocks();
     this.initConditionBlocks();
@@ -91,7 +145,7 @@ export class BlocklyBlocks {
     Blockly.Blocks.event_pattern = {
       init() {
         this.appendDummyInput()
-          .appendField('Event');
+          .appendField('Tansform');
         this.appendStatementInput('EVENT_PATTERN')
           .setCheck( ['event', 'event_pattern_structure'] );
         this.setInputsInline(true);
@@ -183,7 +237,7 @@ export class BlocklyBlocks {
     Blockly.Blocks.action = {
       init() {
         this.appendDummyInput()
-          .appendField('Action');
+          .appendField('to');
         this.appendStatementInput('ACTIONS')
           .setCheck('test');
         this.setInputsInline(true);
@@ -197,4 +251,61 @@ export class BlocklyBlocks {
   private initVariableBlocks(): void {
     const env: any = this;
   }
+
+  public initChangeListeners(): void {
+    this.initPreviewChangeListener();
+  }
+
+  public initPreviewChangeListener(): void {
+    this.workspace.addChangeListener(() => {
+      document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspace);
+    });
+  }
+
+  public initButtonCallbacks(): void {
+    this.initEventAliasButtonCallback();
+  }
+
+  private initEventAliasButtonCallback(): void {
+    this.workspace.registerButtonCallback('addEventAliasCallback', () => {
+      const eventAlias = prompt('Please enter an event alias');
+      if (eventAlias) {
+        this.eventAliases.push(eventAlias);
+        const test = new Blockly.VariableModel(this.workspace, eventAlias);
+        new Blockly.Events.VarCreate(test).run(true);
+      }
+    });
+  }
+
+  public initCategoryCallbacks(): void {
+    this.initAliasesCategoryCallback();
+  }
+
+  private initEventSchemaCategoryCallback(): void {
+    this.workspace.registerToolboxCategoryCallback('EVENT SCHEMAS', () => {
+      const xmlList = [];
+      xmlList.push(Blockly.Xml.textToDom(
+        '<label text="Create new schema"></label>' +
+        '<block type="type"></block>' +
+        '<sep gap="8"></sep>' +
+        '<block type="attribute_definition"></block>' +
+        '<label text="Existing schemas"></label>'));
+
+      return xmlList;
+    });
+  }
+
+  private initAliasesCategoryCallback(): void {
+    this.workspace.registerToolboxCategoryCallback('ALIASES', () => {
+      const xmlList = [];
+      xmlList.push(Blockly.Xml.textToDom('<button text="Add event alias" callbackKey="addEventAliasCallback"></button>'));
+      if ( this.workspace.variableMap_.variableMap_[''] ) {
+        this.workspace.variableMap_.variableMap_[''].map((variable: any) =>  {
+          xmlList.push(Blockly.Xml.textToDom(`<block type="event_alias"><field name="ALIAS">${variable.name}</field></block>`));
+        });
+      }
+      return xmlList;
+    });
+  }
+
 }

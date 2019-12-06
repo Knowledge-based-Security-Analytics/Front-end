@@ -1,13 +1,8 @@
-import { StatementService } from './../../../services/statement.service';
-
 declare var Blockly: any;
 
 export class BlocklyParser {
-  private stmtService: StatementService;
 
-  constructor(stmtService: StatementService) {
-    this.stmtService = stmtService;
-  }
+  constructor() { }
 
   public initParsers(): void {
     this.initEventTypeParser();

@@ -15,6 +15,7 @@ export class BlocklyComponent implements OnInit {
   public statement: Statement;
   private blocklyParser: BlocklyParser;
   private blocklyBlocks: BlocklyBlocks;
+  private eventAliases: string[] = [];
   public workspace: any;
   public toolbox = `
     <xml id="toolbox" style="display: none">
@@ -25,6 +26,7 @@ export class BlocklyComponent implements OnInit {
         <block type="attribute_definition"></block>
         <label text="Existing types"></label>
       </category>
+      <category name="ALIASES" custom="ALIASES" colour="65"></category>
       <sep></sep>
       <category name="EVENT" colour="200">
         <block type="event"></block>
@@ -44,10 +46,6 @@ export class BlocklyComponent implements OnInit {
       </category>
       <category name="ACTION" colour="300">
         <block type="action"></block>
-      </category>
-      <sep></sep>
-      <category name="ALIASES" colour="300">
-        <button text="Add event alias" callbackKey="addEventAliasCallback"></button>
       </category>
     </xml>`;
 
@@ -94,7 +92,23 @@ export class BlocklyComponent implements OnInit {
     });
 
     this.workspace.registerButtonCallback('addEventAliasCallback', () => {
-      console.log('TEST');
+      const eventAlias = prompt('Please enter an event alias');
+      if (eventAlias) {
+        this.eventAliases.push(eventAlias);
+        const test = new Blockly.VariableModel(this.workspace, eventAlias);
+        new Blockly.Events.VarCreate(test).run(true);
+      }
+    });
+
+    this.workspace.registerToolboxCategoryCallback('ALIASES', () => {
+      const xmlList = [];
+      xmlList.push(Blockly.Xml.textToDom('<button text="Add event alias" callbackKey="addEventAliasCallback"></button>'));
+      if ( this.workspace.variableMap_.variableMap_[''] ) {
+        this.workspace.variableMap_.variableMap_[''].map((variable: any) =>  {
+          xmlList.push(Blockly.Xml.textToDom(`<block type="event_alias"><field name="ALIAS">${variable.name}</field></block>`));
+        });
+      }
+      return xmlList;
     });
 
     return this.workspace;

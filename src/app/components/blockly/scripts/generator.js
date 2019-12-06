@@ -16,6 +16,17 @@
     return code.trim();
   };
 
+  Blockly.EPL.scrub_=function(a,b,c){
+    var d="";
+    if(!a.outputConnection||!a.outputConnection.targetConnection){
+      var e=a.getCommentText();
+      e&&(e=Blockly.utils.string.wrap(e,Blockly.EPL.COMMENT_WRAP-3),d+=Blockly.EPL.prefixLines(e+"\n","// "));
+      for(var f=0;f<a.inputList.length;f++)a.inputList[f].type==Blockly.INPUT_VALUE&&(e=a.inputList[f].connection.targetBlock())&&(e=Blockly.EPL.allNestedComments(e))&&(d+=Blockly.EPL.prefixLines(e,"// "))
+    }
+    a=a.nextConnection&&a.nextConnection.targetBlock();
+    c=c?"":Blockly.EPL.blockToCode(a);return d+b+c
+  };
+
   Blockly.EPL.init = function(a) {
     Blockly.EPL.definitions_=Object.create(null);
     Blockly.EPL.functionNames_=Object.create(null);

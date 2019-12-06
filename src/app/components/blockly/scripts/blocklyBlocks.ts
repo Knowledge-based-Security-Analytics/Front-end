@@ -55,6 +55,16 @@ export class BlocklyBlocks {
         this.setTooltip('');
       }
     };
+
+    Blockly.Blocks.event_alias = {
+      init() {
+        this.appendDummyInput()
+          .appendField(new Blockly.FieldLabelSerializable(''), 'ALIAS');
+        this.setOutput(true, null);
+        this.setColour(65);
+        this.setTooltip('');
+      }
+    };
   }
 
   private initPatternBlocks(): void {
@@ -66,7 +76,7 @@ export class BlocklyBlocks {
           .appendField('Event')
           .appendField(new Blockly.FieldDropdown(dropDownData), 'EVENT_TYPE')
           .appendField('as')
-          .appendField(new Blockly.FieldTextInput('default'), 'EVENT_ALIAS');
+          .appendField(new Blockly.FieldVariable('eventAlias'), 'EVENT_ALIAS');
         this.appendValueInput('CONDITION')
           .setCheck('condition')
           .setAlign(Blockly.ALIGN_CENTRE);
@@ -172,7 +182,6 @@ export class BlocklyBlocks {
     const env: any = this;
     Blockly.Blocks.action = {
       init() {
-        console.log(env.stmtService);
         this.appendDummyInput()
           .appendField('Action');
         this.appendStatementInput('ACTIONS')

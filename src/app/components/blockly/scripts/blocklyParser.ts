@@ -28,6 +28,10 @@ export class BlocklyParser {
     Blockly.EPL.attribute_definition = (block: any): string => {
       return `, ${block.getFieldValue('ATTRIBUTE_NAME')} ${block.getFieldValue('ATTRIBUTE_TYPE')}`;
     };
+
+    Blockly.EPL.event_alias = (block: any): string => {
+      return `${block.getFieldValue('ALIAS')}`;
+    }
   }
 
   private initPatternParser(): void {
@@ -36,7 +40,9 @@ export class BlocklyParser {
     };
 
     Blockly.EPL.event = (block: any): string => {
-      return `${block.getFieldValue('EVENT_ALIAS')}=${block.getFieldValue('EVENT_TYPE')}${Blockly.EPL.statementToCode(block, 'CONDITION')}${block.nextConnection.targetConnection ? ' -> ' : ''}`;
+      const eventAlias = block.workspace.variableMap_.variableMap_['']
+        .find((variableModel: any) => variableModel.id_ === block.getFieldValue('EVENT_ALIAS')).name;
+      return `${eventAlias}=${block.getFieldValue('EVENT_TYPE')}${Blockly.EPL.statementToCode(block, 'CONDITION')}${block.nextConnection.targetConnection ? ' -> ' : ''}`;
     };
 
     Blockly.EPL.event_pattern_repeat = (block: any): string => {

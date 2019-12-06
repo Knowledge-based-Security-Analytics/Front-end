@@ -1,1 +1,20 @@
-<p>debugger works!</p>
+<mat-grid-list cols="3" rowHeight="100%">
+  <mat-grid-tile>
+    <mat-grid-tile-header><h3>Logs</h3></mat-grid-tile-header>
+    <mat-list class="debug-textarea" dense>
+      <mat-list-item *ngFor="let event of events[0]"><span [ngClass]="'event-name'">{{event.name}}:</span><span [ngClass]="'event-body'">{{event.body}}</span></mat-list-item>
+    </mat-list>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-grid-tile-header><h3>Events</h3></mat-grid-tile-header>
+    <mat-list class="debug-textarea" dense>
+        <mat-list-item *ngFor="let event of events[1]"><span [ngClass]="'event-name'">{{event.name}}:</span><span [ngClass]="'event-body'">{{event.body}}</span></mat-list-item>
+      </mat-list>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-grid-tile-header><h3>Incidents</h3></mat-grid-tile-header>
+    <mat-list class="debug-textarea" dense>
+        <mat-list-item *ngFor="let event of events[2]"><span [ngClass]="'event-name'">{{event.name}}:</span><span [ngClass]="'event-body'">{{event.body}}</span></mat-list-item>
+      </mat-list>
+  </mat-grid-tile>
+</mat-grid-list>

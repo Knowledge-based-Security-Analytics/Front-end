@@ -73,6 +73,14 @@ export class StatementService {
     });
   }
 
+  public getStatement(deploymentId: string): Statement {
+    for (const statement of this.statements) {
+      if (statement.deploymentId === deploymentId) {
+        return statement;
+      }
+    }
+  }
+
   private parseStatement(statement: Statement) {
     if (!statement.eplStatement) {
       return;
@@ -100,6 +108,9 @@ export class StatementService {
       });
     } else if (statement.eplStatement.includes('@KafkaOutput')) {
       statement.eplParsed.type = 'pattern';
+
+      statement.eplParsed.name = statement.eplStatement.match(/\'.*\'/)[0];
+      statement.eplParsed.name = statement.eplParsed.name.slice(1, statement.eplParsed.name.length - 1);
     }
   }
 

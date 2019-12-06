@@ -12,10 +12,10 @@
               <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
             </mat-panel-description>
           </mat-expansion-panel-header>
-              <app-statement [statement] = "statement"></app-statement>
+              <app-statement [statement] = "statement" (alerted)="onAlert($event, statement)"></app-statement>
             <mat-action-row>
-                <button mat-icon-button matTooltip="show details">
-                  <mat-icon>info</mat-icon>
+                <button mat-icon-button matTooltip="debug" (click)="onDebug(statement)">
+                  <mat-icon>bug_report</mat-icon>
                 </button>
                 <button mat-icon-button matTooltip="edit statement">
                   <mat-icon>edit</mat-icon>
@@ -37,11 +37,8 @@
               <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
             </mat-panel-description>
           </mat-expansion-panel-header>
-              <app-statement [statement] = "statement"></app-statement>
+              <app-statement [statement] = "statement" (alerted)="onAlert($event, statement)"></app-statement>
             <mat-action-row>
-                <button mat-icon-button matTooltip="show details">
-                  <mat-icon>info</mat-icon>
-                </button>
                 <button mat-icon-button matTooltip="edit statement">
                   <mat-icon>edit</mat-icon>
                 </button>

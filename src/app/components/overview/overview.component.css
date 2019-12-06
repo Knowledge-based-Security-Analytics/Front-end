@@ -14,4 +14,8 @@
 
 .statement-overview {
   padding-top: 5em;
+  overflow: auto;
+  height: 100%;
+  padding: 3px;
+  padding-right: 10px;
 }

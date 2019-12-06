@@ -1,0 +1,42 @@
+mat-grid-list {
+  margin-top: 8px;
+}
+
+.debug-textarea {
+  position: absolute;
+  left: 0px;
+  top: 5px;
+  right: 0px;
+  bottom: 5px;
+  overflow: auto;
+  margin-top: 43px;
+  padding: 4px;
+  font-family: monospace;
+  background: #f4f4f4;
+  color: #666;
+  font-size: 15px;
+}
+
+:host /deep/ .mat-list-item-content {
+  padding: 0!important;
+  font-family: monospace;
+  font-size: 15px;
+  height: auto;
+}
+
+.mat-list-item {
+  height: auto !important;
+  margin: 8px 0px;
+}
+
+.event-name {
+  font-size: 10px;
+  color: #666;
+  align-self: start;
+  display: contents;
+}
+
+.event-body {
+  word-break: break-word;
+  display: contents;
+}

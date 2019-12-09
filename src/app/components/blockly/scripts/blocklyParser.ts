@@ -6,6 +6,7 @@ export class BlocklyParser {
 
   public initParsers(): void {
     this.initEventTypeParser();
+    this.initEventAliasParser();
     this.initPatternParser();
     this.initConditionParser();
     this.initActionParser();
@@ -24,9 +25,19 @@ export class BlocklyParser {
       return `, ${block.getFieldValue('ATTRIBUTE_NAME')} ${block.getFieldValue('ATTRIBUTE_TYPE')}`;
     };
 
+    Blockly.EPL.existing_schema = (block: any): string => {
+      return `${block.getFieldValue('EVENT_TYPE')}`;
+    }
+
+    Blockly.EPL.new_schema = (block: any): string => {
+      return `${block.getFieldValue('EVENT_TYPE')}`;
+    }
+  }
+
+  private initEventAliasParser(): void {
     Blockly.EPL.event_alias = (block: any): string => {
       return `${block.getFieldValue('ALIAS')}`;
-    }
+    };
   }
 
   private initPatternParser(): void {

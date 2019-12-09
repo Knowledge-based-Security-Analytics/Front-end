@@ -12,13 +12,7 @@ export class BlocklyBlocks {
   private eventAliases: string[] = [];
   private toolbox = `
     <xml id="toolbox" style="display: none">
-      <category name ="EVENT SCHEMAS" colour="20">
-        <label text="Create new schema"></label>
-        <block type="type"></block>
-        <sep gap="8"></sep>
-        <block type="attribute_definition"></block>
-        <label text="Existing schemas"></label>
-      </category>
+      <category name ="EVENT SCHEMAS" custom="EVENT SCHEMAS" colour="20"></category>
       <category name="ALIASES" custom="ALIASES" colour="65"></category>
       <sep></sep>
       <category name="EVENT" colour="200">
@@ -51,6 +45,13 @@ export class BlocklyBlocks {
   }
 
   public initBlockly(): void {
+    this.injectBlockly();
+    this.initBlocks();
+    this.initChangeListeners();
+    this.initButtonCallbacks();
+    this.initCategoryCallbacks();
+  }
+  private injectBlockly(): void {
     const blocklyDiv = document.getElementById( 'blocklyDiv' );
     this.workspace = Blockly.inject(
       blocklyDiv,
@@ -64,20 +65,14 @@ export class BlocklyBlocks {
           wheel: false,
         }
       });
-    this.initChangeListeners();
-    this.initButtonCallbacks();
-    this.initCategoryCallbacks();
-    this.initBlocks();
   }
-
   private initBlocks(): void {
     this.initEventTypeBlocks();
+    this.initEventAliasBlocks();
     this.initPatternBlocks();
     this.initConditionBlocks();
     this.initActionBlocks();
-    this.initVariableBlocks();
   }
-
   private initEventTypeBlocks(): void {
     Blockly.Blocks.type = {
       init() {
@@ -110,6 +105,27 @@ export class BlocklyBlocks {
       }
     };
 
+    Blockly.Blocks.existing_schema = {
+      init() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable(''), 'EVENT_TYPE');
+        this.setOutput(true, 'EVENT_TYPE');
+        this.setColour(20);
+        this.setTooltip('');
+      }
+    };
+
+    Blockly.Blocks.new_schema = {
+      init() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldTextInput('newSchema'), 'EVENT_TYPE');
+        this.setOutput(true, 'EVENT_TYPE');
+        this.setColour(20);
+        this.setTooltip('');
+      }
+    };
+  }
+  private initEventAliasBlocks(): void {
     Blockly.Blocks.event_alias = {
       init() {
         this.appendDummyInput()
@@ -120,7 +136,6 @@ export class BlocklyBlocks {
       }
     };
   }
-
   private initPatternBlocks(): void {
     const env: any = this;
     Blockly.Blocks.event = {
@@ -217,7 +232,6 @@ export class BlocklyBlocks {
       }
     };
   }
-
   private initConditionBlocks(): void {
     Blockly.Blocks.condition = {
       init() {
@@ -231,13 +245,14 @@ export class BlocklyBlocks {
       }
     };
   }
-
   private initActionBlocks(): void {
     const env: any = this;
     Blockly.Blocks.action = {
       init() {
         this.appendDummyInput()
-          .appendField('to');
+          .appendField('to event schema');
+        this.appendValueInput('EVENT_SCHEMA')
+          .setCheck('EVENT_TYPE');
         this.appendStatementInput('ACTIONS')
           .setCheck('test');
         this.setInputsInline(true);
@@ -247,25 +262,17 @@ export class BlocklyBlocks {
       }
     };
   }
-
-  private initVariableBlocks(): void {
-    const env: any = this;
-  }
-
-  public initChangeListeners(): void {
+  private initChangeListeners(): void {
     this.initPreviewChangeListener();
   }
-
-  public initPreviewChangeListener(): void {
+  private initPreviewChangeListener(): void {
     this.workspace.addChangeListener(() => {
       document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspace);
     });
   }
-
-  public initButtonCallbacks(): void {
+  private initButtonCallbacks(): void {
     this.initEventAliasButtonCallback();
   }
-
   private initEventAliasButtonCallback(): void {
     this.workspace.registerButtonCallback('addEventAliasCallback', () => {
       const eventAlias = prompt('Please enter an event alias');
@@ -276,26 +283,26 @@ export class BlocklyBlocks {
       }
     });
   }
-
-  public initCategoryCallbacks(): void {
-    this.initAliasesCategoryCallback();
+  private initCategoryCallbacks(): void {
+    this.initEventAliasesCategoryCallback();
+    this.initEventSchemaCategoryCallback();
   }
-
   private initEventSchemaCategoryCallback(): void {
     this.workspace.registerToolboxCategoryCallback('EVENT SCHEMAS', () => {
       const xmlList = [];
-      xmlList.push(Blockly.Xml.textToDom(
-        '<label text="Create new schema"></label>' +
-        '<block type="type"></block>' +
-        '<sep gap="8"></sep>' +
-        '<block type="attribute_definition"></block>' +
-        '<label text="Existing schemas"></label>'));
-
+      xmlList.push(Blockly.Xml.textToDom('<label text="Create new schema"></label>'));
+      xmlList.push(Blockly.Xml.textToDom('<block type="type"></block>'));
+      xmlList.push(Blockly.Xml.textToDom('<block type="attribute_definition"></block>'));
+      xmlList.push(Blockly.Xml.textToDom('<sep gap="8"></sep>'));
+      xmlList.push(Blockly.Xml.textToDom('<label text="Existing schemas"></label>'));
+      xmlList.push(Blockly.Xml.textToDom('<block type="new_schema"></block>'));
+      this.eventTypes.map(( eventType: string ) => {
+        xmlList.push(Blockly.Xml.textToDom(`<block type="existing_schema"><field name="EVENT_TYPE">${eventType}</field></block>`));
+      });
       return xmlList;
     });
   }
-
-  private initAliasesCategoryCallback(): void {
+  private initEventAliasesCategoryCallback(): void {
     this.workspace.registerToolboxCategoryCallback('ALIASES', () => {
       const xmlList = [];
       xmlList.push(Blockly.Xml.textToDom('<button text="Add event alias" callbackKey="addEventAliasCallback"></button>'));

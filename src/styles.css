@@ -1,5 +1,23 @@
 @import '~highlight.js/styles/github.css';
 @import "~@fortawesome/fontawesome-free/css/all.css";
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+}
+
+::-webkit-scrollbar-thumb {
+  background: grey;
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(90, 90, 90);
+}

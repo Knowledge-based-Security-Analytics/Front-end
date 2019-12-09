@@ -28,15 +28,10 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/blockly/blockly_compressed.js",
-              "node_modules/blockly/blocks_compressed.js",
-              "node_modules/blockly/msg/js/en.js",
-              "./src/app/shared/blockly/event_type.js",
-              "./src/app/shared/blockly/event.js",
-              "./src/app/shared/blockly/condition.js",
-              "./src/app/shared/blockly/action.js",
-              "./src/app/shared/blockly/generator.js",
-              "./src/app/shared/blockly/parser.js"
+              "node_modules\\blockly\\blockly.js",
+              "node_modules\\blockly\\blocks.js",
+              "node_modules\\blockly\\msg\\en.js",
+              ".\\src\\app\\components\\blockly\\scripts\\generator.js"
             ]
           },
           "configurations": {

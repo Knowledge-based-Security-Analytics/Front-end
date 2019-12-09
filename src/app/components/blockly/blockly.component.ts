@@ -1,6 +1,9 @@
+import { EPLParsed } from 'src/app/models/statemet';
+import { BlocklyParser } from './scripts/blocklyParser';
 import { StatementService } from './../../services/statement.service';
 import { Statement } from './../../models/statemet';
 import { Component, OnInit } from '@angular/core';
+import { BlocklyBlocks } from './scripts/blocklyBlocks';
 
 declare var Blockly: any;
 
@@ -10,46 +13,20 @@ declare var Blockly: any;
   styleUrls: ['./blockly.component.css']
 })
 export class BlocklyComponent implements OnInit {
-  statement: Statement;
-  statementFunctionName = 'Create statement';
-  messageHistory = [];
-  public workspacePlayground: any;
-  public toolbox = `
-    <xml id="toolbox" style="display: none">
-      <category name ="EVENT TYPES" colour="20">
-        <label text="Create new type"></label>
-        <block type="type"></block>
-        <sep gap="8"></sep>
-        <block type="attribute_definition"></block>
-        <label text="Existing types"></label>
-      </category>
-      <sep gap="8"></sep>
-      <category name="EVENT" colour="200">
-        <block type="event"></block>
-        <sep gap="32"></sep>
-        <block type="event_pattern"></block>
-        <sep gap="32"></sep>
-        <block type="event_pattern_and"></block>
-        <sep gap="8"></sep>
-        <block type="event_pattern_or"></block>
-        <sep gap="8"></sep>
-        <block type="event_pattern_not"></block>
-        <sep gap="8"></sep>
-        <block type="event_pattern_repeat"></block>
-      </category>
-      <category name="CONDITION" colour="100">
-        <block type="condition"></block>
-      </category>
-      <category name="ACTION" colour="300">
-        <block type="action"></block>
-      </category>
-    </xml>`;
+  public statement: Statement;
 
-  constructor( private stmtService: StatementService ) { }
+  private blocklyParser: BlocklyParser;
+  private blocklyBlocks: BlocklyBlocks;
+
+  constructor( private stmtService: StatementService ) {
+    this.blocklyParser = new BlocklyParser();
+    this.blocklyBlocks = new BlocklyBlocks(this.stmtService);
+  }
 
   ngOnInit() {
     this.initStatement();
-    this.createBlocks();
+    this.blocklyBlocks.initBlockly();
+    this.blocklyParser.initParsers();
   }
 
   private initStatement(): void {
@@ -62,26 +39,6 @@ export class BlocklyComponent implements OnInit {
       blocklyXml: '',
       eventType: false
     };
-  }
-
-  private createBlocks(): BlocklyComponent {
-    const blocklyDiv = document.getElementById( 'blocklyDiv' );
-    this.workspacePlayground = Blockly.inject(
-      blocklyDiv,
-      {
-        toolbox: this.toolbox,
-        grid: { spacing: 20, length: 3, colour: '#ccc', snap: true },
-        trashcan: true,
-        scrollbars: false,
-        zoom: {
-          controls: true,
-          wheel: false,
-        }
-      });
-    this.workspacePlayground.addChangeListener(() => {
-      document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspacePlayground);
-    });
-    return this.workspacePlayground;
   }
 
   public async createStatement(): Promise<void> {
@@ -97,8 +54,8 @@ export class BlocklyComponent implements OnInit {
   }
 
   private updateStatement(statement: Statement): Statement {
-    statement.eplStatement = Blockly.EPL.workspaceToCode(this.workspacePlayground);
-    statement.blocklyXml = Blockly.Xml.workspaceToDom(this.workspacePlayground).outerHTML.replace(/\\([\s\S])|(")/g, "\\$1$2");
+    statement.eplStatement = Blockly.EPL.workspaceToCode(this.blocklyBlocks.workspace);
+    statement.blocklyXml = Blockly.Xml.workspaceToDom(this.blocklyBlocks.workspace).outerHTML.replace(/\\([\s\S])|(")/g, '\\$1$2');
     statement.eventType = this.statement.eplStatement.includes('create json schema');
     return statement;
   }

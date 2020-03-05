@@ -1,7 +1,7 @@
 import { EPLParsed } from 'src/app/models/statemet';
 import { BlocklyParser } from './scripts/blocklyParser';
-import { StatementService } from './../../services/statement.service';
-import { Statement } from './../../models/statemet';
+import { StatementService } from '../../../../services/statement.service';
+import { Statement } from '../../../../models/statemet';
 import { Component, OnInit } from '@angular/core';
 import { BlocklyBlocks } from './scripts/blocklyBlocks';
 

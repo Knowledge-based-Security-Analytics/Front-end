@@ -36,7 +36,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatDialogModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
   ]
 })
 export class MaterialModule { }

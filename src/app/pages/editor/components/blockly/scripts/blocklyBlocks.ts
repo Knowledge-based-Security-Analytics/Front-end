@@ -29,7 +29,10 @@ export class BlocklyBlocks {
         <block type="event_pattern_repeat"></block>
       </category>
       <category name="CONDITION" colour="100">
+        <block type="condition_wrapper"></block>
         <block type="condition"></block>
+        <block type="condition_text_input"></block>
+        <block type="condition_number_input"></block>
       </category>
       <category name="ACTION" colour="300">
         <block type="action"></block>
@@ -41,6 +44,7 @@ export class BlocklyBlocks {
     this.stmtService.statementsObservable.subscribe( newStatements => {
       this.statements = newStatements.filter(statement => statement.eventType).map(statement => statement.eplParsed);
       this.statements.map(statement => this.eventTypes.push(statement.name));
+      console.table(this.statements);
     });
   }
 
@@ -145,7 +149,7 @@ export class BlocklyBlocks {
           .appendField('Event')
           .appendField(new Blockly.FieldDropdown(dropDownData), 'EVENT_TYPE')
           .appendField('as')
-          .appendField(new Blockly.FieldVariable('eventAlias'), 'EVENT_ALIAS');
+          .appendField(new Blockly.FieldVariable(''), 'EVENT_ALIAS');
         this.appendValueInput('CONDITION')
           .setCheck('condition')
           .setAlign(Blockly.ALIGN_CENTRE);
@@ -154,6 +158,18 @@ export class BlocklyBlocks {
         this.setNextStatement(true, 'event');
         this.setColour(230);
         this.setTooltip('');
+      },
+      onchange(event: any) {
+        if (event.type === Blockly.Events.CHANGE) {
+          if (event.name === 'EVENT_TYPE') {
+            const eventAlias = env.workspace.getBlockById(event.blockId).getFieldValue('EVENT_ALIAS');
+            Blockly.Variables.getVariable(env.workspace, eventAlias).type = event.newValue;
+          } else if (event.name === 'EVENT_ALIAS') {
+            const eventType = env.workspace.getBlockById(event.blockId).getFieldValue('EVENT_TYPE');
+            Blockly.Variables.getVariable(env.workspace, event.newValue).type = eventType;
+            Blockly.Variables.getVariable(env.workspace, event.oldValue).type = '';
+          }
+        }
       }
     };
 
@@ -233,7 +249,7 @@ export class BlocklyBlocks {
     };
   }
   private initConditionBlocks(): void {
-    Blockly.Blocks.condition = {
+    Blockly.Blocks.condition_wrapper = {
       init() {
         this.appendDummyInput()
           .appendField('Condition');
@@ -244,7 +260,46 @@ export class BlocklyBlocks {
         this.setTooltip('');
       }
     };
+
+    Blockly.Blocks.condition = {
+      init() {
+        this.appendDummyInput();
+        this.appendValueInput('LEFT')
+            .setCheck(['condition_text_input', 'condition_number_input']);
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([
+              ['=', '='], ['>', '>'], ['<', '<'], ['!=', '!='], ['<=', '<='], ['>=', '>=']
+            ]), 'LOGICAL_OPERATOR');
+        this.appendValueInput('RIGHT')
+            .setCheck(['condition_text_input', 'condition_number_input']);
+        this.setPreviousStatement(true, ['condition', 'condition_wrapper']);
+        this.setNextStatement(true, 'condition');
+        this.setColour(120);
+        this.setTooltip('');
+      }
+    };
+
+    Blockly.Blocks.condition_text_input = {
+      init() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldTextInput('text'), 'TEXT_INPUT');
+        this.setOutput(true, 'condition_text_input');
+        this.setColour(120);
+        this.setTooltip('');
+      }
+    };
+
+    Blockly.Blocks.condition_number_input = {
+      init() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldNumber(0), 'NUMBER_INPUT');
+        this.setOutput(true, 'condition_number_input');
+        this.setColour(120);
+        this.setTooltip('');
+      }
+    };
   }
+
   private initActionBlocks(): void {
     const env: any = this;
     Blockly.Blocks.action = {
@@ -275,11 +330,11 @@ export class BlocklyBlocks {
   }
   private initEventAliasButtonCallback(): void {
     this.workspace.registerButtonCallback('addEventAliasCallback', () => {
+      // TODO Angular Material Dialog
       const eventAlias = prompt('Please enter an event alias');
       if (eventAlias) {
         this.eventAliases.push(eventAlias);
-        const test = new Blockly.VariableModel(this.workspace, eventAlias);
-        new Blockly.Events.VarCreate(test).run(true);
+        new Blockly.Events.VarCreate(new Blockly.VariableModel(this.workspace, eventAlias)).run(true);
       }
     });
   }
@@ -306,11 +361,9 @@ export class BlocklyBlocks {
     this.workspace.registerToolboxCategoryCallback('ALIASES', () => {
       const xmlList = [];
       xmlList.push(Blockly.Xml.textToDom('<button text="Add event alias" callbackKey="addEventAliasCallback"></button>'));
-      if ( this.workspace.variableMap_.variableMap_[''] ) {
-        this.workspace.variableMap_.variableMap_[''].map((variable: any) =>  {
-          xmlList.push(Blockly.Xml.textToDom(`<block type="event_alias"><field name="ALIAS">${variable.name}</field></block>`));
-        });
-      }
+      this.workspace.getAllVariables().map((a: any) =>  {
+        xmlList.push(Blockly.Xml.textToDom(`<block type="event_alias"><field name="ALIAS">${a.name} (${a.type})</field></block>`));
+      });
       return xmlList;
     });
   }

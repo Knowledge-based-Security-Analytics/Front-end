@@ -1,5 +1,5 @@
 import { StatementService } from 'src/app/services/statement.service';
-import { EventStreamService } from './../../services/event-stream.service';
+import { EventStreamService } from '../../../../services/event-stream.service';
 import { Component, OnInit, ViewChildren, QueryList, Input } from '@angular/core';
 import { MatList } from '@angular/material/list';
 import { Statement } from 'src/app/models/statemet';

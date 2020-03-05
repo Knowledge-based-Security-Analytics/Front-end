@@ -31,7 +31,7 @@
               "node_modules\\blockly\\blockly.js",
               "node_modules\\blockly\\blocks.js",
               "node_modules\\blockly\\msg\\en.js",
-              ".\\src\\app\\components\\blockly\\scripts\\generator.js"
+              ".\\src\\app\\pages\\editor\\components\\blockly\\scripts\\generator.js"
             ]
           },
           "configurations": {

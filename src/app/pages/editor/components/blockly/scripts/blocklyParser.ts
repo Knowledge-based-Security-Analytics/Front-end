@@ -70,8 +70,20 @@ export class BlocklyParser {
   }
 
   private initConditionParser(): void {
-    Blockly.EPL.condition = (block: any): string => {
+    Blockly.EPL.condition_wrapper = (block: any): string => {
       return `(${Blockly.EPL.statementToCode(block, 'CONDITIONS')})`;
+    };
+
+    Blockly.EPL.condition = (block: any): string => {
+      return `${Blockly.EPL.statementToCode(block, 'LEFT')} ${block.getFieldValue('LOGICAL_OPERATOR')} ${Blockly.EPL.statementToCode(block, 'RIGHT')}`;
+    };
+
+    Blockly.EPL.condition_text_input = (block: any): string => {
+      return `${block.getFieldValue('TEXT_INPUT')}`;
+    };
+
+    Blockly.EPL.condition_number_input = (block: any): string => {
+      return `${block.getFieldValue('NUMBER_INPUT')}`;
     };
   }
 

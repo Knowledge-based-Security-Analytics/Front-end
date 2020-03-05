@@ -1,5 +1,5 @@
-import { EventStreamService } from './../../../services/event-stream.service';
-import { Statement } from './../../../models/statemet';
+import { EventStreamService } from '../../../../../services/event-stream.service';
+import { Statement } from '../../../../../models/statemet';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({

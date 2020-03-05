@@ -1,22 +1,14 @@
 <div class="wrapper">
-  <!-- Toolbar --> <app-toolbar></app-toolbar>
+  <mat-toolbar fxLayoutAlgin="center center" class="mat-elevation-z6" color="primary">
+    <span fxFlex="1 1 auto">Visual CEP</span>
+  </mat-toolbar>
 
-  <mat-divider></mat-divider>
+  <nav mat-tab-nav-bar mat-stretch-tabs class="mat-elevation-z4">
+    <a mat-tab-link routerLink='editor' active="true"><mat-icon>build_outlined</mat-icon>Editor</a>
+    <a mat-tab-link routerLink='rules' active="true">Analyzer</a>
+  </nav>
 
   <div class="content" fxLayout="row">
-    <div id="editor" fxFlex="1 1 70%">
-      <!-- Blockly --> <app-blockly *ngIf="!debugging"></app-blockly>
-      <!-- Debugger -->
-      <ng-container *ngIf="debugging">
-        <button mat-button (click)="debugging = false"><mat-icon>navigate_before</mat-icon>back</button>
-        <app-debugger [statement] = "debugStatement"></app-debugger>
-      </ng-container>
-    </div>
-
-    <div id="overview" fxFlex="1 1 30%">
-      <!-- Statement Overview --> <app-overview (debug) = "debug($event)"></app-overview>
-    </div>
+    <router-outlet></router-outlet>
   </div>
 </div>
-
-<router-outlet></router-outlet>

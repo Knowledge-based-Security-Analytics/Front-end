@@ -5,28 +5,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BlocklyComponent } from './components/blockly/blockly.component';
-import { DebuggerComponent } from './components/debugger/debugger.component';
-import { OverviewComponent } from './components/overview/overview.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { GraphQLModule } from './shared/graphql/graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { FormsModule } from '@angular/forms';
-import { StatementComponent } from './components/overview/statement/statement.component';
-import { HighlightModule } from 'ngx-highlightjs';
-import { SortFilterDialogComponent } from './components/overview/sort-filter-dialog/sort-filter-dialog.component';
+import { SortFilterDialogComponent } from './pages/analyzer/components/overview/sort-filter-dialog/sort-filter-dialog.component';
+import { PagesModule } from './pages/pages.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BlocklyComponent,
-    DebuggerComponent,
-    OverviewComponent,
-    ToolbarComponent,
-    StatementComponent,
-    SortFilterDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +26,7 @@ import { SortFilterDialogComponent } from './components/overview/sort-filter-dia
     FlexLayoutModule,
     GraphQLModule,
     HttpClientModule,
-    HighlightModule
+    PagesModule
   ],
   entryComponents: [
     SortFilterDialogComponent

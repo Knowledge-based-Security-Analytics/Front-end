@@ -1,3 +1,10 @@
+@import 'themes';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~@nebular/theme/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+};
 @import '~highlight.js/styles/github.css';
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import '@angular/material/prebuilt-themes/indigo-pink.css';

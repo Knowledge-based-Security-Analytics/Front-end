@@ -5,7 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-statement',
   templateUrl: './statement.component.html',
-  styleUrls: ['./statement.component.css']
+  styleUrls: ['./statement.component.scss']
 })
 export class StatementComponent implements OnInit {
   @Output() alerted = new EventEmitter<number>();

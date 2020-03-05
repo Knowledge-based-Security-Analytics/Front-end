@@ -1,5 +1,3 @@
-import { OverviewComponent } from './pages/analyzer/components/overview/overview.component';
-import { BlocklyComponent } from './pages/editor/components/blockly/blockly.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 

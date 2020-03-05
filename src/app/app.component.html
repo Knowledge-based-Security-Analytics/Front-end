@@ -1,14 +1,22 @@
-<div class="wrapper">
-  <mat-toolbar fxLayoutAlgin="center center" class="mat-elevation-z6" color="primary">
-    <span fxFlex="1 1 auto">Visual CEP</span>
-  </mat-toolbar>
+<nb-layout>
 
-  <nav mat-tab-nav-bar mat-stretch-tabs class="mat-elevation-z4">
-    <a mat-tab-link routerLink='editor' active="true"><mat-icon>build_outlined</mat-icon>Editor</a>
-    <a mat-tab-link routerLink='rules' active="true">Analyzer</a>
-  </nav>
+  <nb-layout-header fixed>
+    <div class="header-container">
+      <div class="logo-container">
+        <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
+          <nb-icon icon="menu-2-outline"></nb-icon>
+        </a>
+        <a class="logo" href="#">Visual CEP</a>
+      </div>
+    </div>
+  </nb-layout-header>
 
-  <div class="content" fxLayout="row">
+  <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+    <nb-menu [items]="menu"></nb-menu>
+  </nb-sidebar>
+
+  <nb-layout-column>
     <router-outlet></router-outlet>
-  </div>
-</div>
+  </nb-layout-column>
+
+</nb-layout>

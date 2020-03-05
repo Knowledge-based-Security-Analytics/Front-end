@@ -1,20 +1,23 @@
+import { MENU_ITEMS } from './app.pages-menu';
 import { Component } from '@angular/core';
 import { Statement } from './models/statemet';
+import { NbSidebarService } from '@nebular/theme';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'visual-cep-frontend';
-
+  menu = MENU_ITEMS;
   public debugStatement: Statement;
-
   debugging = false;
 
-  toggleChanged(debugging: boolean): void {
-    this.debugging = debugging;
+  constructor(private sidebarService: NbSidebarService) { }
+
+  public toggleSidebar(): boolean {
+    this.sidebarService.toggle(true, 'menu-sidebar');
+    return false;
   }
 
   public debug(statement: Statement) {

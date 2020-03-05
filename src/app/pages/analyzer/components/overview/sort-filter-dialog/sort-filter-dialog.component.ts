@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-sort-filter-dialog',
   templateUrl: './sort-filter-dialog.component.html',
-  styleUrls: ['./sort-filter-dialog.component.css']
+  styleUrls: ['./sort-filter-dialog.component.scss']
 })
 export class SortFilterDialogComponent implements OnInit {
   public filter: FilterOptions = {};

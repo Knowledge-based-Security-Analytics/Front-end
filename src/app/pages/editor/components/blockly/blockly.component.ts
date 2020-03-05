@@ -10,7 +10,7 @@ declare var Blockly: any;
 @Component({
   selector: 'app-blockly',
   templateUrl: './blockly.component.html',
-  styleUrls: ['./blockly.component.css']
+  styleUrls: ['./blockly.component.scss']
 })
 export class BlocklyComponent implements OnInit {
   public statement: Statement;

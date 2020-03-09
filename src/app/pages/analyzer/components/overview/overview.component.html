@@ -17,9 +17,9 @@
                 <button mat-icon-button matTooltip="debug" (click)="onDebug(statement)">
                   <mat-icon>bug_report</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="edit statement">
-                  <mat-icon>edit</mat-icon>
-                </button>
+                <a routerLink="/editor/{{statement.deploymentId}}">
+                  <button mat-icon-button matTooltip="edit statement"><mat-icon>edit</mat-icon></button>
+                </a>
                 <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
                   <mat-icon>delete</mat-icon>
                 </button>
@@ -39,9 +39,9 @@
           </mat-expansion-panel-header>
               <app-statement [statement] = "statement" (alerted)="onAlert($event, statement)"></app-statement>
             <mat-action-row>
-                <button mat-icon-button matTooltip="edit statement">
-                  <mat-icon>edit</mat-icon>
-                </button>
+              <a routerLink="/editor/{{statement.deploymentId}}">
+                <button mat-icon-button matTooltip="edit statement"><mat-icon>edit</mat-icon></button>
+              </a>
                 <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
                   <mat-icon>delete</mat-icon>
                 </button>

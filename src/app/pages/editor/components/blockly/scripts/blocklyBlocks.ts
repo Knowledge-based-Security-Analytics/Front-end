@@ -1,5 +1,6 @@
 import { StatementService } from 'src/app/services/statement.service';
 import { EPLParsed } from 'src/app/models/statemet';
+import { ElementRef } from '@angular/core';
 
 declare var Blockly: any;
 
@@ -48,20 +49,19 @@ export class BlocklyBlocks {
     });
   }
 
-  public initBlockly(): void {
-    this.injectBlockly();
+  public initBlockly(blocklyDiv: any): void {
+    this.injectBlockly(blocklyDiv);
     this.initBlocks();
     this.initChangeListeners();
     this.initButtonCallbacks();
     this.initCategoryCallbacks();
   }
-  private injectBlockly(): void {
-    const blocklyDiv = document.getElementById( 'blocklyDiv' );
+  private injectBlockly(blocklyDiv: any): void {
     this.workspace = Blockly.inject(
       blocklyDiv,
       {
         toolbox: this.toolbox,
-        grid: { spacing: 20, length: 3, colour: '#ccc', snap: true },
+        // grid: { spacing: 20, length: 3, colour: '#ccc', snap: true },
         trashcan: true,
         scrollbars: false,
         zoom: {

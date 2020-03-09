@@ -2,7 +2,7 @@ import { SortFilterDialogComponent, FilterOptions} from './sort-filter-dialog/so
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
 import { StatementService } from 'src/app/services/statement.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-overview',

@@ -1,0 +1,15 @@
+<nb-card class="full-height" accent="primary">
+  <nb-card-header>Info</nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <input class="col-md-12" type="text" nbInput placeholder="Statement name" status="primary" [(ngModel)]="statement.name">
+    </div>
+    <div class="row">
+      <nb-toggle (checkedChange)="changeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" [labelPosition]="end">Production Rule</nb-toggle>
+    </div>
+    <p id="blocklyOutput"></p>
+  </nb-card-body>
+  <nb-card-footer>
+    <button nbButton hero status="primary" fullWidth (click)="createStatement()"><nb-icon icon="save-outline"></nb-icon>Save</button>
+  </nb-card-footer>
+</nb-card>

@@ -39,7 +39,7 @@ export class StatementService {
     return this.graphqlStatementService.pushStatement(eplStatement, blocklyXml, name, deploymentMode, eventType).then(deploymentId => {
       const statement: Statement = {deploymentId, eplStatement, blocklyXml, name, deploymentMode, eventType};
       this.parseStatement(statement);
-      const i = this.statements.push(statement);
+      this.statements.push(statement);
       this.statementsChanged();
       return deploymentId;
     });
@@ -48,8 +48,13 @@ export class StatementService {
   /**
    * @returns The ID of the updated Statement
    */
-  public async updateStatement(deploymentId: string, name?: string, deploymentMode?: string,
-                               eventType?: boolean, eplStatement?: string, blocklyXml?: string): Promise<string> {
+  public async updateStatement(
+    deploymentId: string,
+    name?: string,
+    deploymentMode?: string,
+    eventType?: boolean,
+    eplStatement?: string,
+    blocklyXml?: string): Promise<string> {
     return this.graphqlStatementService.updateStatement(deploymentId, name, deploymentMode, eventType, eplStatement, blocklyXml)
     .then(id => {
       const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);

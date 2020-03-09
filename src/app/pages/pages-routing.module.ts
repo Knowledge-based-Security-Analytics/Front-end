@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BlocklyComponent } from './editor/components/blockly/blockly.component';
 import { OverviewComponent } from './analyzer/components/overview/overview.component';
+import { EditorComponent } from './editor/editor.component';
 
 
 const routes: Routes = [
   {
     path: 'editor',
-    component: BlocklyComponent,
+    component: EditorComponent,
+  },
+  {
+    path: 'editor/:deploymentId',
+    component: EditorComponent
   },
   {
     path: 'rules',

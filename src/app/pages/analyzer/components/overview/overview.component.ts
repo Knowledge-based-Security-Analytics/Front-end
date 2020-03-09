@@ -10,7 +10,6 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent implements OnInit {
-  @Output() debug = new EventEmitter<Statement>();
 
   private rawStatements: Statement[];
   public statements: OverviewStatement[];
@@ -124,10 +123,6 @@ export class OverviewComponent implements OnInit {
     this.statements = this.rawStatements.map(statement => Object.assign({}, statement));
     this.filterStatements();
     this.sortStatements();
-  }
-
-  public onDebug(statement: Statement) {
-    this.debug.emit(statement);
   }
 
   public onAlert(count: number, alertedStatement: Statement) {

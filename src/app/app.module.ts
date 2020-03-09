@@ -14,7 +14,7 @@ import { PagesModule } from './pages/pages.module';
 import {
   NbThemeModule,
   NbLayoutModule,
-   NbSidebarModule,
+   NbButtonModule,
    NbMenuModule,
    NbIconModule,
    NbToastrModule,
@@ -43,6 +43,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbIconModule,
     NbActionsModule,
     NbTooltipModule,
+    NbButtonModule,
   ],
   entryComponents: [
     SortFilterDialogComponent

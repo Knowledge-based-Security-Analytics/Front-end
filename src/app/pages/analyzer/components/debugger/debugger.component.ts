@@ -1,7 +1,7 @@
+import { ActivatedRoute } from '@angular/router';
 import { StatementService } from 'src/app/services/statement.service';
 import { EventStreamService } from '../../../../services/event-stream.service';
-import { Component, OnInit, ViewChildren, QueryList, Input } from '@angular/core';
-import { MatList } from '@angular/material/list';
+import { Component, OnInit } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
 
 @Component({
@@ -10,13 +10,19 @@ import { Statement } from 'src/app/models/statemet';
   styleUrls: ['./debugger.component.scss']
 })
 export class DebuggerComponent implements OnInit {
-  @Input() statement: Statement;
 
+  private statement: Statement;
   public events: {name: string, body: string}[][] = [[], [], []];
 
-  constructor(private eventStreamService: EventStreamService, private statementService: StatementService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private stmtService: StatementService,
+    private eventStreamService: EventStreamService,
+    private statementService: StatementService) {}
 
   ngOnInit() {
+    this.statement = this.stmtService.getStatement(this.route.snapshot.paramMap.get('deploymentId'));
+    console.log(this.statement);
     this.subscribeTopics();
   }
 
@@ -26,7 +32,6 @@ export class DebuggerComponent implements OnInit {
     let statementIDs: string[] = this.statement.deploymentDependencies;
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < statementIDs.length; i++) {
-      console.log(statementIDs[i]);
       const statementToSubscribe = this.statementService.getStatement(statementIDs[i]);
       if (statementToSubscribe.deploymentDependencies && statementToSubscribe.deploymentDependencies.length > 0) {
         statementIDs = statementIDs.concat(statementToSubscribe.deploymentDependencies);

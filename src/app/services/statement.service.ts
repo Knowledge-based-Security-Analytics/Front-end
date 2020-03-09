@@ -79,11 +79,7 @@ export class StatementService {
   }
 
   public getStatement(deploymentId: string): Statement {
-    for (const statement of this.statements) {
-      if (statement.deploymentId === deploymentId) {
-        return statement;
-      }
-    }
+    return this.statements.find(statement => statement.deploymentId === deploymentId);
   }
 
   private parseStatement(statement: Statement) {

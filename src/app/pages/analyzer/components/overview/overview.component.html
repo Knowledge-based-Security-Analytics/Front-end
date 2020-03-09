@@ -14,9 +14,11 @@
           </mat-expansion-panel-header>
               <app-statement [statement] = "statement" (alerted)="onAlert($event, statement)"></app-statement>
             <mat-action-row>
-                <button mat-icon-button matTooltip="debug" (click)="onDebug(statement)">
-                  <mat-icon>bug_report</mat-icon>
-                </button>
+                <a routerLink="/rule/{{statement.deploymentId}}">
+                  <button mat-icon-button matTooltip="debug">
+                    <mat-icon>bug_report</mat-icon>
+                  </button>
+                </a>
                 <a routerLink="/editor/{{statement.deploymentId}}">
                   <button mat-icon-button matTooltip="edit statement"><mat-icon>edit</mat-icon></button>
                 </a>

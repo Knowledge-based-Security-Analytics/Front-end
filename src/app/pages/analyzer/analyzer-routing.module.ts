@@ -9,7 +9,7 @@ const routes: Routes = [{
   component: OverviewComponent,
 },
 {
-  path: 'rule/:id',
+  path: 'rule/:deploymentId',
   component: DebuggerComponent
 }];
 

@@ -1,7 +1,6 @@
 import { MENU_ITEMS } from './app.pages-menu';
 import { Component } from '@angular/core';
 import { Statement } from './models/statemet';
-import { NbSidebarService } from '@nebular/theme';
 
 @Component({
   selector: 'app-root',
@@ -13,12 +12,7 @@ export class AppComponent {
   public debugStatement: Statement;
   debugging = false;
 
-  constructor(private sidebarService: NbSidebarService) { }
-
-  public toggleSidebar(): boolean {
-    this.sidebarService.toggle(true, 'menu-sidebar');
-    return false;
-  }
+  constructor() { }
 
   public debug(statement: Statement) {
     this.debugStatement = statement;

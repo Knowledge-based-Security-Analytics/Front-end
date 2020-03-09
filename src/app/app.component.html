@@ -2,17 +2,18 @@
   <nb-layout-header fixed>
     <div class="header-container">
       <div class="logo-container">
-        <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
-          <nb-icon icon="menu-2-outline"></nb-icon>
+        <a routerLink="/home" class="sidebar-toggle">
+          <nb-icon icon="home-outline"></nb-icon>
         </a>
-        <a class="logo" href="#">Visual CEP</a>
+        <a class="logo" routerLink="/home">Visual CEP</a>
       </div>
     </div>
+    <span style="flex: 1 1"></span>
+    <nb-actions>
+      <nb-action icon="plus-outline" routerLink="/editor" nbTooltip="Add new rule"></nb-action>
+      <nb-action icon="list-outline" routerLink="/rules" nbTooltip="View existing rules"></nb-action>
+    </nb-actions>
   </nb-layout-header>
-
-  <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
-    <nb-menu [items]="menu"></nb-menu>
-  </nb-sidebar>
 
   <nb-layout-column class="container-fluid">
     <router-outlet></router-outlet>

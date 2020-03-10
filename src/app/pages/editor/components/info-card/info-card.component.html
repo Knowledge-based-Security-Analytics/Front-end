@@ -5,7 +5,7 @@
       <input class="col-md-12" type="text" nbInput shape="round" placeholder="Statement name" status="primary" [(ngModel)]="statement.name">
     </div>
     <div class="row">
-      <nb-toggle (checkedChange)="changeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" [labelPosition]="end">Production Rule</nb-toggle>
+      <nb-toggle (checkedChange)="changeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" labelPosition="end">Production Rule</nb-toggle>
     </div>
     <p id="blocklyOutput"></p>
   </nb-card-body>

@@ -1,0 +1,22 @@
+@import '../../../../../../../node_modules/bootstrap/scss/mixins/breakpoints';
+@import '../../../../../../../node_modules/@nebular/theme/styles/global/breakpoints';
+@import '../../../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  .search-label {
+    vertical-align: middle;
+  }
+  .search-input {
+    margin-bottom: 1rem;
+  }
+  .deployment-mode-column {
+    vertical-align: middle;
+    text-align: center;
+  }
+  .column-header {
+    text-align: center;
+  }
+  .drop-confirm-dialog {
+    width: 30rem;
+  }
+}

@@ -1,10 +1,9 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, Output, EventEmitter } from '@angular/core';
 import {
   NbTreeGridDataSource,
   NbSortDirection,
   NbTreeGridDataSourceBuilder,
   NbSortRequest,
-  NbDialogRef,
   NbDialogService,
   NbToastrService} from '@nebular/theme';
 
@@ -17,6 +16,7 @@ import { Statement } from 'src/app/models/statemet';
   styleUrls: ['./list-card.component.scss']
 })
 export class ListCardComponent implements OnInit {
+  @Output() statementSelected: EventEmitter<Statement> = new EventEmitter<Statement>();
 
   get schemaStatements(): Statement[] {
     return this._schemaStatements;
@@ -106,6 +106,11 @@ export class ListCardComponent implements OnInit {
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+
+  selectStatement(deploymentId: string) {
+    const statements = [...this.patternStatements, ...this.schemaStatements];
+    this.statementSelected.emit(statements.find(statement => statement.deploymentId === deploymentId));
   }
 
 }

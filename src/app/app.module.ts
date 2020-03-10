@@ -9,7 +9,6 @@ import { GraphQLModule } from './shared/graphql/graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { FormsModule } from '@angular/forms';
-import { SortFilterDialogComponent } from './pages/analyzer/components/overview/sort-filter-dialog/sort-filter-dialog.component';
 import { PagesModule } from './pages/pages.module';
 import {
   NbThemeModule,
@@ -46,9 +45,6 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbActionsModule,
     NbTooltipModule,
     NbButtonModule,
-  ],
-  entryComponents: [
-    SortFilterDialogComponent
   ],
   providers: [
     StatementService,

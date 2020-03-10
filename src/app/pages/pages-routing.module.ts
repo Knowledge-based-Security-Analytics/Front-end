@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { OverviewComponent } from './analyzer/components/overview/overview.component';
 import { EditorComponent } from './editor/editor.component';
+import {OverviewComponent} from './overview/overview.component';
 
 
 const routes: Routes = [

@@ -3,7 +3,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
 
 @Component({
-  selector: 'app-details',
+  selector: 'app-details-card',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
 })

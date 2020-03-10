@@ -1,12 +1,12 @@
 <div class="row full-height">
   <div class="col-sm-12 col-md-5">
-    <app-details [statement]='statement' (statementChanged)='saveStatement($event)'></app-details>
+    <app-details-card [statement]='statement' (statementChanged)='saveStatement($event)'></app-details-card>
   </div>
   <div class="col-sm-12 col-md-7 full-height">
     <nb-card status="primary" class="full-height">
       <nb-card-header>Rule Editor</nb-card-header>
       <nb-card-body style="padding: 0 0 0 0 ">
-        <app-blockly></app-blockly>
+        <app-blockly-card></app-blockly-card>
       </nb-card-body>
     </nb-card>
   </div>

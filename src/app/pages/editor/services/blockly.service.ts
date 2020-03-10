@@ -1,7 +1,7 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { BlocklyParser } from '../components/blockly/scripts/blocklyParser';
-import { BlocklyBlocks } from '../components/blockly/scripts/blocklyBlocks';
 import { StatementService } from 'src/app/services/statement.service';
+import {BlocklyParser} from '../components/blockly-card/scripts/blocklyParser';
+import {BlocklyBlocks} from '../components/blockly-card/scripts/blocklyBlocks';
 
 declare var Blockly: any;
 

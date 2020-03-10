@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SortFilterDialogComponent } from './sort-filter-dialog.component';
+import { DetailCardComponent } from './detail-card.component';
 
-describe('SortFilterDialogComponent', () => {
-  let component: SortFilterDialogComponent;
-  let fixture: ComponentFixture<SortFilterDialogComponent>;
+describe('StatementComponent', () => {
+  let component: DetailCardComponent;
+  let fixture: ComponentFixture<DetailCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SortFilterDialogComponent ]
+      declarations: [ DetailCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SortFilterDialogComponent);
+    fixture = TestBed.createComponent(DetailCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

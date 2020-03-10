@@ -11,6 +11,7 @@ import { StatementService } from 'src/app/services/statement.service';
 export class OverviewComponent implements OnInit {
 
   private rawStatements: Statement[];
+  selectedStatement: Statement;
 
   constructor(private statementService: StatementService) { }
 
@@ -19,6 +20,10 @@ export class OverviewComponent implements OnInit {
       this.rawStatements = statements;
     });
     this.statementService.getStatements();
+  }
+
+  statementSelected(statement: Statement) {
+    this.selectedStatement = statement;
   }
 
   public onAlert(count: number, alertedStatement: Statement) {

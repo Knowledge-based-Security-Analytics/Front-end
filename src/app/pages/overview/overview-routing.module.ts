@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DebuggerComponent } from './components/debugger/debugger.component';
-import { OverviewComponent } from './components/overview/overview.component';
+import { OverviewComponent } from './overview.component';
 
 
 const routes: Routes = [{
@@ -17,4 +17,4 @@ const routes: Routes = [{
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AnalyzerRoutingModule { }
+export class OverviewRoutingModule { }

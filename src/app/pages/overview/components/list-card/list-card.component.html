@@ -13,7 +13,7 @@
 
     <table [nbTreeGrid]="patternDataSource" [nbSort]="patternDataSource" (sort)="updateSort($event)">
       <tbody>
-        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" class="column-header"></tr>
         <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
         <ng-container [nbTreeGridColumnDef]="nameColumn">
@@ -52,7 +52,13 @@
           <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Actions</th>
           <td nbTreeGridCell *nbTreeGridCellDef="let row">
             <nb-actions size="small" fullWidth>
-              <nb-action icon="bulb-outline"></nb-action>
+              <nb-action
+                icon="bulb-outline"
+                nbTooltip="Information about this Rule"
+                nbTooltipIcon="bulb-outline"
+                nbTooltipPlacement="bottom"
+                (click)="selectStatement(row.data[actionsColumn])">
+              </nb-action>
               <nb-action
                 icon="edit-outline"
                 link="/editor/{{row.data[actionsColumn]}}"
@@ -88,7 +94,7 @@
 
     <table [nbTreeGrid]="schemaDataSource" [nbSort]="schemaDataSource" (sort)="updateSort($event)">
       <tbody>
-        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" class="column-header"></tr>
         <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
         <ng-container [nbTreeGridColumnDef]="nameColumn">
@@ -127,7 +133,13 @@
           <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Actions</th>
           <td nbTreeGridCell *nbTreeGridCellDef="let row">
             <nb-actions size="small" fullWidth>
-              <nb-action icon="bulb-outline"></nb-action>
+              <nb-action
+                icon="bulb-outline"
+                nbTooltip="Information about this Rule"
+                nbTooltipIcon="bulb-outline"
+                nbTooltipPlacement="bottom"
+                (click)="selectStatement(row.data[actionsColumn])">
+              </nb-action>
               <nb-action
                 icon="edit-outline"
                 link="/editor/{{row.data[actionsColumn]}}"

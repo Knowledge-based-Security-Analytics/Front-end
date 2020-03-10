@@ -1,12 +1,12 @@
-import { BlocklyService } from './../../services/blockly.service';
+import { BlocklyService } from '../../services/blockly.service';
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-blockly',
-  templateUrl: './blockly.component.html',
-  styleUrls: ['./blockly.component.scss']
+  selector: 'app-blockly-card',
+  templateUrl: './blockly-card.component.html',
+  styleUrls: ['./blockly-card.component.scss']
 })
-export class BlocklyComponent implements AfterViewInit {
+export class BlocklyCardComponent implements AfterViewInit {
   @ViewChild('blocklyDiv', {static: false}) blocklyDiv: ElementRef;
 
   constructor( private blocklyService: BlocklyService) { }

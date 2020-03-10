@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatementComponent } from './statement.component';
+import { BlocklyCardComponent } from './blockly-card.component';
 
-describe('StatementComponent', () => {
-  let component: StatementComponent;
-  let fixture: ComponentFixture<StatementComponent>;
+describe('BlocklyComponent', () => {
+  let component: BlocklyCardComponent;
+  let fixture: ComponentFixture<BlocklyCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatementComponent ]
+      declarations: [ BlocklyCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StatementComponent);
+    fixture = TestBed.createComponent(BlocklyCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

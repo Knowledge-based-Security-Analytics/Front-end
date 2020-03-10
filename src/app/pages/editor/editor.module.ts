@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NbInputModule, NbButtonModule, NbLayoutModule, NbCardModule, NbActionsModule, NbIconModule, NbToggleModule } from '@nebular/theme';
 
-import { BlocklyComponent } from './components/blockly/blockly.component';
 import { EditorComponent } from './editor.component';
-import { DetailsComponent } from './components/details/details.component';
+import {BlocklyCardComponent} from './components/blockly-card/blockly-card.component';
+import {DetailsComponent} from './components/info-card/details.component';
 
 const NB_MODULES = [
   NbInputModule,
@@ -15,10 +15,10 @@ const NB_MODULES = [
   NbActionsModule,
   NbIconModule,
   NbToggleModule,
-]
+];
 @NgModule({
   declarations: [
-    BlocklyComponent,
+    BlocklyCardComponent,
     EditorComponent,
     DetailsComponent
   ],

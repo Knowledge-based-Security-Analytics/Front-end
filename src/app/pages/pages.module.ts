@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { PagesRoutingModule } from './pages-routing.module';
 import { EditorModule } from './editor/editor.module';
-import { AnalyzerModule } from './analyzer/analyzer.module';
+import { OverviewModule } from './overview/overview.module';
 
 
 @NgModule({
@@ -12,7 +12,7 @@ import { AnalyzerModule } from './analyzer/analyzer.module';
     CommonModule,
     PagesRoutingModule,
     EditorModule,
-    AnalyzerModule
+    OverviewModule
   ]
 })
 export class PagesModule { }

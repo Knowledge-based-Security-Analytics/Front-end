@@ -3,11 +3,11 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Statement } from 'src/app/models/statemet';
 
 @Component({
-  selector: 'app-details-card',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  selector: 'app-info-card',
+  templateUrl: './info-card.component.html',
+  styleUrls: ['./info-card.component.scss']
 })
-export class DetailsComponent {
+export class InfoCardComponent {
   @Input() statement: Statement;
   @Output() statementChanged: EventEmitter<Statement> = new EventEmitter<Statement>();
 

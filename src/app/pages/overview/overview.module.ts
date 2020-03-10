@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { HighlightModule } from 'ngx-highlightjs';
 import {DetailCardComponent} from './components/detail-card/detail-card.component';
 import {ListCardComponent} from './components/list-card/list-card.component';
+import { StatementTableComponent } from './components/list-card/statement-table/statement-table.component';
 
 const NB_MODULES = [
   NbTabsetModule,
@@ -39,7 +40,8 @@ const NB_MODULES = [
     DebuggerComponent,
     OverviewComponent,
     DetailCardComponent,
-    ListCardComponent
+    ListCardComponent,
+    StatementTableComponent
   ],
   imports: [
     ...NB_MODULES,

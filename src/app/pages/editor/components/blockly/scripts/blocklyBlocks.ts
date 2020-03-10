@@ -45,7 +45,7 @@ export class BlocklyBlocks {
     this.stmtService.statementsObservable.subscribe( newStatements => {
       this.statements = newStatements.filter(statement => statement.eventType).map(statement => statement.eplParsed);
       this.statements.map(statement => this.eventTypes.push(statement.name));
-      console.table(this.statements);
+      // console.table(this.statements);
     });
   }
 

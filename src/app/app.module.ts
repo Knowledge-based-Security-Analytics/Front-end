@@ -14,12 +14,13 @@ import { PagesModule } from './pages/pages.module';
 import {
   NbThemeModule,
   NbLayoutModule,
-   NbButtonModule,
-   NbMenuModule,
-   NbIconModule,
-   NbToastrModule,
-   NbActionsModule,
-   NbTooltipModule } from '@nebular/theme';
+  NbButtonModule,
+  NbMenuModule,
+  NbIconModule,
+  NbToastrModule,
+  NbActionsModule,
+  NbTooltipModule,
+  NbDialogModule} from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
@@ -38,6 +39,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbThemeModule.forRoot({ name: 'default' }),
     NbMenuModule.forRoot(),
     NbToastrModule.forRoot(),
+    NbDialogModule.forRoot(),
     NbLayoutModule,
     NbEvaIconsModule,
     NbIconModule,

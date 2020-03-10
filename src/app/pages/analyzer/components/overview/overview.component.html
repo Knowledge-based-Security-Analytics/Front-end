@@ -1,4 +1,34 @@
-<div class="statement-overview mat-typography">
+<div class="row full-height">
+  <div class="col-sm-12 col-md-5 full-height">
+    <nb-card class="full-height" accent="primary">
+      <app-list-card></app-list-card>
+    </nb-card>
+  </div>
+  <div class="col-sm-12 col-md-7 full-height">
+    <nb-reveal-card class="full-height">
+      <nb-card-front>
+        <nb-card class="full-height" status="primary">
+          <nb-card-header>
+            Rule Details
+          </nb-card-header>
+          <nb-card-body>
+            Test
+          </nb-card-body>
+        </nb-card>
+      </nb-card-front>
+      <nb-card-back>
+        <nb-card class="full-height" status="success">
+          <nb-card-header>Rule Chart</nb-card-header>
+          <nb-card-body>
+            Test
+          </nb-card-body>
+        </nb-card>
+      </nb-card-back>
+    </nb-reveal-card>
+  </div>
+</div>
+
+<!-- <div class="statement-overview mat-typography">
   <button mat-icon-button class="filter-button" (click)="openSortFilterDialog()"><mat-icon>filter_list</mat-icon></button>
   <mat-accordion displayMode="default" [multi]="false"
                 [hideToggle]="false">
@@ -52,4 +82,4 @@
       </ng-container>
     </ng-container>
   </mat-accordion>
-</div>
+</div> -->

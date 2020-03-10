@@ -1,21 +1,53 @@
-.mat-expansion-panel-header-description {
-  display: flex;
-  justify-content: flex-end;
-}
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '~@nebular/theme/styles/global/breakpoints';
+@import '../../../../@theme/styles/themes';
 
-.mat-expansion-panel-header-title {
-  margin: auto 0;
-}
+@include nb-install-component() {
+  .full-height {
+    height: 100%;
+    margin-bottom: 0rem;
+  }
 
-.filter-button {
-  float: right;
-  margin-top: 0.25em;
-}
+  nb-tabset {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 
-.statement-overview {
-  padding-top: 5em;
-  overflow: auto;
-  height: 100%;
-  padding: 3px;
-  padding-right: 10px;
+  nb-tab {
+    padding: 0;
+  }
+
+  nb-list-item {
+    display: flex;
+    align-items: baseline;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+
+  .mat-expansion-panel-header-description {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mat-expansion-panel-header-title {
+    margin: auto 0;
+  }
+
+  .filter-button {
+    float: right;
+    margin-top: 0.25em;
+  }
+
+  .statement-overview {
+    padding-top: 5em;
+    overflow: auto;
+    height: 100%;
+    padding: 3px;
+    padding-right: 10px;
+  }
+
 }

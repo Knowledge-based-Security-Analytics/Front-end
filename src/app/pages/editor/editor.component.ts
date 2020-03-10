@@ -1,7 +1,7 @@
 import { BlocklyService } from './services/blockly.service';
 import { StatementService } from './../../services/statement.service';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Statement } from 'src/app/models/statemet';
 import { NbToastrService } from '@nebular/theme';
 
@@ -23,6 +23,7 @@ export class EditorComponent {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private stmtService: StatementService,
     private blocklyService: BlocklyService,
     private toastrService: NbToastrService
@@ -36,6 +37,7 @@ export class EditorComponent {
     this.statement.deploymentId = this.statement.deploymentId ? await this.deployUpdatedStatement() : await this.deployNewStatement();
     this.blocklyService.clearBlocklyWorkspace();
     this.showToast();
+    this.router.navigate(['/']);
   }
 
   private initStatement() {

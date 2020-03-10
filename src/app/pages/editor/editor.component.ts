@@ -42,7 +42,12 @@ export class EditorComponent {
 
   private initStatement() {
     const deploymentId = this.route.snapshot.paramMap.get('deploymentId');
-    deploymentId ? this.statement = this.stmtService.getStatement(deploymentId) : this.initEmptyStatement();
+    if (deploymentId) {
+      this.statement = this.stmtService.getStatement(deploymentId);
+      this.blocklyService.setBlocklyXml(this.statement.blocklyXml);
+    } else {
+      this.initEmptyStatement();
+    }
   }
 
   private initEmptyStatement(): void {

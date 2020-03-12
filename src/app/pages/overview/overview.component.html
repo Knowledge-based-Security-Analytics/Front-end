@@ -12,7 +12,7 @@
             Rule Details
           </nb-card-header>
           <nb-card-body>
-            <app-detail-card [statement]="selectedStatement"></app-detail-card>
+            <app-detail-card [statement]="selectedStatement" (statementUnselect)="statementUnselect()"></app-detail-card>
           </nb-card-body>
         </nb-card>
       </nb-card-front>

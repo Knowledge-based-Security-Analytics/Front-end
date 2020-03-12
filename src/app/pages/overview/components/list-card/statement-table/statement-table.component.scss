@@ -1,5 +1,5 @@
-@import './node_modules/bootstrap/scss/mixins/breakpoints';
-@import './node_modules/@nebular/theme/styles/global/breakpoints';
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '~@nebular/theme/styles/global/breakpoints';
 @import './src/app/@theme/styles/themes';
 
 @include nb-install-component() {
@@ -18,10 +18,6 @@
 
   .column-header {
     text-align: center;
-  }
-
-  .drop-confirm-dialog {
-    width: 30rem;
   }
 
   .action-container {

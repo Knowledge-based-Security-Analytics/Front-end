@@ -2,14 +2,46 @@
   <nb-card-header>Info</nb-card-header>
   <nb-card-body>
     <div class="row">
-      <input class="col-md-12" type="text" nbInput shape="round" placeholder="Statement name" status="primary" [(ngModel)]="statement.name">
+      <div class="col-md-3 flex flex flex-vertical-center">
+        Test
+      </div>
+      <div class="col-md-9">
+        <input type="text" nbInput placeholder="Statement name" status="basic" [(ngModel)]="statement.name" fullWidth>
+      </div>
     </div>
     <div class="row">
-      <nb-toggle (checkedChange)="changeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" labelPosition="end">Production Rule</nb-toggle>
+      <div class="col-md-12">
+        <nb-toggle (checkedChange)="onChangeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" labelPosition="end">Production Rule</nb-toggle>
+      </div>
+      <p id="blocklyOutput"></p>
     </div>
-    <p id="blocklyOutput"></p>
   </nb-card-body>
-  <nb-card-footer>
-    <button nbButton hero status="primary" fullWidth (click)="createStatement()"><nb-icon icon="save-outline"></nb-icon>Save</button>
+  <nb-card-footer class="row">
+    <div class="col-md-6 flex flex-horizontal-center">
+      <button nbButton status="danger" (click)="onCancelEdit(confirmCancelDialog)" fullWidth><nb-icon icon="close-outline"></nb-icon>Cancel</button>
+    </div>
+    <div class="col-md-6 flex flex-horizontal-center">
+      <button nbButton status="success" (click)="onCreateStatement()" fullWidth><nb-icon icon="save-outline"></nb-icon>Save</button>
+    </div>
   </nb-card-footer>
 </nb-card>
+
+<ng-template #confirmCancelDialog let-data let-ref="dialogRef">
+  <nb-card class="dialog">
+    <nb-card-header>Do you really want to stop editing the statement?</nb-card-header>
+    <nb-card-footer>
+      <div class="row">
+        <div class="col-md-6 flex flex-horizontal-center">
+          <button nbButton status="danger"(click)="ref.close(false)" fullWidth>
+            <nb-icon icon="close-outline"></nb-icon>No
+          </button>
+        </div>
+        <div class="col-md-6 flex flex-horizontal-center">
+          <button nbButton status="success" (click)="ref.close(true)" fullWidth>
+            <nb-icon icon="checkmark-outline"></nb-icon>Yes
+          </button>
+        </div>
+      </div>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

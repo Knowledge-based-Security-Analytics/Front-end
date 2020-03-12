@@ -9,12 +9,14 @@ import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core
 })
 export class DetailCardComponent implements OnChanges {
   @Output() alerted = new EventEmitter<number>();
+  @Output() statementUnselect: EventEmitter<void> = new EventEmitter<void>();
 
   @Input() statement: Statement;
 
   constructor(private eventStreamService: EventStreamService) { }
 
   ngOnChanges() {
+    console.log(this.statement);
     if (this.statement) {
       this.eventStreamService.subscribeTopic(this.statement.eplParsed.name).subscribe(event => {
         if (!this.statement.alertCount) {
@@ -24,6 +26,10 @@ export class DetailCardComponent implements OnChanges {
         this.alerted.emit(this.statement.alertCount);
       });
     }
+  }
+
+  onStatementUnselect(): void {
+    this.statementUnselect.emit();
   }
 
 }

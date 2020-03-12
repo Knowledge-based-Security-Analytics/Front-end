@@ -26,6 +26,10 @@ export class OverviewComponent implements OnInit {
     this.selectedStatement = statement;
   }
 
+  statementUnselect() {
+    this.selectedStatement = null;
+  }
+
   public onAlert(count: number, alertedStatement: Statement) {
     for (const statement of this.rawStatements) {
       if (statement.deploymentId === alertedStatement.deploymentId) {

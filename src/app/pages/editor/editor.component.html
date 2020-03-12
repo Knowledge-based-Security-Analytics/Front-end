@@ -1,0 +1,19 @@
+<div class="row full-height">
+  <div class="col-sm-12 col-md-5">
+    <app-info-card [statement]='statement' (statementChanged)='saveStatement($event)'></app-info-card>
+  </div>
+  <div class="col-sm-12 col-md-7 full-height">
+    <nb-card
+    status="primary"
+    class="full-height"
+    [nbSpinner]="loading"
+    nbSpinnerStatus="primary"
+    nbSpinnerSize="large"
+    nbSpinnerMessage="Loading blockly...">
+      <nb-card-header>Rule Editor</nb-card-header>
+      <nb-card-body style="padding: 0 0 0 0 ">
+        <app-blockly-card></app-blockly-card>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

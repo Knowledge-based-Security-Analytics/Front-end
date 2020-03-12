@@ -1,0 +1,17 @@
+<nb-tabset fullWidth>
+  <nb-tab tabTitle="Patterns">
+    <app-statement-table
+      [statements]="patternStatements"
+      (dropStatement)="onDropStatement($event)"
+      (selectStatement)="onSelectStatement($event)">
+    </app-statement-table>
+  </nb-tab>
+
+  <nb-tab tabTitle="Schemas">
+    <app-statement-table
+    [statements]="schemaStatements"
+    (dropStatement)="onDropStatement($event)"
+    (selectStatement)="onSelectStatement($event)">
+  </app-statement-table>
+  </nb-tab>
+</nb-tabset>

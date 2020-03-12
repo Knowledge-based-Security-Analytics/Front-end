@@ -1,0 +1,10 @@
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '~@nebular/theme/styles/global/breakpoints';
+@import './src/app/@theme/styles/themes';
+
+@include nb-install-component() {
+  .full-height {
+    height: 100%;
+    margin-bottom: 0rem;
+  }
+}

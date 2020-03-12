@@ -1,46 +1,48 @@
 import { StatementService } from './services/statement.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BlocklyComponent } from './components/blockly/blockly.component';
-import { DebuggerComponent } from './components/debugger/debugger.component';
-import { OverviewComponent } from './components/overview/overview.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { GraphQLModule } from './shared/graphql/graphql.module';
+import { GraphQLModule } from './services/graphql/graphql.module';
 import { HttpClientModule } from '@angular/common/http';
-import { MaterialModule } from './shared/material/material.module';
 import { FormsModule } from '@angular/forms';
-import { StatementComponent } from './components/overview/statement/statement.component';
-import { HighlightModule } from 'ngx-highlightjs';
-import { SortFilterDialogComponent } from './components/overview/sort-filter-dialog/sort-filter-dialog.component';
+import { PagesModule } from './pages/pages.module';
+import {
+  NbThemeModule,
+  NbLayoutModule,
+  NbButtonModule,
+  NbMenuModule,
+  NbIconModule,
+  NbToastrModule,
+  NbActionsModule,
+  NbTooltipModule,
+  NbDialogModule} from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BlocklyComponent,
-    DebuggerComponent,
-    OverviewComponent,
-    ToolbarComponent,
-    StatementComponent,
-    SortFilterDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    MaterialModule,
-    FlexLayoutModule,
     GraphQLModule,
     HttpClientModule,
-    HighlightModule
-  ],
-  entryComponents: [
-    SortFilterDialogComponent
+    PagesModule,
+    NbThemeModule.forRoot({ name: 'default' }),
+    NbMenuModule.forRoot(),
+    NbToastrModule.forRoot(),
+    NbDialogModule.forRoot(),
+    NbLayoutModule,
+    NbEvaIconsModule,
+    NbIconModule,
+    NbActionsModule,
+    NbTooltipModule,
+    NbButtonModule,
   ],
   providers: [
     StatementService,

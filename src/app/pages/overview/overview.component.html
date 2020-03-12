@@ -1,0 +1,85 @@
+<div class="row full-height">
+  <div class="col-sm-12 col-md-5 full-height">
+    <nb-card class="full-height" accent="primary">
+      <app-list-card (statementSelected)="statementSelected($event)"></app-list-card>
+    </nb-card>
+  </div>
+  <div class="col-sm-12 col-md-7 full-height">
+    <nb-reveal-card class="full-height">
+      <nb-card-front>
+        <nb-card class="full-height" status="primary">
+          <nb-card-header>
+            Rule Details
+          </nb-card-header>
+          <nb-card-body>
+            <app-detail-card [statement]="selectedStatement" (statementUnselect)="statementUnselect()"></app-detail-card>
+          </nb-card-body>
+        </nb-card>
+      </nb-card-front>
+      <nb-card-back>
+        <nb-card class="full-height" status="success">
+          <nb-card-header>Rule Chart</nb-card-header>
+          <nb-card-body>
+            Graph
+          </nb-card-body>
+        </nb-card>
+      </nb-card-back>
+    </nb-reveal-card>
+  </div>
+</div>
+
+<!-- <div class="statement-overview mat-typography">
+  <button mat-icon-button class="filter-button" (click)="openSortFilterDialog()"><mat-icon>filter_list</mat-icon></button>
+  <mat-accordion displayMode="default" [multi]="false"
+                [hideToggle]="false">
+    <ng-container *ngIf="filter.pattern">
+      <h2>Patterns:</h2>
+      <ng-container *ngFor="let statement of statements; let i = index" >
+        <mat-expansion-panel [hideToggle]="false" *ngIf="statement.visible && (statement.eplParsed.type == 'pattern')">
+          <mat-expansion-panel-header [collapsedHeight]="'62px'">
+            <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
+            <mat-panel-description>
+              <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+              <app-statement [statement] = "statement" (alerted)="onAlert($event, statement)"></app-statement>
+            <mat-action-row>
+                <a routerLink="/rule/{{statement.deploymentId}}">
+                  <button mat-icon-button matTooltip="debug">
+                    <mat-icon>bug_report</mat-icon>
+                  </button>
+                </a>
+                <a routerLink="/editor/{{statement.deploymentId}}">
+                  <button mat-icon-button matTooltip="edit statement"><mat-icon>edit</mat-icon></button>
+                </a>
+                <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+            </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container><br />
+    </ng-container>
+    <ng-container *ngIf="filter.schema">
+      <h2>Schemas:</h2>
+      <ng-container *ngFor="let statement of statements; let i = index" >
+        <mat-expansion-panel [hideToggle]="false" *ngIf="statement.visible && (statement.eplParsed.type == 'schema')">
+          <mat-expansion-panel-header [collapsedHeight]="'62px'">
+            <mat-panel-title><mat-icon fontSet="fa" fontIcon="fa-wrench" *ngIf="statement.deploymentMode == 'dev'" matTooltip="development"></mat-icon>{{statement.name}}</mat-panel-title>
+            <mat-panel-description>
+              <mat-chip-list *ngIf="statement.alertCount"><mat-chip color="accent" selected disabled>{{statement.alertCount}}</mat-chip></mat-chip-list>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+              <app-statement [statement] = "statement" (alerted)="onAlert($event, statement)"></app-statement>
+            <mat-action-row>
+              <a routerLink="/editor/{{statement.deploymentId}}">
+                <button mat-icon-button matTooltip="edit statement"><mat-icon>edit</mat-icon></button>
+              </a>
+                <button mat-icon-button matTooltip="delete statement" (click)="dropStatement(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+            </mat-action-row>
+        </mat-expansion-panel>
+      </ng-container>
+    </ng-container>
+  </mat-accordion>
+</div> -->

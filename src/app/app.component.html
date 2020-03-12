@@ -1,22 +1,21 @@
-<div class="wrapper">
-  <!-- Toolbar --> <app-toolbar></app-toolbar>
-
-  <mat-divider></mat-divider>
-
-  <div class="content" fxLayout="row">
-    <div id="editor" fxFlex="1 1 70%">
-      <!-- Blockly --> <app-blockly *ngIf="!debugging"></app-blockly>
-      <!-- Debugger -->
-      <ng-container *ngIf="debugging">
-        <button mat-button (click)="debugging = false"><mat-icon>navigate_before</mat-icon>back</button>
-        <app-debugger [statement] = "debugStatement"></app-debugger>
-      </ng-container>
+<nb-layout>
+  <nb-layout-header fixed>
+    <div class="header-container">
+      <div class="logo-container">
+        <a routerLink="/home" class="sidebar-toggle">
+          <nb-icon icon="home-outline"></nb-icon>
+        </a>
+        <a class="logo" routerLink="/home">Visual CEP</a>
+      </div>
     </div>
+    <span style="flex: 1 1"></span>
+    <nb-actions>
+      <nb-action icon="plus-outline" link="/editor" nbTooltip="Add new rule" nbTooltipPlacement="left" nbTooltipStatus="success"></nb-action>
+      <nb-action icon="compass-outline" link="/rules" nbTooltip="View existing rules" nbTooltipPlacement="left" nbTooltipStatus="primary"></nb-action>
+    </nb-actions>
+  </nb-layout-header>
 
-    <div id="overview" fxFlex="1 1 30%">
-      <!-- Statement Overview --> <app-overview (debug) = "debug($event)"></app-overview>
-    </div>
-  </div>
-</div>
-
-<router-outlet></router-outlet>
+  <nb-layout-column class="container-fluid">
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+</nb-layout>

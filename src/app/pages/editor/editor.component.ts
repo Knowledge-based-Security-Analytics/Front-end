@@ -1,17 +1,24 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NbToastrService } from '@nebular/theme';
+
 import { BlocklyService } from './services/blockly.service';
 import { StatementService } from './../../services/statement.service';
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Statement } from 'src/app/models/statemet';
-import { NbToastrService } from '@nebular/theme';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
-export class EditorComponent {
+export class EditorComponent implements OnInit {
 
+  get loading(): boolean {
+    return this._loading;
+  }
+  set loading(loading: boolean) {
+    this._loading = loading;
+  }
   get statement(): Statement {
     return this._statement;
   }
@@ -20,6 +27,8 @@ export class EditorComponent {
   }
   // tslint:disable-next-line: variable-name
   private _statement: Statement;
+  // tslint:disable-next-line: variable-name
+  private _loading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,7 +36,9 @@ export class EditorComponent {
     private stmtService: StatementService,
     private blocklyService: BlocklyService,
     private toastrService: NbToastrService
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.initStatement();
   }
 
@@ -40,14 +51,16 @@ export class EditorComponent {
     this.router.navigate(['/']);
   }
 
-  private initStatement() {
+  private async initStatement() {
+    this.loading = true;
     const deploymentId = this.route.snapshot.paramMap.get('deploymentId');
     if (deploymentId) {
       this.statement = this.stmtService.getStatement(deploymentId);
-      this.blocklyService.setBlocklyXml(this.statement.blocklyXml);
+      await this.blocklyService.setBlocklyXml(this.statement.blocklyXml);
     } else {
       this.initEmptyStatement();
     }
+    this.loading = false;
   }
 
   private initEmptyStatement(): void {

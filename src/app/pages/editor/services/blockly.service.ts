@@ -49,13 +49,13 @@ export class BlocklyService {
     .replace(/\\([\s\S])|(")/g, '\\$1$2');
   }
 
-  public async setBlocklyXml(xml: string): Promise<void> {
-    const promise = new Promise((resolve, reject) => {
+  public async setBlocklyXml(xml: string): Promise<string> {
+    return new Promise((resolve, reject) => {
       const blocklyXML = new DOMParser().parseFromString(xml, 'text/xml').documentElement;
-      setTimeout(() => resolve(blocklyXML), 1500);
-    });
-    promise.then(blocklyXml => {
-      Blockly.Xml.appendDomToWorkspace(blocklyXml, this.blocklyBlocks.workspace);
+      setTimeout(() => {
+        Blockly.Xml.appendDomToWorkspace(blocklyXML, this.blocklyBlocks.workspace);
+        resolve('Loaded');
+      }, 1500);
     });
   }
 

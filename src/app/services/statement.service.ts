@@ -1,5 +1,5 @@
 import { Statement } from 'src/app/models/statemet';
-import { GraphQLStatementService } from './../shared/graphql/graphql_statement.service';
+import { GraphQLStatementService } from './graphql/graphql_statement.service';
 import { Injectable } from '@angular/core';
 import { type } from 'os';
 import { BehaviorSubject } from 'rxjs';

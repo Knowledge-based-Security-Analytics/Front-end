@@ -8,7 +8,8 @@ import {
   NbCardModule,
   NbActionsModule,
   NbIconModule,
-  NbToggleModule
+  NbToggleModule,
+  NbSpinnerModule,
 } from '@nebular/theme';
 
 import { EditorComponent } from './editor.component';
@@ -23,6 +24,7 @@ const NB_MODULES = [
   NbActionsModule,
   NbIconModule,
   NbToggleModule,
+  NbSpinnerModule,
 ];
 @NgModule({
   declarations: [

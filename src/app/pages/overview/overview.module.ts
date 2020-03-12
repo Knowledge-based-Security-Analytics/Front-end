@@ -16,7 +16,6 @@ import {
 import { OverviewRoutingModule } from './overview-routing.module';
 import { DebuggerComponent } from './components/debugger/debugger.component';
 import { OverviewComponent } from './overview.component';
-import { MaterialModule } from 'src/app/shared/material/material.module';
 import { FormsModule } from '@angular/forms';
 import { HighlightModule } from 'ngx-highlightjs';
 import {DetailCardComponent} from './components/detail-card/detail-card.component';
@@ -47,7 +46,6 @@ const NB_MODULES = [
     ...NB_MODULES,
     CommonModule,
     OverviewRoutingModule,
-    MaterialModule,
     FormsModule,
     HighlightModule,
   ]

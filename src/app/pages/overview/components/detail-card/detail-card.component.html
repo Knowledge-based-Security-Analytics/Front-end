@@ -1,10 +1,18 @@
-<div *ngIf="statement">
-  <p>
-    <b>Deployment ID:</b><br />
-    <code>{{statement.deploymentId}}</code>
-  </p>
-  <p>
-    <b>EPL Statement:</b><br />
-    <code [highlight]="statement.eplStatement" [languages]="['SQL']"></code>
-  </p>
+<div *ngIf="statement" class="row">
+    <div class="col-md-1">
+      <button nbButton hero shape="round" status="info">Back</button>
+    </div>
+    <div class="col-md-11">
+      <h3>{{statement.name}}</h3>
+    </div>
+  <div class="col-md-12">
+    <p>
+      <b class="caption-2 text-hint">Deployment ID:</b><br />
+      <code>{{statement.deploymentId}}</code>
+    </p>
+    <p>
+      <b>EPL Statement:</b><br />
+      <code [highlight]="statement.eplStatement" [languages]="['SQL']"></code>
+    </p>
+  </div>
 </div>

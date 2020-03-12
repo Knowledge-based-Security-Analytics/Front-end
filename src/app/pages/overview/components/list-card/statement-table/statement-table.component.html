@@ -4,19 +4,30 @@
     nbInput
     fullWidth
     shape="round"
-    placeholder="Search..."
+    placeholder="Search for statement..."
     [nbFilterInput]="dataSource"
     id="search">
 </div>
 
-<table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+<table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)" style="border: 2px solid #fff">
   <tbody>
     <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" class="column-header"></tr>
     <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
     <ng-container [nbTreeGridColumnDef]="nameColumn">
-      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(nameColumn)" *nbTreeGridHeaderCellDef>Name</th>
-      <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[nameColumn] || '-'}}</td>
+      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(nameColumn)" *nbTreeGridHeaderCellDef style="width: 10rem;">Name</th>
+      <td nbTreeGridCell *nbTreeGridCellDef="let row" style="width: 10rem;">
+        <nb-actions fullWidth>
+          <nb-action
+            nbTooltip="Show details"
+            nbTooltipIcon="bulb-outline"
+            nbTooltipPlacement="bottom"
+            (click)="onSelectStatement(row.data[actionsColumn])"
+            style="cursor: pointer;">
+            {{row.data[nameColumn] || '-'}}
+          </nb-action>
+        </nb-actions>
+      </td>
     </ng-container>
 
     <ng-container [nbTreeGridColumnDef]="deploymentModeColumn">
@@ -24,14 +35,14 @@
         nbTreeGridHeaderCell
         [nbSortHeader]="getSortDirection(deploymentModeColumn)"
         *nbTreeGridHeaderCellDef>
-          Deployment Mode
+          Mode
       </th>
       <td nbTreeGridCell *nbTreeGridCellDef="let row" class="deployment-mode-column">
         <nb-icon
           *ngIf="row.data[deploymentModeColumn]==='prod'"
           icon="sun-outline"
           status="success"
-          nbTooltip="Production Rule"
+          nbTooltip="Production rule"
           nbTooltipIcon="sun-outline"
           nbTooltipStatus="success"
           nbTooltipPlacement="bottom"></nb-icon>
@@ -39,7 +50,7 @@
           *ngIf="row.data[deploymentModeColumn]==='dev'"
           icon="settings-outline"
           status="warning"
-          nbTooltip="Development Rule"
+          nbTooltip="Development rule"
           nbTooltipIcon="settings-outline"
           nbTooltipStatus="warning"
           nbTooltipPlacement="bottom"></nb-icon>
@@ -49,29 +60,32 @@
     <ng-container [nbTreeGridColumnDef]="actionsColumn">
       <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Actions</th>
       <td nbTreeGridCell *nbTreeGridCellDef="let row">
-        <nb-actions size="small" fullWidth>
-          <nb-action
-            icon="bulb-outline"
-            nbTooltip="Information about this Rule"
-            nbTooltipIcon="bulb-outline"
-            nbTooltipPlacement="bottom"
-            (click)="onSelectStatement(row.data[actionsColumn])">
-          </nb-action>
-          <nb-action
-            icon="edit-outline"
-            link="/editor/{{row.data[actionsColumn]}}"
-            nbTooltip="Edit this Rule"
+        <div class="row">
+          <div class="col-md-6 action-container action-container-left">
+            <button
+            nbButton
+            ghost
+            status="info"
+            nbTooltip="Start editing this rule"
             nbTooltipIcon="edit-outline"
-            nbTooltipPlacement="bottom">
-          </nb-action>
-          <nb-action
-            icon="trash-2-outline"
-            nbTooltip="Delete this Rule"
+            nbTooltipPlacement="bottom"
+            routerLink="/editor/{{row.data[actionsColumn]}}">
+              <nb-icon icon="edit-outline"></nb-icon>
+            </button>
+          </div>
+          <div class="col-md-6 action-container action-container-right">
+            <button
+            nbButton
+            ghost
+            status="info"
+            nbTooltip="Delete this rule"
             nbTooltipIcon="trash-2-outline"
             nbTooltipPlacement="bottom"
             (click)="onDropStatement(row.data[actionsColumn], dialog)">
-          </nb-action>
-        </nb-actions>
+              <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+          </div>
+        </div>
       </td>
     </ng-container>
   </tbody>

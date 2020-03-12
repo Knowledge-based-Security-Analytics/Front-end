@@ -1,4 +1,4 @@
-import { GraphQLEventStreamService } from './../shared/graphql/graphql_event-stream.service';
+import { GraphQLEventStreamService } from './graphql/graphql_event-stream.service';
 import { Event } from './../models/event';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

@@ -5,9 +5,8 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GraphQLModule } from './shared/graphql/graphql.module';
+import { GraphQLModule } from './services/graphql/graphql.module';
 import { HttpClientModule } from '@angular/common/http';
-import { MaterialModule } from './shared/material/material.module';
 import { FormsModule } from '@angular/forms';
 import { PagesModule } from './pages/pages.module';
 import {
@@ -31,7 +30,6 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    MaterialModule,
     GraphQLModule,
     HttpClientModule,
     PagesModule,

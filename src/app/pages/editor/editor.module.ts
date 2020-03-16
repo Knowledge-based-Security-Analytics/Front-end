@@ -1,3 +1,4 @@
+import { CoreModule } from './../../@core/core.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,9 +31,10 @@ const NB_MODULES = [
   declarations: [
     BlocklyCardComponent,
     EditorComponent,
-    InfoCardComponent
+    InfoCardComponent,
   ],
   imports: [
+    CoreModule,
     CommonModule,
     FormsModule,
     ...NB_MODULES,

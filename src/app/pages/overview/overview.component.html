@@ -1,7 +1,11 @@
 <div class="row full-height">
   <div class="col-sm-12 col-md-5 full-height">
-    <nb-card class="full-height" accent="primary">
-      <app-list-card (statementSelected)="statementSelected($event)"></app-list-card>
+    <nb-card class="full-height" accent="primary" [nbSpinner]="loading" nbSpinnerStatus="primary" nbSpinnerSize="large" nbSpinnerMessage="Loading statements...">
+      <app-list-card
+        [schemaStatements] = "schemaStatements"
+        [patternStatements] = "patternStatements"
+        (statementSelected)="statementSelected($event)">
+      </app-list-card>
     </nb-card>
   </div>
   <div class="col-sm-12 col-md-7 full-height">

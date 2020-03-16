@@ -1,4 +1,4 @@
-<div *ngIf="statement" class="row">
+<div *ngIf="statement else noStatement" class="row">
     <div class="col-md-11">
       <h3>{{statement.name}}</h3>
     </div>
@@ -19,6 +19,9 @@
     </div>
   </div>
 </div>
-<div *ngIf="!statement" class="full-height flex flex-horizontal-center flex-vertical-center">
-  <p>No statement currently selected...</p>
-</div>
+
+<ng-template #noStatement>
+  <div class="full-height flex flex-horizontal-center flex-vertical-center">
+    <p>No statement currently selected...</p>
+  </div>
+</ng-template>

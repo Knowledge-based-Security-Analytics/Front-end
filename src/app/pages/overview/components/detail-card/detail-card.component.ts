@@ -16,7 +16,6 @@ export class DetailCardComponent implements OnChanges {
   constructor(private eventStreamService: EventStreamService) { }
 
   ngOnChanges() {
-    console.log(this.statement);
     if (this.statement) {
       this.eventStreamService.subscribeTopic(this.statement.eplParsed.name).subscribe(event => {
         if (!this.statement.alertCount) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, TemplateRef, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnChanges, TemplateRef, EventEmitter, Output, ViewChild, ContentChild } from '@angular/core';
 import { Statement } from '@angular/compiler';
 import {
   NbTreeGridDataSource,

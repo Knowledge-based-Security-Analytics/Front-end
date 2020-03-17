@@ -4,6 +4,8 @@ export class StatementDef {
   deploymentMode?: boolean;
   eplStatement?: boolean;
   name?: boolean;
+  description?: boolean;
+  modified?: boolean;
   blocklyXml?: boolean;
   eventType?: boolean;
 }

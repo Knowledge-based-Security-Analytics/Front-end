@@ -12,6 +12,7 @@ import {
   NbIconModule,
   NbButtonModule,
   NbSpinnerModule,
+  NbFormFieldModule,
 } from '@nebular/theme';
 
 import { OverviewRoutingModule } from './overview-routing.module';
@@ -34,6 +35,7 @@ const NB_MODULES = [
   NbIconModule,
   NbButtonModule,
   NbSpinnerModule,
+  NbFormFieldModule,
 ];
 
 @NgModule({

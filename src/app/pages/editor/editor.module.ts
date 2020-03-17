@@ -11,6 +11,7 @@ import {
   NbIconModule,
   NbToggleModule,
   NbSpinnerModule,
+  NbFormFieldModule,
 } from '@nebular/theme';
 
 import { EditorComponent } from './editor.component';
@@ -26,6 +27,7 @@ const NB_MODULES = [
   NbIconModule,
   NbToggleModule,
   NbSpinnerModule,
+  NbFormFieldModule
 ];
 @NgModule({
   declarations: [

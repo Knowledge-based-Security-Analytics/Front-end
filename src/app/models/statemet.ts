@@ -4,6 +4,8 @@ export interface Statement {
     deploymentMode?: string;
     eplStatement?: string;
     name?: string;
+    description?: string;
+    modified?: string;
     blocklyXml?: string;
     eventType?: boolean;
     alertCount?: number;

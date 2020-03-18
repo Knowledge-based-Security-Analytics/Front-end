@@ -14,30 +14,15 @@
     <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" class="column-header"></tr>
     <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-    <ng-container [nbTreeGridColumnDef]="nameColumn">
-      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(nameColumn)" *nbTreeGridHeaderCellDef style="width: 10rem;">Name</th>
-      <td nbTreeGridCell *nbTreeGridCellDef="let row" style="width: 10rem;">
-        <nb-actions fullWidth>
-          <nb-action
-            nbTooltip="Show details"
-            nbTooltipIcon="bulb-outline"
-            nbTooltipPlacement="bottom"
-            (click)="onSelectStatement(row.data[actionsColumn])"
-            style="cursor: pointer;">
-            {{row.data[nameColumn] || '-'}}
-          </nb-action>
-        </nb-actions>
-      </td>
-    </ng-container>
-
     <ng-container [nbTreeGridColumnDef]="deploymentModeColumn">
       <th
         nbTreeGridHeaderCell
         [nbSortHeader]="getSortDirection(deploymentModeColumn)"
-        *nbTreeGridHeaderCellDef>
+        *nbTreeGridHeaderCellDef
+        style="width: 5rem;">
           Mode
       </th>
-      <td nbTreeGridCell *nbTreeGridCellDef="let row" class="deployment-mode-column">
+      <td nbTreeGridCell *nbTreeGridCellDef="let row" class="deployment-mode-column" style="width: 5rem;">
         <nb-icon
           *ngIf="row.data[deploymentModeColumn]==='prod'"
           icon="sun-outline"
@@ -57,9 +42,32 @@
       </td>
     </ng-container>
 
-    <ng-container [nbTreeGridColumnDef]="actionsColumn">
-      <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Actions</th>
+    <ng-container [nbTreeGridColumnDef]="nameColumn">
+      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(nameColumn)" *nbTreeGridHeaderCellDef style="width: 25rem;">Name</th>
+      <td nbTreeGridCell *nbTreeGridCellDef="let row" style="width: 25rem;">
+        <nb-actions fullWidth>
+          <nb-action
+            nbTooltip="Show details"
+            nbTooltipIcon="bulb-outline"
+            nbTooltipPlacement="bottom"
+            (click)="onSelectStatement(row.data[actionsColumn])"
+            style="cursor: pointer; font-weight: 400; font-size: 0.9rem;">
+            {{row.data[nameColumn] || '-'}}
+          </nb-action>
+        </nb-actions>
+      </td>
+    </ng-container>
+
+    <ng-container [nbTreeGridColumnDef]="modifiedColumn">
+      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(modifiedColumn)" *nbTreeGridHeaderCellDef>Last modified</th>
       <td nbTreeGridCell *nbTreeGridCellDef="let row">
+        <span class="flex flex-horizontal-center flex-vertical-center" style="cursor: default; font-weight: 400; font-size: 0.9rem;">{{row.data[modifiedColumn]}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container [nbTreeGridColumnDef]="actionsColumn">
+      <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 10rem;">Actions</th>
+      <td nbTreeGridCell *nbTreeGridCellDef="let row" style="width: 10rem;">
         <div class="row">
           <div class="col-md-6 action-container action-container-left">
             <button

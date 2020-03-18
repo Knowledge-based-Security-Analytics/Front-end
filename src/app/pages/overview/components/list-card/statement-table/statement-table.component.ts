@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, TemplateRef, EventEmitter, Output, ViewChild, ContentChild } from '@angular/core';
-import { Statement } from '@angular/compiler';
 import {
   NbTreeGridDataSource,
   NbSortDirection,
    NbTreeGridDataSourceBuilder,
    NbDialogService,
    NbSortRequest } from '@nebular/theme';
+import { Statement } from 'src/app/models/statemet';
 
 @Component({
   selector: 'app-statement-table',
@@ -21,9 +21,10 @@ export class StatementTableComponent implements OnChanges {
   dataSource: NbTreeGridDataSource<Statement>;
 
   deploymentModeColumn = 'deploymentMode';
+  modifiedColumn = 'modified_locale';
   nameColumn = 'name';
   actionsColumn = 'deploymentId';
-  allColumns = [this.deploymentModeColumn, this.nameColumn, this.actionsColumn];
+  allColumns = [this.deploymentModeColumn, this.nameColumn, this.modifiedColumn, this.actionsColumn];
 
   schemaDataSource: NbTreeGridDataSource<Statement>;
   patternDataSource: NbTreeGridDataSource<Statement>;
@@ -37,6 +38,10 @@ export class StatementTableComponent implements OnChanges {
 
   ngOnChanges() {
     this.statementsTreeNodes = this.statements.map(statement => Object.assign({data: statement}));
+    this.statements.map((statement: Statement) => {
+      // tslint:disable-next-line: no-string-literal
+      statement['modified_locale'] = new Date(statement.modified).toLocaleString();
+    });
     this.dataSource = this.dataSourceBuilder.create(this.statementsTreeNodes);
   }
 

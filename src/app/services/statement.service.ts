@@ -68,7 +68,7 @@ export class StatementService {
     .then(id => {
       const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);
       const statementNew: Statement = {deploymentId: id, eplStatement, blocklyXml, name, description, deploymentMode, eventType};
-      statementNew.modified = new Date().toLocaleString();
+      statementNew.modified = new Date().toISOString();
       this.parseStatement(statementNew);
       this.statements[i] = statementNew;
       this.statementsChanged();

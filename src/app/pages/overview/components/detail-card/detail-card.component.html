@@ -1,10 +1,13 @@
 <div *ngIf="statement else noStatement" class="row">
-    <div class="col-md-11">
+    <div class="col-md-11 col-sm-9">
       <h3>{{statement.name}}</h3>
     </div>
-    <div class="col-md-1 flex flex-horizontal-center flex-vertical-center">
+    <div class="col-md-1 col-sm-3 flex flex-horizontal-center flex-vertical-center">
       <button nbButton ghost shape="round" status="primary" (click)="onStatementUnselect()">
         <nb-icon icon="close-outline"></nb-icon>
+      </button>
+      <button nbButton ghost shape="round" status="success" (click)="onStatementUnselect()">
+        <nb-icon icon="edit-outline"></nb-icon>
       </button>
     </div>
   <div class="col-md-12">
@@ -17,6 +20,10 @@
       <b class="caption-2 text-hint">EPL Statement:</b><br />
       <code [highlight]="statement.eplStatement" [languages]="['SQL']"></code>
     </div>
+    <div
+      echarts
+      [options]="chartOption" class="demo-chart"
+    (chartInit)="onChartInit($event)"></div>
   </div>
 </div>
 

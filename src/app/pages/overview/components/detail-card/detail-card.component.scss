@@ -3,5 +3,7 @@
 @import './src/app/@theme/styles/themes';
 
 @include nb-install-component() {
-
+  .demo-chart {
+    height: 400px;
+  }
 }

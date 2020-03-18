@@ -14,6 +14,7 @@ import {
   NbSpinnerModule,
   NbFormFieldModule,
 } from '@nebular/theme';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import { OverviewRoutingModule } from './overview-routing.module';
 import { DebuggerComponent } from './components/debugger/debugger.component';
@@ -36,6 +37,7 @@ const NB_MODULES = [
   NbButtonModule,
   NbSpinnerModule,
   NbFormFieldModule,
+  NgxEchartsModule,
 ];
 
 @NgModule({

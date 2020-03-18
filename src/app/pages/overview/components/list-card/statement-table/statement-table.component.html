@@ -43,8 +43,8 @@
     </ng-container>
 
     <ng-container [nbTreeGridColumnDef]="nameColumn">
-      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(nameColumn)" *nbTreeGridHeaderCellDef style="width: 25rem;">Name</th>
-      <td nbTreeGridCell *nbTreeGridCellDef="let row" style="width: 25rem;">
+      <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(nameColumn)" *nbTreeGridHeaderCellDef>Name</th>
+      <td nbTreeGridCell *nbTreeGridCellDef="let row">
         <nb-actions fullWidth>
           <nb-action
             nbTooltip="Show details"
@@ -74,7 +74,7 @@
             nbButton
             ghost
             status="success"
-            shape="round"
+            size="small"
             nbTooltip="Start editing this rule"
             nbTooltipIcon="edit-outline"
             nbTooltipPlacement="bottom"
@@ -87,7 +87,7 @@
             nbButton
             ghost
             status="danger"
-            shape="round"
+            size="small"
             nbTooltip="Delete this rule"
             nbTooltipIcon="trash-2-outline"
             nbTooltipPlacement="bottom"

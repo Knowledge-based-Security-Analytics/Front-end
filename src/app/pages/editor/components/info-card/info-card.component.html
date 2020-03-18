@@ -1,27 +1,44 @@
 <nb-card class="full-height" accent="primary">
   <nb-card-header>Info</nb-card-header>
-  <nb-card-body>
-    <div class="row">
-      <div class="col-md-3 flex flex flex-vertical-center">
-        Test
+  <nb-card-body style="align-items: stretch;">
+      <nb-form-field>
+        <div class="row">
+          <label for="name" class="col-md-2 flex flex-vertical-center" style="margin-bottom: 0rem;">Name *</label>
+          <div class="col-md-10">
+            <input nbInput type="text" id="name" class="input" placeholder="Statement name" status="basic" [(ngModel)]="statement.name" #name="ngModel" fullWidth required>
+          </div>
+        </div>
+      </nb-form-field>
+
+      <nb-form-field>
+        <div class="row">
+          <label for="description" class="col-md-2" style="margin-bottom: 0rem;">Description</label>
+          <div class="col-md-10">
+            <textarea nbInput id="description" class="input" placeholder="Statement description" status="basic" [(ngModel)]="statement.description" fullWidth ></textarea>
+          </div>
+        </div>
+      </nb-form-field>
+
+      <div class="row">
+        <label for="blocklyOutput" class="col-md-2" style="margin-bottom: 0rem;">EPL </label>
+        <div class="col-md-10">
+          <textarea nbInput id="blocklyOutput" class="input" placeholder="EPL statement" disabled fullWidth></textarea>
+        </div>
       </div>
-      <div class="col-md-9">
-        <input type="text" nbInput placeholder="Statement name" status="basic" [(ngModel)]="statement.name" fullWidth>
+
+      <div class="row">
+        <div class="col-md-12">
+          <nb-toggle (checkedChange)="onChangeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" labelPosition="end">Production Rule</nb-toggle>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <nb-toggle (checkedChange)="onChangeDeploymentMode($event)" [checked]="statement.deploymentMode=='prod'" labelPosition="end">Production Rule</nb-toggle>
-      </div>
-      <p id="blocklyOutput"></p>
-    </div>
+
   </nb-card-body>
   <nb-card-footer class="row">
     <div class="col-md-6 flex flex-horizontal-center">
       <button nbButton status="danger" (click)="onCancelEdit(confirmCancelDialog)" fullWidth><nb-icon icon="close-outline"></nb-icon>Cancel</button>
     </div>
     <div class="col-md-6 flex flex-horizontal-center">
-      <button nbButton status="success" (click)="onCreateStatement()" fullWidth><nb-icon icon="save-outline"></nb-icon>Save</button>
+      <button nbButton status="success" [disabled]="name.invalid" (click)="onCreateStatement()" fullWidth><nb-icon icon="save-outline"></nb-icon>Save</button>
     </div>
   </nb-card-footer>
 </nb-card>

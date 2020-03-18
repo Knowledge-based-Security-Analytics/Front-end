@@ -1,3 +1,4 @@
+import { CoreModule } from './../../@core/core.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +11,7 @@ import {
   NbIconModule,
   NbToggleModule,
   NbSpinnerModule,
+  NbFormFieldModule,
 } from '@nebular/theme';
 
 import { EditorComponent } from './editor.component';
@@ -25,14 +27,16 @@ const NB_MODULES = [
   NbIconModule,
   NbToggleModule,
   NbSpinnerModule,
+  NbFormFieldModule
 ];
 @NgModule({
   declarations: [
     BlocklyCardComponent,
     EditorComponent,
-    InfoCardComponent
+    InfoCardComponent,
   ],
   imports: [
+    CoreModule,
     CommonModule,
     FormsModule,
     ...NB_MODULES,

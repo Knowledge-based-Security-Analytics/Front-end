@@ -1,8 +1,7 @@
 import { GraphQLUtils } from './graphql_utils';
 import { Injectable } from '@angular/core';
-import { Apollo, QueryRef } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { DocumentNode } from 'apollo-link';
 import { Statement } from 'src/app/models/statemet';
 import { StatementDef } from './statement-def';
 
@@ -44,7 +43,7 @@ export class GraphQLStatementService {
    * @returns The ID of the deployed Statement
    */
   public async pushStatement(eplStatement: string, blocklyXml: string, name?: string,
-                             deploymentMode?: string, eventType?: boolean): Promise<string> {
+                             deploymentMode?: string, eventType?: boolean, description?: string): Promise<string> {
     const gqlString = gql`
       mutation {
         deployStatement(
@@ -52,6 +51,7 @@ export class GraphQLStatementService {
             ${name ? `name: "${name}"` : ''}
             ${deploymentMode ? `deploymentMode: "${deploymentMode}"` : ''}
             ${eventType !== undefined ? `eventType: ${eventType}` : ''}
+            ${description ? `description: "${description}"` : ''}
             eplStatement: "${eplStatement}"
             blocklyXml: "${blocklyXml}"
           }
@@ -64,7 +64,7 @@ export class GraphQLStatementService {
    * @returns The ID of the updated Statement
    */
   public async updateStatement(deploymentId: string, name?: string, deploymentMode?: string,
-                               eventType?: boolean, eplStatement?: string, blocklyXml?: string): Promise<string> {
+                               eventType?: boolean, eplStatement?: string, blocklyXml?: string, description?: string): Promise<string> {
     const gqlString = gql`
       mutation {
         redeployStatement(
@@ -72,6 +72,7 @@ export class GraphQLStatementService {
             ${name ? `name: "${name}"` : ''}
             ${deploymentMode ? `deploymentMode: "${deploymentMode}"` : ''}
             ${eventType !== undefined ? `eventType: ${eventType}` : ''}
+            ${description ? `description: "${description}"` : ''}
             deploymentId: "${deploymentId}"
             ${eplStatement ? `eplStatement: "${eplStatement}"` : ''}
             ${blocklyXml ? `blocklyXml: "${blocklyXml}"` : ''}

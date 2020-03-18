@@ -10,16 +10,28 @@ import { StatementService } from 'src/app/services/statement.service';
 })
 export class OverviewComponent implements OnInit {
 
-  private rawStatements: Statement[];
+  schemaStatements: Statement[];
+  patternStatements: Statement[];
+  loading = false;
+  // private rawStatements: Statement[];
   selectedStatement: Statement;
 
-  constructor(private statementService: StatementService) { }
+  constructor(private stmtService: StatementService) { }
 
   ngOnInit() {
-    this.statementService.statementsObservable.subscribe(statements => {
-      this.rawStatements = statements;
+    // this.statementService.statementsObservable.subscribe(statements => {
+    //   this.rawStatements = statements;
+    // });
+    // this.statementService.getStatements();
+    this.loading = true;
+    this.stmtService.statementsObservable.subscribe(statements => {
+      this.schemaStatements = statements.filter(statement => statement.eventType);
+      this.patternStatements = statements.filter(statement => !statement.eventType);
+      if (this.schemaStatements.length > 0 || this.patternStatements.length > 0) {
+        this.loading = false;
+      }
     });
-    this.statementService.getStatements();
+    this.stmtService.getStatements();
   }
 
   statementSelected(statement: Statement) {
@@ -30,11 +42,11 @@ export class OverviewComponent implements OnInit {
     this.selectedStatement = null;
   }
 
-  public onAlert(count: number, alertedStatement: Statement) {
-    for (const statement of this.rawStatements) {
-      if (statement.deploymentId === alertedStatement.deploymentId) {
-        statement.alertCount = alertedStatement.alertCount;
-      }
-    }
-  }
+  // public onAlert(count: number, alertedStatement: Statement) {
+  //   for (const statement of this.rawStatements) {
+  //     if (statement.deploymentId === alertedStatement.deploymentId) {
+  //       statement.alertCount = alertedStatement.alertCount;
+  //     }
+  //   }
+  // }
 }

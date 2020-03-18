@@ -1,7 +1,6 @@
 import { Statement } from 'src/app/models/statemet';
 import { GraphQLStatementService } from './graphql/graphql_statement.service';
 import { Injectable } from '@angular/core';
-import { type } from 'os';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -21,6 +20,8 @@ export class StatementService {
                                                         deploymentMode: true,
                                                         eplStatement: true,
                                                         name: true,
+                                                        description: true,
+                                                        modified: true,
                                                         blocklyXml: true,
                                                         eventType: true});
       this.statements.forEach(statement => {
@@ -34,10 +35,16 @@ export class StatementService {
   /**
    * @returns The ID of the deployed Statement
    */
-  public async pushStatement(eplStatement: string, blocklyXml: string, name?: string,
-                             deploymentMode?: string, eventType?: boolean): Promise<string> {
-    return this.graphqlStatementService.pushStatement(eplStatement, blocklyXml, name, deploymentMode, eventType).then(deploymentId => {
-      const statement: Statement = {deploymentId, eplStatement, blocklyXml, name, deploymentMode, eventType};
+  public async pushStatement(
+    eplStatement: string,
+    blocklyXml: string,
+    name?: string,
+    deploymentMode?: string,
+    eventType?: boolean,
+    description?: string): Promise<string> {
+    return this.graphqlStatementService
+    .pushStatement(eplStatement, blocklyXml, name, deploymentMode, eventType, description).then(deploymentId => {
+      const statement: Statement = {deploymentId, eplStatement, blocklyXml, name, description, deploymentMode, eventType};
       this.parseStatement(statement);
       this.statements.push(statement);
       this.statementsChanged();
@@ -54,11 +61,14 @@ export class StatementService {
     deploymentMode?: string,
     eventType?: boolean,
     eplStatement?: string,
-    blocklyXml?: string): Promise<string> {
-    return this.graphqlStatementService.updateStatement(deploymentId, name, deploymentMode, eventType, eplStatement, blocklyXml)
+    blocklyXml?: string,
+    description?: string): Promise<string> {
+    return this.graphqlStatementService
+    .updateStatement(deploymentId, name, deploymentMode, eventType, eplStatement, blocklyXml, description)
     .then(id => {
       const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);
-      const statementNew: Statement = {deploymentId: id, eplStatement, blocklyXml, name, deploymentMode, eventType};
+      const statementNew: Statement = {deploymentId: id, eplStatement, blocklyXml, name, description, deploymentMode, eventType};
+      statementNew.modified = new Date().toLocaleString();
       this.parseStatement(statementNew);
       this.statements[i] = statementNew;
       this.statementsChanged();

@@ -44,9 +44,9 @@ export class BlocklyService {
   }
 
   public getBlocklyXml(): string {
-    return this.xmlSerializer
+    return new XMLSerializer()
     .serializeToString(Blockly.Xml.workspaceToDom(this.blocklyBlocks.workspace))
-    .replace(/\\([\s\S])|(")/g, '\\$1$2');
+    .replace(/"/g, '\'');
   }
 
   public async setBlocklyXml(xml: string): Promise<string> {

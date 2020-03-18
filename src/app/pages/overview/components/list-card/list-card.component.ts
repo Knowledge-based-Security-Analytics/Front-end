@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { NbToastrService } from '@nebular/theme';
 
 import { StatementService } from 'src/app/services/statement.service';
@@ -10,38 +10,16 @@ import { Statement } from 'src/app/models/statemet';
   styleUrls: ['./list-card.component.scss']
 })
 export class ListCardComponent implements OnInit {
+  @Input() schemaStatements: Statement[];
+  @Input() patternStatements: Statement[];
   @Output() statementSelected: EventEmitter<Statement> = new EventEmitter<Statement>();
-
-  get schemaStatements(): Statement[] {
-    return this._schemaStatements;
-  }
-  set schemaStatements(schemaStatements: Statement[]) {
-    this._schemaStatements = schemaStatements;
-  }
-  get patternStatements(): Statement[] {
-    return this._patternStatements;
-  }
-  set patternStatements(patternStatements) {
-    this._patternStatements = patternStatements;
-  }
-
-  // tslint:disable-next-line: variable-name
-  private _schemaStatements: Statement[];
-  // tslint:disable-next-line: variable-name
-  private _patternStatements: Statement[];
 
   constructor(
     private stmtService: StatementService,
     private toastrService: NbToastrService,
   ) { }
 
-  ngOnInit() {
-    this.stmtService.statementsObservable.subscribe(statements => {
-      this.schemaStatements = statements.filter(statement => statement.eventType);
-      this.patternStatements = statements.filter(statement => !statement.eventType);
-    });
-    this.stmtService.getStatements();
-  }
+  ngOnInit() { }
 
   onDropStatement(deploymentId: string) {
     this.stmtService.dropStatement(deploymentId).then(() => {

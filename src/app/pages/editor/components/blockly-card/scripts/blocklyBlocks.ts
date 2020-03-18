@@ -322,7 +322,9 @@ export class BlocklyBlocks {
   }
   private initPreviewChangeListener(): void {
     this.workspace.addChangeListener(() => {
-      document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspace);
+      if (document.getElementById( 'blocklyOutput' )) {
+        document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.workspace);
+      }
     });
   }
   private initButtonCallbacks(): void {

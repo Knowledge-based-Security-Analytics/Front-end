@@ -29,6 +29,7 @@ export class EditorComponent implements OnInit {
   private _statement: Statement;
   // tslint:disable-next-line: variable-name
   private _loading = false;
+  saving = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,10 +46,12 @@ export class EditorComponent implements OnInit {
   public async saveStatement(statement: Statement): Promise<void> {
     this.statement = statement;
     this.addEplAndBlocklyXml();
-    this.statement.deploymentId = this.statement.deploymentId ? await this.deployUpdatedStatement() : await this.deployNewStatement();
+    this.saving = true;
+    this.statement.deploymentId = await this.deployStatement();
     this.blocklyService.clearBlocklyWorkspace();
-    this.showToast();
+    this.saving = false;
     this.router.navigate(['/']);
+    this.showToast();
   }
 
   private async initStatement() {
@@ -75,6 +78,10 @@ export class EditorComponent implements OnInit {
     };
   }
 
+  private deployStatement(): Promise<string> {
+    return this.statement.deploymentId ? this.deployUpdatedStatement() : this.deployNewStatement();
+  }
+
   private addEplAndBlocklyXml(): void {
     this.statement.eplStatement = this.blocklyService.getEplStatement();
     this.statement.blocklyXml = this.blocklyService.getBlocklyXml();
@@ -88,8 +95,9 @@ export class EditorComponent implements OnInit {
       this.statement.deploymentMode,
       this.statement.eventType,
       this.statement.eplStatement,
-      this.statement.blocklyXml
-    );
+      this.statement.blocklyXml,
+      this.statement.description
+      );
   }
 
   private deployNewStatement(): Promise<string> {
@@ -98,7 +106,9 @@ export class EditorComponent implements OnInit {
       this.statement.blocklyXml,
       this.statement.name,
       this.statement.deploymentMode,
-      this.statement.eventType);
+      this.statement.eventType,
+      this.statement.description,
+      );
   }
 
   private showToast() {

@@ -34,7 +34,6 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     GraphQLModule,
     HttpClientModule,
     PagesModule,
-    NbThemeModule.forRoot({ name: 'default' }),
     NbMenuModule.forRoot(),
     NbToastrModule.forRoot(),
     NbDialogModule.forRoot(),

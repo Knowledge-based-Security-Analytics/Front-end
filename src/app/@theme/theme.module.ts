@@ -13,7 +13,8 @@ const PIPES = [
 
 @NgModule({
   declarations: [ ...PIPES, ],
-  imports: [ CommonModule ]
+  imports: [ CommonModule ],
+  exports: [ CommonModule, ...PIPES, ]
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders {

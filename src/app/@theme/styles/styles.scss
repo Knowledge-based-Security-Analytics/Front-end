@@ -5,12 +5,14 @@
 
 // framework component themes (styles tied to theme variables)
 @import '~@nebular/theme/styles/globals';
-@import '~@nebular/auth/styles/all';
 
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 @import '~bootstrap/scss/grid';
+
+@import '~highlight.js/styles/github.css';
+@import "~@fortawesome/fontawesome-free/css/all.css";
 
 // loading progress bar theme
 @import './pace.theme';
@@ -23,11 +25,51 @@
 
   // framework global styles
   @include nb-theme-global();
-  @include nb-auth-global();
 
   @include ngx-layout();
   // loading progress bar
   @include ngx-pace-theme();
 
   @include nb-overrides();
+
+  html, body { height: 100%; }
+  body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+  .full-height {
+    height: 100%;
+    margin-bottom: 0rem;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-horizontal-center {
+    justify-content: center;
+  }
+
+  .flex-vertical-center {
+    align-items: center;
+  }
+
+  .dialog {
+    width: 30rem;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: grey;
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(90, 90, 90);
+  }
 };

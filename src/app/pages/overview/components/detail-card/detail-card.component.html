@@ -20,10 +20,10 @@
       <b class="caption-2 text-hint">EPL Statement:</b><br />
       <code [highlight]="statement.eplStatement" [languages]="['SQL']"></code>
     </div>
-    <div
-      echarts
-      [options]="chartOption" class="demo-chart"
-    (chartInit)="onChartInit($event)"></div>
+    <div echarts
+      [options]="chartOption"
+      class="demo-chart"
+      (chartInit)="onChartInit($event)"></div>
   </div>
 </div>
 

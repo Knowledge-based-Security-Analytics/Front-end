@@ -15,7 +15,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
 
   @Input() statement: Statement;
 
-  chartOption: EChartOption;
+  chartOption: any;
   echartsInstance: any;
 
   constructor(

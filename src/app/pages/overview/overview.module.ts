@@ -1,3 +1,4 @@
+import { ThemeModule } from './../../@theme/theme.module';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -20,8 +21,8 @@ import { DebuggerComponent } from './components/debugger/debugger.component';
 import { OverviewComponent } from './overview.component';
 import { FormsModule } from '@angular/forms';
 import { HighlightModule } from 'ngx-highlightjs';
-import {DetailCardComponent} from './components/detail-card/detail-card.component';
-import {ListCardComponent} from './components/list-card/list-card.component';
+import { DetailCardComponent } from './components/detail-card/detail-card.component';
+import { ListCardComponent } from './components/list-card/list-card.component';
 import { StatementTableComponent } from './components/list-card/statement-table/statement-table.component';
 
 const NB_MODULES = [
@@ -38,6 +39,7 @@ const NB_MODULES = [
   NbFormFieldModule,
 ];
 
+
 @NgModule({
   declarations: [
     DebuggerComponent,
@@ -50,6 +52,7 @@ const NB_MODULES = [
     ...NB_MODULES,
     CommonModule,
     OverviewRoutingModule,
+    ThemeModule,
     FormsModule,
     HighlightModule,
   ]

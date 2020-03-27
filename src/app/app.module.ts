@@ -1,3 +1,4 @@
+import { ThemeModule } from './@theme/theme.module';
 import { StatementService } from './services/statement.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -33,10 +34,10 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     GraphQLModule,
     HttpClientModule,
     PagesModule,
-    NbThemeModule.forRoot({ name: 'default' }),
     NbMenuModule.forRoot(),
     NbToastrModule.forRoot(),
     NbDialogModule.forRoot(),
+    ThemeModule.forRoot(),
     NbLayoutModule,
     NbEvaIconsModule,
     NbIconModule,

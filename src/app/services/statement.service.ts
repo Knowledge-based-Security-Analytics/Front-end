@@ -68,7 +68,7 @@ export class StatementService {
     .then(id => {
       const i = this.statements.findIndex(statement => statement.deploymentId === deploymentId);
       const statementNew: Statement = {deploymentId: id, eplStatement, blocklyXml, name, description, deploymentMode, eventType};
-      statementNew.modified = new Date().toLocaleString();
+      statementNew.modified = new Date().toISOString();
       this.parseStatement(statementNew);
       this.statements[i] = statementNew;
       this.statementsChanged();
@@ -104,7 +104,7 @@ export class StatementService {
       statement.eplParsed.type = 'schema';
 
       statement.eplParsed.name = statement.eplStatement.match(/schema.*\(/)[0];
-      statement.eplParsed.name = statement.eplParsed.name.slice(7, statement.eplParsed.name.length - 2);
+      statement.eplParsed.name = statement.eplParsed.name.slice(7, -5);
 
       statement.eplParsed.attributes = {};
       let eventDef = statement.eplStatement.match(/schema.*\(.*\)/)[0];
@@ -121,7 +121,9 @@ export class StatementService {
       statement.eplParsed.type = 'pattern';
 
       statement.eplParsed.name = statement.eplStatement.match(/\'.*\'/)[0];
-      statement.eplParsed.name = statement.eplParsed.name.slice(1, statement.eplParsed.name.length - 1);
+      statement.eplParsed.name = statement.eplParsed.name
+        .split('@')[1]
+        .slice(13, -1);
     }
   }
 

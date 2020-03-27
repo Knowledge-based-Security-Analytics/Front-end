@@ -32,8 +32,6 @@
               "node_modules/blockly/blockly.js",
               "node_modules/blockly/blocks.js",
               "node_modules/blockly/msg/en.js",
-              "node_modules/echarts/dist/echarts.min.js",
-              "node_modules/echarts/dist/extension/bmap.min.js",
               "src/app/pages/editor/components/blockly-card/scripts/generator.js"
             ]
           },

@@ -15,15 +15,14 @@ import {
   NbSpinnerModule,
   NbFormFieldModule,
 } from '@nebular/theme';
-import { NgxEchartsModule } from 'ngx-echarts';
 
 import { OverviewRoutingModule } from './overview-routing.module';
 import { DebuggerComponent } from './components/debugger/debugger.component';
 import { OverviewComponent } from './overview.component';
 import { FormsModule } from '@angular/forms';
 import { HighlightModule } from 'ngx-highlightjs';
-import {DetailCardComponent} from './components/detail-card/detail-card.component';
-import {ListCardComponent} from './components/list-card/list-card.component';
+import { DetailCardComponent } from './components/detail-card/detail-card.component';
+import { ListCardComponent } from './components/list-card/list-card.component';
 import { StatementTableComponent } from './components/list-card/statement-table/statement-table.component';
 
 const NB_MODULES = [
@@ -38,8 +37,8 @@ const NB_MODULES = [
   NbButtonModule,
   NbSpinnerModule,
   NbFormFieldModule,
-  NgxEchartsModule,
 ];
+
 
 @NgModule({
   declarations: [

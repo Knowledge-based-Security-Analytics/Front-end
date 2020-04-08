@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 
 import { BlocklyService } from './services/blockly.service';
-import { StatementService } from './../../services/statement.service';
-import { Statement } from 'src/app/models/statemet';
+import { Pattern, Schema } from 'src/app/models/statement';
+import { StatementService } from 'src/app/shared/services/statement.service';
 
 @Component({
   selector: 'app-editor',
@@ -13,41 +13,32 @@ import { Statement } from 'src/app/models/statemet';
 })
 export class EditorComponent implements OnInit {
 
-  get loading(): boolean {
-    return this._loading;
-  }
-  set loading(loading: boolean) {
-    this._loading = loading;
-  }
-  get statement(): Statement {
-    return this._statement;
-  }
-  set statement(statement: Statement) {
-    this._statement = statement;
-  }
-  // tslint:disable-next-line: variable-name
-  private _statement: Statement;
-  // tslint:disable-next-line: variable-name
-  private _loading = false;
-  saving = false;
+  public loading = false;
+  public saving = false;
+  private deploymentId: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private stmtService: StatementService,
-    private blocklyService: BlocklyService,
+    public blocklyService: BlocklyService,
     private toastrService: NbToastrService
-  ) { }
+  ) {
+    this.route.paramMap.subscribe( paramMap => {
+      this.blocklyService.statementType = paramMap.get('statementType');
+      this.deploymentId = paramMap.get('deploymentId');
+    });
+  }
 
   ngOnInit() {
     this.initStatement();
   }
 
-  public async saveStatement(statement: Statement): Promise<void> {
-    this.statement = statement;
+  public async saveStatement(statement: Pattern | Schema): Promise<void> {
+    this.blocklyService.statement = statement;
     this.addEplAndBlocklyXml();
     this.saving = true;
-    this.statement.deploymentId = await this.deployStatement();
+    this.blocklyService.statement.deploymentProperties.id = await this.deployStatement();
     this.blocklyService.clearBlocklyWorkspace();
     this.saving = false;
     this.router.navigate(['/']);
@@ -56,10 +47,9 @@ export class EditorComponent implements OnInit {
 
   private async initStatement() {
     this.loading = true;
-    const deploymentId = this.route.snapshot.paramMap.get('deploymentId');
-    if (deploymentId) {
-      this.statement = this.stmtService.getStatement(deploymentId);
-      await this.blocklyService.setBlocklyXml(this.statement.blocklyXml);
+    if (this.deploymentId) {
+      this.blocklyService.statement = this.stmtService.getStatement(this.deploymentId);
+      await this.blocklyService.setBlocklyXml(this.blocklyService.statement.blocklyXml);
     } else {
       this.initEmptyStatement();
     }
@@ -67,54 +57,32 @@ export class EditorComponent implements OnInit {
   }
 
   private initEmptyStatement(): void {
-    this.statement = {
-      deploymentId: '',
-      deploymentDependencies: [],
-      deploymentMode: 'dev',
-      eplStatement: '',
-      name: '',
-      blocklyXml: '',
-      eventType: false
-    };
+    this.blocklyService.statement = this.blocklyService.statementType === 'schema' ? new Schema() : new Pattern();
   }
 
   private deployStatement(): Promise<string> {
-    return this.statement.deploymentId ? this.deployUpdatedStatement() : this.deployNewStatement();
+    return this.blocklyService.statement.deploymentProperties.id ? this.deployUpdatedStatement() : this.deployNewStatement();
   }
 
   private addEplAndBlocklyXml(): void {
-    this.statement.eplStatement = this.blocklyService.getEplStatement();
-    this.statement.blocklyXml = this.blocklyService.getBlocklyXml();
-    this.statement.eventType = this.statement.eplStatement.includes('create json schema');
+    // this.statement.eplStatement = this.blocklyService.getEplStatement();
+    this.blocklyService.statement.blocklyXml = this.blocklyService.getBlocklyXml();
+    // this.statement.eventType = this.statement.eplStatement.includes('create json schema');
   }
 
   private deployUpdatedStatement(): Promise<string> {
-    return this.stmtService.updateStatement(
-      this.statement.deploymentId,
-      this.statement.name,
-      this.statement.deploymentMode,
-      this.statement.eventType,
-      this.statement.eplStatement,
-      this.statement.blocklyXml,
-      this.statement.description
-      );
+    return this.stmtService.updateStatement(this.blocklyService.statement);
+
   }
 
   private deployNewStatement(): Promise<string> {
-    return this.stmtService.pushStatement(
-      this.statement.eplStatement,
-      this.statement.blocklyXml,
-      this.statement.name,
-      this.statement.deploymentMode,
-      this.statement.eventType,
-      this.statement.description,
-      );
+    return this.stmtService.pushStatement(this.blocklyService.statement);
   }
 
   private showToast() {
     this.toastrService.show(
-      `Deployment ID: ${this.statement.deploymentId}`,
-      `Successfully deployed "${this.statement.name}"`,
+      `Deployment ID: ${this.blocklyService.statement.deploymentProperties.id}`,
+      `Successfully deployed "${this.blocklyService.statement.name}"`,
       { status: 'success' }
     );
   }

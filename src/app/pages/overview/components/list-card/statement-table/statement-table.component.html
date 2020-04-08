@@ -78,7 +78,7 @@
             nbTooltip="Start editing this rule"
             nbTooltipIcon="edit-outline"
             nbTooltipPlacement="bottom"
-            routerLink="/editor/{{row.data[actionsColumn]}}">
+            routerLink="/editor/{{schemas ? 'schema' : 'pattern'}}/{{row.data[actionsColumn]}}">
               <nb-icon icon="edit-outline"></nb-icon>
             </button>
           </div>

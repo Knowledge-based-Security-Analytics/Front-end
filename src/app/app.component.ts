@@ -10,6 +10,11 @@ export class AppComponent implements OnInit {
 
   activeRoute = '/';
 
+  items = [
+    { title: 'Add schema', icon: 'layers-outline', link: '/editor/schema' },
+    { title: 'Add pattern', icon: 'funnel-outline', link: '/editor/pattern' },
+  ];
+
   constructor(
     private router: Router,
 

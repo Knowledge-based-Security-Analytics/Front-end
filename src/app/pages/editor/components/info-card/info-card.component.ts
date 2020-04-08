@@ -1,7 +1,7 @@
 import { NbDialogService } from '@nebular/theme';
 import { Component, Input, EventEmitter, Output, TemplateRef } from '@angular/core';
 
-import { Statement } from 'src/app/models/statemet';
+import { Pattern, Schema } from 'src/app/models/statement';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./info-card.component.scss']
 })
 export class InfoCardComponent {
-  @Input() statement: Statement;
-  @Output() statementChanged: EventEmitter<Statement> = new EventEmitter<Statement>();
+  @Input() statement: Pattern | Schema;
+  @Output() statementChanged: EventEmitter<Pattern | Schema> = new EventEmitter<Pattern | Schema>();
 
   constructor(
     private dialogService: NbDialogService,
@@ -19,7 +19,7 @@ export class InfoCardComponent {
    ) { }
 
   public onChangeDeploymentMode(production: boolean): void {
-    production ? this.statement.deploymentMode = 'prod' : this.statement.deploymentMode = 'dev';
+    production ? this.statement.deploymentProperties.mode = 'prod' : this.statement.deploymentProperties.mode = 'dev';
   }
 
   public onCreateStatement(): void {

@@ -5,7 +5,7 @@ import {
    NbTreeGridDataSourceBuilder,
    NbDialogService,
    NbSortRequest } from '@nebular/theme';
-import { Statement } from 'src/app/models/statemet';
+import { Pattern, Schema } from 'src/app/models/statement';
 
 @Component({
   selector: 'app-statement-table',
@@ -13,34 +13,39 @@ import { Statement } from 'src/app/models/statemet';
   styleUrls: ['./statement-table.component.scss']
 })
 export class StatementTableComponent implements OnChanges {
-  @Input() statements: Statement[];
+  @Input() statements: (Pattern | Schema)[];
+  @Input() schemas: boolean;
   @Output() dropStatement: EventEmitter<string> = new EventEmitter<string>();
   @Output() selectStatement: EventEmitter<string> = new EventEmitter<string>();
 
-  statementsTreeNodes: TreeNode<Statement>[];
-  dataSource: NbTreeGridDataSource<Statement>;
+  statementsTreeNodes: TreeNode<Pattern | Schema>[];
+  dataSource: NbTreeGridDataSource<Pattern | Schema>;
 
-  deploymentModeColumn = 'deploymentMode';
+  deploymentModeColumn = 'mode';
   modifiedColumn = 'modified_locale';
   nameColumn = 'name';
-  actionsColumn = 'deploymentId';
+  actionsColumn = 'id';
   allColumns = [this.deploymentModeColumn, this.nameColumn, this.modifiedColumn, this.actionsColumn];
 
-  schemaDataSource: NbTreeGridDataSource<Statement>;
-  patternDataSource: NbTreeGridDataSource<Statement>;
+  schemaDataSource: NbTreeGridDataSource<Pattern | Schema>;
+  patternDataSource: NbTreeGridDataSource<Pattern | Schema>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
   constructor(
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<Statement>,
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<Pattern | Schema>,
     private dialogService: NbDialogService) { }
 
   ngOnChanges() {
     this.statementsTreeNodes = this.statements.map(statement => Object.assign({data: statement}));
-    this.statements.map((statement: Statement) => {
+    this.statements.map((statement: Pattern | Schema) => {
       // tslint:disable-next-line: no-string-literal
-      statement['modified_locale'] = new Date(statement.modified).toLocaleString();
+      statement['modified_locale'] = new Date(statement.lastModified).toLocaleString();
+      // tslint:disable-next-line: no-string-literal
+      statement['mode'] = statement.deploymentProperties.mode;
+      // tslint:disable-next-line: no-string-literal
+      statement['id'] = statement.deploymentProperties.id;
     });
     this.dataSource = this.dataSourceBuilder.create(this.statementsTreeNodes);
   }

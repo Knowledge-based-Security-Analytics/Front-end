@@ -1,9 +1,9 @@
-import { GraphQLUtils } from './graphql_utils';
+import { BackendStatementModel } from './../models/backendStatementModel';
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { Statement } from 'src/app/models/statemet';
-import { StatementDef } from './statement-def';
+import { StatementDef } from '../models/statementDef';
+import { GraphQLUtils } from '../models/graphql.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class GraphQLStatementService {
                                        name?: string,
                                        deploymentMode?: string,
                                        eventType?: boolean}
-                            ): Promise<Statement[]> {
+                            ): Promise<BackendStatementModel[]> {
     if (!filter) {
       filter = {};
     }
@@ -42,7 +42,7 @@ export class GraphQLStatementService {
   /**
    * @returns The ID of the deployed Statement
    */
-  public async pushStatement(eplStatement: string, blocklyXml: string, name?: string,
+  public async pushStatement(eplStatement: string, blocklyXml: string, objectRepresentation: string, name?: string,
                              deploymentMode?: string, eventType?: boolean, description?: string): Promise<string> {
     const gqlString = gql`
       mutation {
@@ -52,6 +52,7 @@ export class GraphQLStatementService {
             ${deploymentMode ? `deploymentMode: "${deploymentMode}"` : ''}
             ${eventType !== undefined ? `eventType: ${eventType}` : ''}
             ${description ? `description: "${description}"` : ''}
+            objectRepresentation: "${objectRepresentation}"
             eplStatement: "${eplStatement}"
             blocklyXml: "${blocklyXml}"
           }
@@ -64,7 +65,8 @@ export class GraphQLStatementService {
    * @returns The ID of the updated Statement
    */
   public async updateStatement(deploymentId: string, name?: string, deploymentMode?: string,
-                               eventType?: boolean, eplStatement?: string, blocklyXml?: string, description?: string): Promise<string> {
+                               eventType?: boolean, eplStatement?: string, blocklyXml?: string,
+                               description?: string, objectRepresentation?: string): Promise<string> {
     const gqlString = gql`
       mutation {
         redeployStatement(
@@ -74,6 +76,7 @@ export class GraphQLStatementService {
             ${eventType !== undefined ? `eventType: ${eventType}` : ''}
             ${description ? `description: "${description}"` : ''}
             deploymentId: "${deploymentId}"
+            ${objectRepresentation ? `objectRepresentation: "${objectRepresentation}"` : ''}
             ${eplStatement ? `eplStatement: "${eplStatement}"` : ''}
             ${blocklyXml ? `blocklyXml: "${blocklyXml}"` : ''}
           }

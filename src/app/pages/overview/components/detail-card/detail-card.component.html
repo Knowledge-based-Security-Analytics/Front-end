@@ -13,12 +13,12 @@
   <div class="col-md-12">
     <div>
       <b class="caption-2 text-hint">Deployment ID:</b><br />
-      <code>{{statement.deploymentId}}</code>
+      <code>{{statement.deploymentProperties.id}}</code>
     </div>
     <br>
     <div>
       <b class="caption-2 text-hint">EPL Statement:</b><br />
-      <code [highlight]="statement.eplStatement" [languages]="['SQL']"></code>
+      <code [highlight]="statement.deploymentProperties.eplStatement" [languages]="['SQL']"></code>
     </div>
   </div>
   <div #d3Histogram></div>

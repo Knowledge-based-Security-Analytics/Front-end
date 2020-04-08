@@ -8,4 +8,5 @@ export class StatementDef {
   modified?: boolean;
   blocklyXml?: boolean;
   eventType?: boolean;
+  objectRepresentation?: boolean;
 }

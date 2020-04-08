@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Observable } from 'rxjs';
-import { GraphQLUtils } from './graphql_utils';
-import { Event } from '../../models/event';
+import { Event } from 'src/app/models/event';
+import { GraphQLUtils } from '../models/graphql.utils';
 
 @Injectable({
   providedIn: 'root'

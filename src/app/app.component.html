@@ -9,10 +9,12 @@
       </div>
     </div>
     <span style="flex: 1 1"></span>
-    <nb-actions>
-      <nb-action icon="plus-outline" link="/editor" [disabled]="activeRoute.includes('/editor')" nbTooltip="Add new rule" nbTooltipPlacement="left" nbTooltipStatus="success"></nb-action>
+    <button outline nbButton [disabled]="activeRoute.includes('/editor')" [nbContextMenu]="items">
+      New statement
+    </button>
+<!--     <nb-actions>
       <nb-action icon="compass-outline" link="/rules" nbTooltip="View existing rules" nbTooltipPlacement="left" nbTooltipStatus="primary"></nb-action>
-    </nb-actions>
+    </nb-actions> -->
   </nb-layout-header>
 
   <nb-layout-column class="container-fluid">

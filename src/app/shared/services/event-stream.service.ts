@@ -1,7 +1,7 @@
-import { GraphQLEventStreamService } from './graphql/graphql_event-stream.service';
-import { Event } from './../models/event';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Event } from 'src/app/models/event';
+import { GraphQLEventStreamService } from '../graphql/services/graphql_event-stream.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { NbToastrService } from '@nebular/theme';
 
-import { StatementService } from 'src/app/services/statement.service';
-import { Statement } from 'src/app/models/statemet';
+import { Pattern, Schema } from 'src/app/models/statement';
+import { StatementService } from 'src/app/shared/services/statement.service';
 
 @Component({
   selector: 'app-list-card',
@@ -10,9 +10,9 @@ import { Statement } from 'src/app/models/statemet';
   styleUrls: ['./list-card.component.scss']
 })
 export class ListCardComponent implements OnInit {
-  @Input() schemaStatements: Statement[];
-  @Input() patternStatements: Statement[];
-  @Output() statementSelected: EventEmitter<Statement> = new EventEmitter<Statement>();
+  @Input() schemaStatements: Schema[];
+  @Input() patternStatements: Pattern[];
+  @Output() statementSelected: EventEmitter<Pattern | Schema> = new EventEmitter<Pattern | Schema>();
 
   constructor(
     private stmtService: StatementService,
@@ -40,6 +40,6 @@ export class ListCardComponent implements OnInit {
 
   onSelectStatement( deploymentId: string ) {
     const statements = [...this.patternStatements, ...this.schemaStatements];
-    this.statementSelected.emit(statements.find(statement => statement.deploymentId === deploymentId));
+    this.statementSelected.emit(statements.find(statement => statement.deploymentProperties.id === deploymentId));
   }
 }

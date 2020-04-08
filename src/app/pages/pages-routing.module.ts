@@ -6,11 +6,11 @@ import {OverviewComponent} from './overview/overview.component';
 
 const routes: Routes = [
   {
-    path: 'editor',
+    path: 'editor/:statementType',
     component: EditorComponent,
   },
   {
-    path: 'editor/:deploymentId',
+    path: 'editor/:statementType/:deploymentId',
     component: EditorComponent
   },
   {

@@ -2,6 +2,7 @@
   <nb-tab tabTitle="Patterns">
     <app-statement-table
       [statements]="patternStatements"
+      [schemas]="false"
       (dropStatement)="onDropStatement($event)"
       (selectStatement)="onSelectStatement($event)">
     </app-statement-table>
@@ -10,6 +11,7 @@
   <nb-tab tabTitle="Schemas">
     <app-statement-table
     [statements]="schemaStatements"
+    [schemas]="true"
     (dropStatement)="onDropStatement($event)"
     (selectStatement)="onSelectStatement($event)">
   </app-statement-table>

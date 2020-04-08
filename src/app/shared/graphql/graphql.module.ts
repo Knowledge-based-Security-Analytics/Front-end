@@ -1,13 +1,16 @@
-import {NgModule} from '@angular/core';
-import {ApolloModule, APOLLO_OPTIONS, Apollo} from 'apollo-angular';
-import {HttpLinkModule, HttpLink} from 'apollo-angular-link-http';
+import { NgModule } from '@angular/core';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
-import {InMemoryCache} from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
 const uri = 'http://192.168.2.116:4000/';
 const websocketUri = 'ws://192.168.2.116:4000/graphql';
+
+/* const uri = 'http://localhost:4000/';
+const websocketUri = 'ws://localhost:4000/graphql'; */
 
 export function createApollo(httpLink: HttpLink) {
   const http = httpLink.create({

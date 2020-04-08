@@ -1,8 +1,8 @@
-import { EventStreamService } from '../../../../services/event-stream.service';
-import { Statement } from '../../../../models/statemet';
+import { Pattern, Schema } from 'src/app/models/statement';
 import { Component, OnChanges, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import * as d3 from 'd3';
+import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 
 @Component({
   selector: 'app-detail-card',
@@ -13,7 +13,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
   @Output() alerted = new EventEmitter<number>();
   @Output() statementUnselect: EventEmitter<void> = new EventEmitter<void>();
 
-  @Input() statement: Statement;
+  @Input() statement: Pattern | Schema;
 
   @ViewChild('d3Histogram') d3HistogramRef: ElementRef;
 
@@ -32,7 +32,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
       };
     });
     if (this.statement) {
-      this.eventStreamService.subscribeTopic(this.statement.eplParsed.name).subscribe(event => {
+      this.eventStreamService.subscribeTopic(this.statement.name).subscribe(event => {
         if (!this.statement.alertCount) {
           this.statement.alertCount = 0;
         }
@@ -53,6 +53,6 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
   }
 
   initD3() {
-    const svg = d3.create("svg");
+    const svg = d3.create('svg');
   }
 }

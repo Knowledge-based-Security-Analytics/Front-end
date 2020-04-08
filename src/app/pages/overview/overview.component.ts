@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Statement } from 'src/app/models/statemet';
-import { StatementService } from 'src/app/services/statement.service';
+import { Schema, Pattern, Statement } from 'src/app/models/statement';
+import { StatementService } from 'src/app/shared/services/statement.service';
 
 
 @Component({
@@ -10,31 +10,29 @@ import { StatementService } from 'src/app/services/statement.service';
 })
 export class OverviewComponent implements OnInit {
 
-  schemaStatements: Statement[];
-  patternStatements: Statement[];
+  schemaStatements: Schema[];
+  patternStatements: Pattern[];
   loading = false;
-  // private rawStatements: Statement[];
-  selectedStatement: Statement;
+  selectedStatement: Schema | Pattern;
 
-  constructor(private stmtService: StatementService) { }
-
-  ngOnInit() {
-    // this.statementService.statementsObservable.subscribe(statements => {
-    //   this.rawStatements = statements;
-    // });
-    // this.statementService.getStatements();
-    this.loading = true;
+  constructor(private stmtService: StatementService) {
     this.stmtService.statementsObservable.subscribe(statements => {
-      this.schemaStatements = statements.filter(statement => statement.eventType);
-      this.patternStatements = statements.filter(statement => !statement.eventType);
+      this.loading = true;
+      this.schemaStatements = statements.filter(statement => Statement.isSchema(statement)) as Schema[];
+      this.patternStatements = statements.filter(statement => !Statement.isSchema(statement)) as Pattern[];
       if (this.schemaStatements.length > 0 || this.patternStatements.length > 0) {
         this.loading = false;
       }
     });
-    this.stmtService.getStatements();
+   }
+
+  ngOnInit() {
+    if (this.schemaStatements.length === 0 || this.patternStatements.length === 0) {
+      this.stmtService.getStatements();
+    }
   }
 
-  statementSelected(statement: Statement) {
+  statementSelected(statement: Pattern | Schema) {
     this.selectedStatement = statement;
   }
 

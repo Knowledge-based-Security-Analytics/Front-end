@@ -1,8 +1,8 @@
 import { ActivatedRoute } from '@angular/router';
-import { StatementService } from 'src/app/services/statement.service';
-import { EventStreamService } from '../../../../services/event-stream.service';
 import { Component, OnInit } from '@angular/core';
-import { Statement } from 'src/app/models/statemet';
+import { Pattern, Schema } from 'src/app/models/statement';
+import { StatementService } from 'src/app/shared/services/statement.service';
+import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 
 @Component({
   selector: 'app-debugger',
@@ -11,7 +11,7 @@ import { Statement } from 'src/app/models/statemet';
 })
 export class DebuggerComponent implements OnInit {
 
-  private statement: Statement;
+  private statement: Pattern | Schema;
   public events: {name: string, body: string}[][] = [[], [], []];
 
   constructor(
@@ -29,12 +29,12 @@ export class DebuggerComponent implements OnInit {
   private async subscribeTopics() {
     this.subscribeTopic(this.statement, 2);
 
-    let statementIDs: string[] = this.statement.deploymentDependencies;
+    let statementIDs: string[] = this.statement.deploymentProperties.dependencies;
     // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < statementIDs.length; i++) {
       const statementToSubscribe = this.statementService.getStatement(statementIDs[i]);
-      if (statementToSubscribe.deploymentDependencies && statementToSubscribe.deploymentDependencies.length > 0) {
-        statementIDs = statementIDs.concat(statementToSubscribe.deploymentDependencies);
+      if (statementToSubscribe.deploymentProperties.dependencies && statementToSubscribe.deploymentProperties.dependencies.length > 0) {
+        statementIDs = statementIDs.concat(statementToSubscribe.deploymentProperties.dependencies);
         this.subscribeTopic(statementToSubscribe, 1);
       } else {
         this.subscribeTopic(statementToSubscribe, 0);
@@ -42,9 +42,9 @@ export class DebuggerComponent implements OnInit {
     }
   }
 
-  private subscribeTopic(statement: Statement, position: number) {
-    this.eventStreamService.subscribeTopic(statement.eplParsed.name).subscribe((event) => {
-      this.events[position].unshift({name: statement.eplParsed.name, body: event.jsonString});
+  private subscribeTopic(statement: Pattern | Schema, position: number) {
+    this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
+      this.events[position].unshift({name: statement.name, body: event.jsonString});
     });
   }
 

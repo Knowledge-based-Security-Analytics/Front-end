@@ -3,7 +3,7 @@ nbSpinnerStatus="primary"
 nbSpinnerSize="large"
 nbSpinnerMessage="Saving statement...">
   <div class="col-sm-12 col-md-5">
-    <app-info-card [statement]='statement' (statementChanged)='saveStatement($event)'></app-info-card>
+    <app-info-card [statement]='blocklyService.statement' (statementChanged)='saveStatement($event)'></app-info-card>
   </div>
   <div class="col-sm-12 col-md-7 full-height">
     <nb-card

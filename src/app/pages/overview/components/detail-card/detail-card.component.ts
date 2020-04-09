@@ -1,8 +1,8 @@
 import { Pattern, Schema } from 'src/app/models/statement';
 import { Component, OnChanges, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
-import * as d3 from 'd3';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-detail-card',
@@ -14,7 +14,6 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
   @Output() statementUnselect: EventEmitter<void> = new EventEmitter<void>();
 
   @Input() statement: Pattern | Schema;
-
   @ViewChild('d3Histogram') d3HistogramRef: ElementRef;
 
   colorScheme: any;

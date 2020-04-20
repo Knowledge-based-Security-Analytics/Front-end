@@ -1,7 +1,3 @@
-import { DEFAULT_THEME as baseTheme } from '@nebular/theme';
-
-export const THEME_VARIABLES = baseTheme.variables;
-
 export const BLOCKS = {
   attribute: {
     name: 'ATTRIBUTE',

@@ -66,6 +66,9 @@ export class EditorComponent implements OnInit {
   }
 
   private addEplAndBlocklyXml(): void {
+    if (Statement.isSchema(this.blocklyService.statement)) {
+      this.blocklyService.statement.deploymentProperties.eplStatement = ObjectRepToEpl.translateSchemaToEpl(this.blocklyService.statement);
+    }
     // this.statement.eplStatement = this.blocklyService.getEplStatement();
     this.blocklyService.statement.blocklyXml = this.blocklyService.getBlocklyXml();
     // this.statement.eventType = this.statement.eplStatement.includes('create json schema');

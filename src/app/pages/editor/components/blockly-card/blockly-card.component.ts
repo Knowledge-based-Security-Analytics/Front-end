@@ -4,6 +4,7 @@ import { BlockInitializers } from './blockly-scripts/blockInitializers';
 import { BlockParsers } from './blockly-scripts/blockParsers';
 import { BlocklyService } from '../../services/blockly.service';
 import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { StatementService } from 'src/app/shared/services/statement.service';
 
 declare var Blockly: any;
 

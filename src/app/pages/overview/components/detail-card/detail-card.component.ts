@@ -1,4 +1,4 @@
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 import { Component, OnChanges, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';

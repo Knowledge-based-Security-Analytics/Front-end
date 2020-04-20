@@ -5,7 +5,7 @@ import {
    NbTreeGridDataSourceBuilder,
    NbDialogService,
    NbSortRequest } from '@nebular/theme';
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 
 @Component({
   selector: 'app-statement-table',

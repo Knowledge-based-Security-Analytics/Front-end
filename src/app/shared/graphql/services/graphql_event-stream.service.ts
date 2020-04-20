@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Observable } from 'rxjs';
-import { Event } from 'src/app/models/event';
+import { Event } from 'src/app/shared/models/event';
 import { GraphQLUtils } from '../models/graphql.utils';
 
 @Injectable({

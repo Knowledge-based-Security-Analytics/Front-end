@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Pattern, Schema, Statement } from 'src/app/models/statement';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 
 declare var Blockly: any;
@@ -35,9 +35,20 @@ export class BlocklyService {
   }
 
   public initPreviewChangeListener(): void {
+    const basicAttributes = [
+      {name: 'complex', type: 'boolean'},
+      {name: 'id', type: 'string'},
+      {name: 'timestamp', type: 'string'}
+    ];
+    const complexAttributes = [
+      ...basicAttributes,
+      {name: 'sources', type: 'object[]'}
+    ];
+
     this.workspace.addChangeListener(() => {
       if (Statement.isSchema(this.statement)) {
         this.statement.attributes = [];
+        this.statement.attributes.push(...this.statement.complexEvent ? complexAttributes : basicAttributes);
       } else {
         this.statement.outputAttributes = [];
         this.statement.events = [];

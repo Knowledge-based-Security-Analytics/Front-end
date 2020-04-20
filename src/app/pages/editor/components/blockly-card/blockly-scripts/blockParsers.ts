@@ -1,6 +1,6 @@
-import { ValueCondition, LogicalCondition, Statement } from '../../../../../models/statement';
+import { ValueCondition, LogicalCondition, Statement } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
-import { RepeatPattern, NotPattern, ConditionedEvent, IEventAlias, OrPattern, AndPattern } from 'src/app/models/statement';
+import { RepeatPattern, NotPattern, ConditionedEvent, IEventAlias, OrPattern, AndPattern } from 'src/app/shared/models/eplObjectRepresentation';
 
 declare var Blockly: any;
 

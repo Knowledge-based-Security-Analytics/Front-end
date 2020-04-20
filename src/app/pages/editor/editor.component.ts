@@ -1,9 +1,10 @@
+import { ObjectRepToEpl } from './components/blockly-card/blockly-scripts/objectRepToEpl';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 
 import { BlocklyService } from './services/blockly.service';
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 
 @Component({

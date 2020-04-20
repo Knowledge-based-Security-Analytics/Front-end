@@ -1,4 +1,4 @@
-import { IEventAlias, Statement } from '../../../../../models/statement';
+import { IEventAlias, Statement } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
 declare var Blockly: any;
 

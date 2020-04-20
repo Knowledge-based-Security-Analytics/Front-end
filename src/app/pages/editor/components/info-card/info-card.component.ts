@@ -1,7 +1,7 @@
 import { NbDialogService } from '@nebular/theme';
 import { Component, Input, EventEmitter, Output, TemplateRef } from '@angular/core';
 
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 import { Router } from '@angular/router';
 
 @Component({

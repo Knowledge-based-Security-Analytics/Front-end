@@ -1,4 +1,7 @@
+import { StatementService } from './../../../../../shared/services/statement.service';
+import { IEventAlias } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
+import { Schema } from 'src/app/shared/models/eplObjectRepresentation';
 declare var Blockly: any;
 
 export class BlockInitializers {

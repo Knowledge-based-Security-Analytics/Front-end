@@ -103,6 +103,10 @@ export class StatementService {
     return this.statements.find(statement => statement.deploymentProperties.id === deploymentId);
   }
 
+  public getSchema( name: string ): Schema {
+    return this.statements.find( (statement) => Statement.isSchema(statement) && statement.name === name) as Schema;
+  }
+
 /*   private parseStatement(statement: Statement) {
     this.backendToFrontendDataModelConverter(statement);
     if (!statement.eplStatement) {

@@ -2,6 +2,7 @@ import { StatementService } from './../../../../../shared/services/statement.ser
 import { IEventAlias } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
 import { Schema } from 'src/app/shared/models/eplObjectRepresentation';
+import { THEME_VARIABLES, BLOCKS, PATTERN_STRUCTURE } from 'src/app/shared/models/strings';
 declare var Blockly: any;
 
 export class BlockInitializers {
@@ -41,7 +42,7 @@ export class BlockInitializers {
               ['Boolean', 'boolean']]), 'ATTRIBUTE_TYPE');
         this.setPreviousStatement(true, 'attribute_definition');
         this.setNextStatement(true, 'attribute_definition');
-        this.setColour(40);
+        this.setColour(	THEME_VARIABLES.primary );
         this.setTooltip('');
       }
     };
@@ -54,7 +55,7 @@ export class BlockInitializers {
           .appendField('->')
           .appendField(new Blockly.FieldDropdown([['att1', 'att1']]), 'ATTRIBUTE');
         this.setOutput(true, null);
-        this.setColour(65);
+        this.setColour( THEME_VARIABLES.primary );
         this.setTooltip('');
       }
     };
@@ -74,7 +75,7 @@ export class BlockInitializers {
         this.setInputsInline(false);
         this.setPreviousStatement(true, 'event');
         this.setNextStatement(true, 'event');
-        this.setColour(230);
+        this.setColour( THEME_VARIABLES.info );
         this.setTooltip('');
       },
       onchange(event: any) {
@@ -120,7 +121,7 @@ export class BlockInitializers {
         this.setInputsInline(true);
         this.setPreviousStatement(true, 'event_pattern_structure');
         this.setNextStatement(true, 'event_pattern_structure');
-        this.setColour(220);
+        this.setColour( THEME_VARIABLES.info );
         this.setTooltip('');
       }
     };
@@ -136,7 +137,7 @@ export class BlockInitializers {
         this.setInputsInline(true);
         this.setPreviousStatement(true, 'event_pattern_structure');
         this.setNextStatement(true, 'event_pattern_structure');
-        this.setColour(220);
+        this.setColour( THEME_VARIABLES.info );
         this.setTooltip('');
       }
     };
@@ -150,7 +151,7 @@ export class BlockInitializers {
         this.setInputsInline(true);
         this.setPreviousStatement(true, ['event', 'event_pattern_structure']);
         this.setNextStatement(true, ['event', 'event_pattern_structure']);
-        this.setColour(220);
+        this.setColour( THEME_VARIABLES.info );
         this.setTooltip('');
       }
     };
@@ -166,7 +167,7 @@ export class BlockInitializers {
         this.setInputsInline(true);
         this.setPreviousStatement(true, ['event', 'event_pattern_structure']);
         this.setNextStatement(true, ['event', 'event_pattern_structure']);
-        this.setColour(220);
+        this.setColour( THEME_VARIABLES.info );
         this.setTooltip('');
       }
     };
@@ -182,7 +183,7 @@ export class BlockInitializers {
           .setCheck(['value_condition', 'logical_condition']);
         this.setInputsInline(true);
         this.setPreviousStatement(true, ['condition', 'logical_condition']);
-        this.setColour(120);
+        this.setColour( THEME_VARIABLES.success );
         this.setTooltip('');
       }
     };
@@ -197,7 +198,7 @@ export class BlockInitializers {
           .setCheck(['value_condition', 'logical_condition']);
         this.setInputsInline(true);
         this.setPreviousStatement(true, ['condition', 'logical_condition']);
-        this.setColour(120);
+        this.setColour( THEME_VARIABLES.success );
         this.setTooltip('');
       }
     };
@@ -215,7 +216,7 @@ export class BlockInitializers {
             .setCheck(['condition_text_input', 'condition_number_input']);
         this.setPreviousStatement(true, ['value_condition', 'condition']);
         this.setNextStatement(false);
-        this.setColour(120);
+        this.setColour( THEME_VARIABLES.success );
         this.setTooltip('');
       }
     };
@@ -225,7 +226,7 @@ export class BlockInitializers {
         this.appendDummyInput()
             .appendField(new Blockly.FieldTextInput('text'), 'TEXT_INPUT');
         this.setOutput(true, 'condition_text_input');
-        this.setColour(120);
+        this.setColour( THEME_VARIABLES.success );
         this.setTooltip('');
       }
     };
@@ -235,7 +236,7 @@ export class BlockInitializers {
         this.appendDummyInput()
             .appendField(new Blockly.FieldNumber(0), 'NUMBER_INPUT');
         this.setOutput(true, 'condition_number_input');
-        this.setColour(120);
+        this.setColour( THEME_VARIABLES.success );
         this.setTooltip('');
       }
     };
@@ -253,7 +254,7 @@ export class BlockInitializers {
           .setCheck('test');
         this.setInputsInline(true);
         this.setPreviousStatement(true, 'action');
-        this.setColour(300);
+        this.setColour( THEME_VARIABLES.warning );
         this.setTooltip('');
       }
     };
@@ -263,7 +264,7 @@ export class BlockInitializers {
         this.appendDummyInput()
             .appendField(new Blockly.FieldLabelSerializable(''), 'EVENT_TYPE');
         this.setOutput(true, 'EVENT_TYPE');
-        this.setColour(20);
+        this.setColour( THEME_VARIABLES.warning );
         this.setTooltip('');
       }
     };
@@ -273,7 +274,7 @@ export class BlockInitializers {
         this.appendDummyInput()
             .appendField(new Blockly.FieldTextInput('newSchema'), 'EVENT_TYPE');
         this.setOutput(true, 'EVENT_TYPE');
-        this.setColour(20);
+        this.setColour( THEME_VARIABLES.warning );
         this.setTooltip('');
       }
     };

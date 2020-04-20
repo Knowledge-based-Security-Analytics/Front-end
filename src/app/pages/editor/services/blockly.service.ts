@@ -1,3 +1,4 @@
+import { THEME_VARIABLES } from 'src/app/shared/models/strings';
 import { Injectable } from '@angular/core';
 import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
@@ -12,13 +13,13 @@ export class BlocklyService {
   public workspace: any;
   public toolboxSchema = `
   <xml id="toolbox" style="display: none">
-    <category name ="EVENT SCHEMAS" custom="EVENT SCHEMAS" colour="20"></category>
+    <category name ="SCHEMA" custom="SCHEMA" colour="${THEME_VARIABLES.primary}"></category>
   </xml>`;
   public toolboxPattern = `
   <xml id="toolbox" style="display: none">
-    <category name="EVENT" custom="EVENT" colour="200"></category>
-    <category name="CONDITION" custom="CONDITION" colour="100"></category>
-    <category name="ACTION" custom="ACTION" colour="300"></category>
+    <category name="EVENT" custom="EVENT" colour="${THEME_VARIABLES.info}"></category>
+    <category name="CONDITION" custom="CONDITION" colour="${THEME_VARIABLES.success}"></category>
+    <category name="ACTION" custom="ACTION" colour="${THEME_VARIABLES.warning}"></category>
   </xml>`;
   public eventTypes: string[] = [];
   public eventAliases: string[] = [];

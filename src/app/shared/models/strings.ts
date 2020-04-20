@@ -1,3 +1,11 @@
+export const DOUBLE_SEQUENCE_PATTERN = {
+  expression1: 'EVENTS_1',
+  expression2: 'EVENTS_2'
+};
+export const SINGLE_SEQUENCE_PATTERN = {
+  expression1: 'EVENTS'
+};
+
 export const BLOCKS = {
   attribute: {
     name: 'ATTRIBUTE',
@@ -21,36 +29,27 @@ export const BLOCKS = {
     },
     statements: {
       condition: 'CONDITION',
+      conditionCheck: 'CONDITION'
     },
   },
   andPattern: {
     name: 'EVENT_PATTERN_AND',
-    statements: {
-      expression1: 'EVENTS_1',
-      expression2: 'EVENTS_2'
-    }
+    statements: DOUBLE_SEQUENCE_PATTERN
   },
   orPattern: {
     name: 'EVENT_PATTERN_OR',
-    statements: {
-      expression1: 'EVENTS_1',
-      expression2: 'EVENTS_2'
-    }
+    statements: DOUBLE_SEQUENCE_PATTERN
   },
   notPattern: {
     name: 'EVENT_PATTERN_NOT',
-    statements: {
-      expression1: 'EVENTS',
-    }
+    statements: SINGLE_SEQUENCE_PATTERN
   },
   repeatPattern: {
     name: 'EVENT_PATTERN_REPEAT',
     fields: {
       repeatCount: 'COUNT'
     },
-    statements: {
-      expression1: 'EVENTS',
-    }
+    statements: SINGLE_SEQUENCE_PATTERN
   },
   action: {
     name: 'ACTION',
@@ -65,6 +64,40 @@ export const BLOCKS = {
     name: 'EXISTING_SCHEMA',
     fields: {
       schema: 'SCHEMA',
+    }
+  },
+  orCondition: {
+    name: 'CONDITION_OR',
+    statements: {
+      expression1: 'CONDITION_1',
+      expression2: 'CONDITION_2'
+    }
+  },
+  andCondition: {
+    name: 'CONDITION_AND',
+    statements: {
+      expression1: 'CONDITION_1',
+      expression2: 'CONDITION_2'
+    }
+  },
+  condition: {
+    name: 'CONDITION',
+    fields: {
+      leftInput: 'LEFT',
+      operator: 'LOGICAL_OPERATOR',
+      rightInput: 'RIGHT'
+    }
+  },
+  conditionTextInput: {
+    name: 'CONDITION_TEXT_INPUT',
+    fields: {
+      textInput: 'TEXT_INPUT'
+    }
+  },
+  conditionNumberInput: {
+    name: 'CONDITION_NUMBER_INPUT',
+    fields: {
+      numberInput: 'NUMBER_INPUT'
     }
   }
 };

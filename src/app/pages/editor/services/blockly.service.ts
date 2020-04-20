@@ -56,7 +56,7 @@ export class BlocklyService {
         this.statement.eventSequence = [];
       }
       Blockly.EPL.workspaceToCode(this.workspace);
-      // console.log(this.statementType === 'schema' ? this.currentSchema : this.currentPattern);
+      console.log(this.statement);
       /* if (document.getElementById( 'blocklyOutput' )) {
         document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.blocklyWorkspace);
       } */

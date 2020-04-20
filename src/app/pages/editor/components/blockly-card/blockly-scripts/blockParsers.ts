@@ -1,6 +1,14 @@
+import { SINGLE_SEQUENCE_PATTERN } from './../../../../../shared/models/strings';
 import { ValueCondition, LogicalCondition, Statement } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
-import { RepeatPattern, NotPattern, ConditionedEvent, IEventAlias, OrPattern, AndPattern } from 'src/app/shared/models/eplObjectRepresentation';
+import {
+  RepeatPattern,
+  NotPattern,
+  ConditionedEvent,
+  IEventAlias,
+  OrPattern,
+  AndPattern } from 'src/app/shared/models/eplObjectRepresentation';
+import { DOUBLE_SEQUENCE_PATTERN, BLOCKS } from 'src/app/shared/models/strings';
 
 declare var Blockly: any;
 
@@ -34,10 +42,10 @@ export class BlockParsers {
   }
 
   private parseDoubleSequencePattern( pattern: OrPattern | AndPattern, block: any ): string {
-    for (const event of JSON.parse( `[${Blockly.EPL.statementToCode(block, 'EVENTS_1')}]`) ) {
+    for (const event of JSON.parse( `[${Blockly.EPL.statementToCode(block, DOUBLE_SEQUENCE_PATTERN.expression1)}]`) ) {
       pattern.eventSequenceA.push(this.castPatternType(event));
     }
-    for (const event of JSON.parse( `[${Blockly.EPL.statementToCode(block, 'EVENTS_2')}]`) ) {
+    for (const event of JSON.parse( `[${Blockly.EPL.statementToCode(block, DOUBLE_SEQUENCE_PATTERN.expression2)}]`) ) {
       pattern.eventSequenceB.push(this.castPatternType(event));
     }
 
@@ -51,7 +59,7 @@ export class BlockParsers {
   }
 
   private parseSingleSequencePattern( pattern: RepeatPattern | NotPattern, block: any ): string {
-    for ( const event of JSON.parse(`[${Blockly.EPL.statementToCode(block, 'EVENTS')}]`) ) {
+    for ( const event of JSON.parse(`[${Blockly.EPL.statementToCode(block, SINGLE_SEQUENCE_PATTERN.expression1)}]`) ) {
       pattern.eventSequence.push(this.castPatternType(event));
     }
 
@@ -66,7 +74,10 @@ export class BlockParsers {
 
   private initEventTypeParser(): void {
     Blockly.EPL.attribute_definition = (block: any): string => {
-      const attribute = {name: block.getFieldValue('ATTRIBUTE_NAME'), type: block.getFieldValue('ATTRIBUTE_TYPE')};
+      const attribute = {
+        name: block.getFieldValue(BLOCKS.attribute.fields.name),
+        type: block.getFieldValue(BLOCKS.attribute.fields.type)
+      };
       if (Statement.isSchema(this.blocklyService.statement)) {
        this.blocklyService.statement.attributes.push(attribute);
       }
@@ -74,32 +85,27 @@ export class BlockParsers {
     };
 
     Blockly.EPL.existing_schema = (block: any): string => {
-      return `${block.getFieldValue('EVENT_TYPE')}`;
+      return `${block.getFieldValue(BLOCKS.outputSchema.fields.schema)}`;
     };
 
     Blockly.EPL.new_schema = (block: any): string => {
-      return `${block.getFieldValue('EVENT_TYPE')}`;
+      return `${block.getFieldValue(BLOCKS.outputSchema.fields.schema)}`;
     };
   }
 
   private initEventAliasParser(): void {
     Blockly.EPL.event_alias = (block: any): string => {
-      return `${block.getFieldValue('ALIAS')}.${block.getFieldValue('ATTRIBUTE')}`;
+      return block.getFieldValue(BLOCKS.eventAlias.fields.alias) + '.' + block.getFieldValue(BLOCKS.eventAlias.fields.attribute);
     };
   }
 
   private initPatternParser(): void {
-    Blockly.EPL.event_pattern = (block: any): string => {
-      Blockly.EPL.statementToCode(block, 'EVENT_PATTERN');
-      return JSON.stringify(this.blocklyService.statement);
-    };
-
     Blockly.EPL.event = (block: any): string => {
       const eventAlias = block.workspace.variableMap_.variableMap_[''].find((variableModel: any) => {
-        return variableModel.id_ === block.getFieldValue('EVENT_ALIAS');
+        return variableModel.id_ === block.getFieldValue(BLOCKS.sequencePattern.fields.alias);
       }).name;
 
-      const newEvent: IEventAlias = {alias: eventAlias, eventType: block.getFieldValue('EVENT_TYPE')};
+      const newEvent: IEventAlias = {alias: eventAlias, eventType: block.getFieldValue(BLOCKS.sequencePattern.fields.type)};
       if (!Statement.isSchema(this.blocklyService.statement)) {
         if (!this.blocklyService.statement.events.find( event => event.alias === newEvent.alias)) {
           this.blocklyService.statement.events.push(newEvent);
@@ -109,7 +115,7 @@ export class BlockParsers {
           const conditionedEvent = new ConditionedEvent();
 
           conditionedEvent.event = newEvent;
-          for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, 'CONDITION')}]`)) {
+          for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.sequencePattern.statements.condition)}]`)) {
             conditionedEvent.condition = condition;
           }
 
@@ -121,7 +127,7 @@ export class BlockParsers {
 
     Blockly.EPL.event_pattern_repeat = (block: any): string => {
       const repeatPattern = new RepeatPattern();
-      repeatPattern.times = block.getFieldValue('COUNT');
+      repeatPattern.times = block.getFieldValue(BLOCKS.repeatPattern.fields.repeatCount);
       return this.parseSingleSequencePattern(repeatPattern, block);
     };
 
@@ -145,10 +151,10 @@ export class BlockParsers {
     Blockly.EPL.condition_or = (block: any): string => {
       const logicalCondition = new LogicalCondition();
       logicalCondition.operator = 'or';
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, 'CONDITION_1')}]`) ) {
+      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.orCondition.statements.expression1)}]`) ) {
         logicalCondition.value1.push(condition);
       }
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, 'CONDITION_2')}]`) ) {
+      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.orCondition.statements.expression2)}]`) ) {
         logicalCondition.value2.push(condition);
       }
       return JSON.stringify(logicalCondition);
@@ -157,10 +163,10 @@ export class BlockParsers {
     Blockly.EPL.condition_and = (block: any): string => {
       const logicalCondition = new LogicalCondition();
       logicalCondition.operator = 'and';
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, 'CONDITION_1')}]`) ) {
+      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.andCondition.statements.expression1)}]`) ) {
         logicalCondition.value1.push(condition);
       }
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, 'CONDITION_2')}]`) ) {
+      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.andCondition.statements.expression2)}]`) ) {
         logicalCondition.value2.push(condition);
       }
       return JSON.stringify(logicalCondition);
@@ -168,24 +174,24 @@ export class BlockParsers {
 
     Blockly.EPL.condition = (block: any): string => {
       const valueCondition = new ValueCondition();
-      valueCondition.value1 = Blockly.EPL.statementToCode(block, 'LEFT');
-      valueCondition.operator = block.getFieldValue('LOGICAL_OPERATOR');
-      valueCondition.value2 = Blockly.EPL.statementToCode(block, 'RIGHT');
+      valueCondition.value1 = Blockly.EPL.statementToCode(block, BLOCKS.condition.fields.leftInput);
+      valueCondition.operator = block.getFieldValue(BLOCKS.condition.fields.operator);
+      valueCondition.value2 = Blockly.EPL.statementToCode(block, BLOCKS.condition.fields.rightInput);
       return JSON.stringify(valueCondition);
     };
 
     Blockly.EPL.condition_text_input = (block: any): string => {
-      return `${block.getFieldValue('TEXT_INPUT')}`;
+      return block.getFieldValue(BLOCKS.conditionTextInput.fields.textInput);
     };
 
     Blockly.EPL.condition_number_input = (block: any): string => {
-      return `${block.getFieldValue('NUMBER_INPUT')}`;
+      return JSON.stringify(block.getFieldValue(BLOCKS.conditionNumberInput.fields.numberInput));
     };
   }
 
   private initActionParser(): void {
     Blockly.EPL.action = (block: any): string => {
-      return `(${Blockly.EPL.statementToCode(block, 'ACTIONS')})`;
+      return `(${Blockly.EPL.statementToCode(block, BLOCKS.action.statements.outputVariables)})`;
     };
   }
 }

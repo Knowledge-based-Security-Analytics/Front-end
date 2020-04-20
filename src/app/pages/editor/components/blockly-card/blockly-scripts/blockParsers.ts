@@ -65,36 +65,10 @@ export class BlockParsers {
   }
 
   private initEventTypeParser(): void {
-    Blockly.EPL.type = (block: any): string => {
-      const basicAttributes = [
-        {name: 'complex', type: 'boolean'},
-        {name: 'id', type: 'string'},
-        {name: 'timestamp', type: 'string'}
-      ];
-      const complexAttributes = [
-        ...basicAttributes,
-        {name: 'sources', type: 'object[]'}
-      ];
-
-      if (Statement.isSchema(this.blocklyService.statement)) {
-        if (block.getFieldValue('EVENT_TYPE') === 'COMPLEX_TYPE') {
-          this.blocklyService.statement.attributes.push(...complexAttributes);
-        } else {
-          this.blocklyService.statement.attributes.push(...basicAttributes);
-        }
-      }
-
-      Blockly.EPL.statementToCode(block, 'ATTRIBUTES');
-
-      return JSON.stringify(this.blocklyService.statement);
-    };
-
     Blockly.EPL.attribute_definition = (block: any): string => {
       const attribute = {name: block.getFieldValue('ATTRIBUTE_NAME'), type: block.getFieldValue('ATTRIBUTE_TYPE')};
       if (Statement.isSchema(this.blocklyService.statement)) {
-        if (block.getFieldValue('EVENT_TYPE') === 'COMPLEX_TYPE') {
-          this.blocklyService.statement.attributes.push(attribute);
-        }
+       this.blocklyService.statement.attributes.push(attribute);
       }
       return block.nextConnection.targetConnection ? JSON.stringify(attribute) + ', ' : JSON.stringify(attribute);
     };

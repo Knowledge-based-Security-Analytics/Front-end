@@ -24,9 +24,24 @@ class DeploymentProperties {
 }
 
 export class Schema extends Statement {
+  static readonly BASIC_ATTRIBUTES = [
+    {name: 'complex', type: 'boolean'},
+    {name: 'id', type: 'string'},
+    {name: 'timestamp', type: 'string'}
+  ];
+  static readonly COMPLEX_ATTRIBUTES = [
+    ...Schema.BASIC_ATTRIBUTES,
+    {name: 'sources', type: 'object[]'}
+  ];
+
   type: 'schema' = 'schema';
   complexEvent = false;
-  attributes: {name: string, type: string}[] = [];
+  attributes: {name: string, type: string}[] = Schema.BASIC_ATTRIBUTES;
+
+  constructor(name?: string) {
+    super();
+    this.name = name ? name : null;
+  }
 
   getObject(): {[key: string]: string} {
     const returnObj = {};
@@ -42,6 +57,7 @@ export class ConditionedEvent {
 
 export class Pattern extends Statement {
   type: 'pattern' = 'pattern';
+  outputSchema: Schema = new Schema();
   outputAttributes: {inputAttribute: string, outputAttribute: string}[] = [];
   events: IEventAlias[] = [];
   eventSequence: (ConditionedEvent | PatternDefinition)[] = [];

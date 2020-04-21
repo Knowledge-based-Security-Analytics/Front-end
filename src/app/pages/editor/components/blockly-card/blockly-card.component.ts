@@ -24,7 +24,7 @@ export class BlocklyCardComponent implements OnInit, AfterViewInit {
     private blocklyService: BlocklyService,
     private stmtService: StatementService ) {
     this.blocklyBlocks = new BlockInitializers(this.blocklyService, this.stmtService);
-    this.blocklyParsers = new BlockParsers(this.blocklyService);
+    this.blocklyParsers = new BlockParsers(this.blocklyService, this.stmtService);
     this.blocklyToolboxCallbacks = new ToolboxCallbacks(this.blocklyService, this.stmtService);
     this.blocklyButtonCallbacks = new ButtonCallbacks(this.blocklyService);
   }

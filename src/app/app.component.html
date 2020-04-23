@@ -2,14 +2,14 @@
   <nb-layout-header fixed>
     <div class="header-container">
       <div class="logo-container">
-        <a routerLink="/rules" class="sidebar-toggle">
+        <a routerLink="/statements" class="sidebar-toggle">
           <nb-icon icon="cube-outline"></nb-icon>
         </a>
-        <a class="logo" routerLink="/rules">Visual CEP</a>
+        <a class="logo" routerLink="/statements">Visual CEP</a>
       </div>
     </div>
     <span style="flex: 1 1"></span>
-    <button outline nbButton [disabled]="activeRoute.includes('/editor')" [nbContextMenu]="items">
+    <button outline nbButton status="primary" [disabled]="activeRoute.includes('/editor')" [nbContextMenu]="items">
       New statement
     </button>
 <!--     <nb-actions>

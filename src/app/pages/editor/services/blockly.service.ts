@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Pattern, Schema, Statement } from 'src/app/models/statement';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
+import { THEME_VARIABLES } from 'src/app/@theme/styles/variables';
 
 declare var Blockly: any;
 
@@ -12,13 +13,13 @@ export class BlocklyService {
   public workspace: any;
   public toolboxSchema = `
   <xml id="toolbox" style="display: none">
-    <category name ="EVENT SCHEMAS" custom="EVENT SCHEMAS" colour="20"></category>
+    <category name ="SCHEMA" custom="SCHEMA" colour="${THEME_VARIABLES.primary[400]}"></category>
   </xml>`;
   public toolboxPattern = `
   <xml id="toolbox" style="display: none">
-    <category name="EVENT" custom="EVENT" colour="200"></category>
-    <category name="CONDITION" custom="CONDITION" colour="100"></category>
-    <category name="ACTION" custom="ACTION" colour="300"></category>
+    <category name="EVENT" custom="EVENT" colour="${THEME_VARIABLES.info[400]}"></category>
+    <category name="CONDITION" custom="CONDITION" colour="${THEME_VARIABLES.success[400]}"></category>
+    <category name="ACTION" custom="ACTION" colour="${THEME_VARIABLES.warning[400]}"></category>
   </xml>`;
   public eventTypes: string[] = [];
   public eventAliases: string[] = [];
@@ -35,16 +36,27 @@ export class BlocklyService {
   }
 
   public initPreviewChangeListener(): void {
+    const basicAttributes = [
+      {name: 'complex', type: 'boolean'},
+      {name: 'id', type: 'string'},
+      {name: 'timestamp', type: 'string'}
+    ];
+    const complexAttributes = [
+      ...basicAttributes,
+      {name: 'sources', type: 'object[]'}
+    ];
+
     this.workspace.addChangeListener(() => {
       if (Statement.isSchema(this.statement)) {
         this.statement.attributes = [];
+        this.statement.attributes.push(...this.statement.complexEvent ? complexAttributes : basicAttributes);
       } else {
         this.statement.outputAttributes = [];
         this.statement.events = [];
         this.statement.eventSequence = [];
       }
       Blockly.EPL.workspaceToCode(this.workspace);
-      // console.log(this.statementType === 'schema' ? this.currentSchema : this.currentPattern);
+      console.log(this.statement);
       /* if (document.getElementById( 'blocklyOutput' )) {
         document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.blocklyWorkspace);
       } */

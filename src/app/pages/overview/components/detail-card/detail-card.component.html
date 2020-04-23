@@ -3,11 +3,15 @@
       <h3>{{statement.name}}</h3>
     </div>
     <div class="col-md-1 col-sm-3 flex flex-horizontal-center flex-vertical-center">
-      <button nbButton ghost shape="round" status="primary" (click)="onStatementUnselect()">
-        <nb-icon icon="close-outline"></nb-icon>
-      </button>
-      <button nbButton ghost shape="round" status="success" (click)="onStatementUnselect()">
+      <button
+        nbButton
+        ghost
+        status="success"
+        routerLink="/editor/{{statement.type === 'schema' ? 'schema' : 'pattern'}}/{{statement.deploymentProperties.id}}">
         <nb-icon icon="edit-outline"></nb-icon>
+      </button>
+      <button nbButton ghost status="primary" (click)="onStatementUnselect()">
+        <nb-icon icon="close-outline"></nb-icon>
       </button>
     </div>
   <div class="col-md-12">

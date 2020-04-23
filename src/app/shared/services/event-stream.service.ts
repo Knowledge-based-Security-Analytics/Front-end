@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Event } from 'src/app/models/event';
+import { Event } from 'src/app/shared/models/event';
 import { GraphQLEventStreamService } from '../graphql/services/graphql_event-stream.service';
 
 @Injectable({

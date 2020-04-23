@@ -14,7 +14,7 @@ const routes: Routes = [
     component: EditorComponent
   },
   {
-    path: 'rules',
+    path: 'statements',
     component: OverviewComponent
   }
 ];

@@ -25,6 +25,7 @@ class DeploymentProperties {
 
 export class Schema extends Statement {
   type: 'schema' = 'schema';
+  complexEvent = false;
   attributes: {name: string, type: string}[] = [];
 
   getObject(): {[key: string]: string} {

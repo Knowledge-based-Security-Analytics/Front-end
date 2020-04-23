@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 

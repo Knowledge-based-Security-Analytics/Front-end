@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { GraphQLStatementService } from '../graphql/services/graphql_statement.service';
 import {
   frontendToBackendModelConverter,
@@ -101,6 +101,10 @@ export class StatementService {
 
   public getStatement(deploymentId: string): Pattern | Schema {
     return this.statements.find(statement => statement.deploymentProperties.id === deploymentId);
+  }
+
+  public getSchema( name: string ): Schema {
+    return this.statements.find( (statement) => Statement.isSchema(statement) && statement.name === name) as Schema;
   }
 
 /*   private parseStatement(statement: Statement) {

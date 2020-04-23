@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { NbToastrService } from '@nebular/theme';
 
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 
 @Component({

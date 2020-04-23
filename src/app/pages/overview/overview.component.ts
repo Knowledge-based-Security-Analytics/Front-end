@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Schema, Pattern, Statement } from 'src/app/models/statement';
+import { Schema, Pattern, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 
 

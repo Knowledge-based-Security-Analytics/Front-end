@@ -1,9 +1,10 @@
+import { ObjectRepToEpl } from './components/blockly-card/blockly-scripts/objectRepToEpl';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 
 import { BlocklyService } from './services/blockly.service';
-import { Pattern, Schema } from 'src/app/models/statement';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 
 @Component({
@@ -65,6 +66,9 @@ export class EditorComponent implements OnInit {
   }
 
   private addEplAndBlocklyXml(): void {
+    if (Statement.isSchema(this.blocklyService.statement)) {
+      this.blocklyService.statement.deploymentProperties.eplStatement = ObjectRepToEpl.translateSchemaToEpl(this.blocklyService.statement);
+    }
     // this.statement.eplStatement = this.blocklyService.getEplStatement();
     this.blocklyService.statement.blocklyXml = this.blocklyService.getBlocklyXml();
     // this.statement.eventType = this.statement.eplStatement.includes('create json schema');

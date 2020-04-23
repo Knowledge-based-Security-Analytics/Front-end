@@ -1,4 +1,4 @@
-import { Pattern, Schema, Statement } from 'src/app/models/statement';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 
 export class BackendStatementModel {
   deploymentId?: string;
@@ -28,6 +28,7 @@ export function backendToFrontendDataModelConverter(statement: BackendStatementM
 
   const objectRepresentation: any = JSON.parse(statement.objectRepresentation.replace(/\\x22/g, '/\x22'));
   if (Statement.isSchema(frontendModel)) {
+    frontendModel.complexEvent = frontendModel.complexEvent;
     frontendModel.attributes = objectRepresentation.attributes ? objectRepresentation.attributes : [];
   } else {
     frontendModel.outputAttributes = objectRepresentation.outputAttributes ? objectRepresentation.outputAttributes : [];
@@ -41,6 +42,7 @@ export function frontendToBackendModelConverter(statement: Pattern | Schema): Ba
   const tempObjectRepresentation: any = {};
   if (Statement.isSchema(statement)) {
     tempObjectRepresentation.attributes = statement.attributes;
+    tempObjectRepresentation.complexEvent = statement.complexEvent;
   } else {
     tempObjectRepresentation.outputAttributes = statement.outputAttributes;
     tempObjectRepresentation.events = statement.events;

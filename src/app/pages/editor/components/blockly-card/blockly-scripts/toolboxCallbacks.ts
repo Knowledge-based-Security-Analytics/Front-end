@@ -1,10 +1,13 @@
-import { IEventAlias, Statement } from '../../../../../models/statement';
+import { IEventAlias, Statement } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
+import { StatementService } from 'src/app/shared/services/statement.service';
 declare var Blockly: any;
 
 export class ToolboxCallbacks {
 
-  constructor(private blocklyService: BlocklyService) { }
+  constructor(
+    private blocklyService: BlocklyService,
+    private stmtService: StatementService) { }
 
   public registerToolboxCategoryCallbacks(): void {
     this.registerEventSchemaCategory();
@@ -14,10 +17,8 @@ export class ToolboxCallbacks {
   }
 
   private registerEventSchemaCategory(): void {
-    this.blocklyService.workspace.registerToolboxCategoryCallback('EVENT SCHEMAS', () => {
+    this.blocklyService.workspace.registerToolboxCategoryCallback('SCHEMA', () => {
       const xmlList = [];
-      xmlList.push(Blockly.Xml.textToDom('<label text="Create new schema"></label>'));
-      xmlList.push(Blockly.Xml.textToDom('<block type="type"></block>'));
       xmlList.push(Blockly.Xml.textToDom('<block type="attribute_definition"></block>'));
       return xmlList;
     });
@@ -28,8 +29,6 @@ export class ToolboxCallbacks {
       const xmlList = [];
       xmlList.push(Blockly.Xml.textToDom('<block type="event"></block>'));
       xmlList.push(Blockly.Xml.textToDom('<sep gap="32"></sep>'));
-     /*  xmlList.push(Blockly.Xml.textToDom('<block type="event_pattern"></block>'));
-      xmlList.push(Blockly.Xml.textToDom('<sep gap="32"></sep>')); */
       xmlList.push(Blockly.Xml.textToDom('<block type="event_pattern_and"></block>'));
       xmlList.push(Blockly.Xml.textToDom('<sep gap="8"></sep>'));
       xmlList.push(Blockly.Xml.textToDom('<block type="event_pattern_or"></block>'));
@@ -52,7 +51,11 @@ export class ToolboxCallbacks {
       xmlList.push(Blockly.Xml.textToDom('<label text="Available Aliases"></label>'));
       if (!Statement.isSchema(this.blocklyService.statement)) {
         this.blocklyService.statement.events.map((a: IEventAlias) =>  {
-          xmlList.push(Blockly.Xml.textToDom(`<block type="event_alias"><field name="ALIAS">${a.alias}</field></block>`));
+          xmlList.push(Blockly.Xml.textToDom(`
+            <block type="event_alias">
+              <field name="ALIAS" >${a.alias}</field>
+            </block>`
+          ));
         });
       }
       return xmlList;
@@ -66,7 +69,7 @@ export class ToolboxCallbacks {
       xmlList.push(Blockly.Xml.textToDom('<label text="Existing schemas"></label>'));
       xmlList.push(Blockly.Xml.textToDom('<block type="new_schema"></block>'));
       this.blocklyService.eventTypes.map(( eventType: string ) => {
-        xmlList.push(Blockly.Xml.textToDom(`<block type="existing_schema"><field name="EVENT_TYPE">${eventType}</field></block>`));
+        xmlList.push(Blockly.Xml.textToDom(`<block type="existing_schema"><field name="SCHEMA">${eventType}</field></block>`));
       });
       return xmlList;
     });

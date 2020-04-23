@@ -14,6 +14,6 @@ export class ObjectRepToEpl {
   }
 
   public static translatePatternToEpl( pattern: Pattern ): string {
-    return '';
+    return 'test';
   }
 }

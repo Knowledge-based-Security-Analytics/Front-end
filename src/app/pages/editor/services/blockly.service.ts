@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { THEME_VARIABLES } from 'src/app/@theme/styles/variables';
+import { ObjectRepToEpl } from '../components/blockly-card/blockly-scripts/objectRepToEpl';
 
 declare var Blockly: any;
 
@@ -37,19 +38,25 @@ export class BlocklyService {
 
   public initPreviewChangeListener(): void {
     this.workspace.addChangeListener(() => {
+      let eplStatement = '';
       if (Statement.isSchema(this.statement)) {
         this.statement.attributes = [];
         this.statement.attributes.push(...this.statement.complexEvent ? Schema.COMPLEX_ATTRIBUTES : Schema.BASIC_ATTRIBUTES);
+        Blockly.EPL.workspaceToCode(this.workspace);
+        eplStatement = ObjectRepToEpl.translateSchemaToEpl(this.statement);
       } else {
         this.statement.outputAttributes = [];
         this.statement.events = [];
         this.statement.eventSequence = [];
+        Blockly.EPL.workspaceToCode(this.workspace);
+        eplStatement = ObjectRepToEpl.translatePatternToEpl(this.statement);
       }
-      Blockly.EPL.workspaceToCode(this.workspace);
+
+      if (document.getElementById( 'blocklyOutput' )) {
+        document.getElementById( 'blocklyOutput' ).innerHTML = eplStatement;
+      }
+
       console.log(this.statement);
-      /* if (document.getElementById( 'blocklyOutput' )) {
-        document.getElementById( 'blocklyOutput' ).innerHTML = Blockly.EPL.workspaceToCode(this.blocklyWorkspace);
-      } */
     });
   }
 

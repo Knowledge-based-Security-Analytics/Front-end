@@ -1,3 +1,43 @@
+
+<div class="row full-height debugger-root" *ngIf="statement">
+  <div class="col-sm" *ngIf="statement.deploymentProperties.dependencies.length >= 2">
+    <nb-card class="debug-card full-height">
+      <nb-card-header>
+        Logs
+      </nb-card-header>
+      <nb-list class="debug-list">
+        <nb-list-item  *ngFor="let event of events[0]">
+          <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+  <div class="col-sm" *ngIf="statement.deploymentProperties.dependencies.length >= 1">
+    <nb-card class="debug-card full-height">
+      <nb-card-header>
+        Events
+      </nb-card-header>
+      <nb-list class="debug-list">
+        <nb-list-item  *ngFor="let event of events[1]">
+          <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+  <div class="col-sm">
+    <nb-card class="debug-card full-height">
+      <nb-card-header>
+        Incidents
+      </nb-card-header>
+      <nb-list class="debug-list">
+        <nb-list-item  *ngFor="let event of events[2]">
+          <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  </div>
+</div>
+
 <!-- <mat-grid-list cols="3" rowHeight="100%">
   <mat-grid-tile>
     <mat-grid-tile-header><h3>Logs</h3></mat-grid-tile-header>
@@ -17,6 +57,4 @@
         <mat-list-item *ngFor="let event of events[2]"><span [ngClass]="'event-name'">{{event.name}}:</span><span [ngClass]="'event-body'">{{event.body}}</span></mat-list-item>
       </mat-list>
   </mat-grid-tile>
-</mat-grid-list>
- -->
-<p>debugger works</p>
+</mat-grid-list> -->

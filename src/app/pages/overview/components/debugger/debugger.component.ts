@@ -1,29 +1,33 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-debugger',
   templateUrl: './debugger.component.html',
   styleUrls: ['./debugger.component.scss']
 })
-export class DebuggerComponent implements OnInit {
-
-  private statement: Pattern | Schema;
+export class DebuggerComponent implements OnInit, OnChanges {
+  @Input() statement: Statement;
   public events: {name: string, body: string}[][] = [[], [], []];
 
+  private subscriptions: Subscription[] = [];
+
   constructor(
-    private route: ActivatedRoute,
-    private stmtService: StatementService,
     private eventStreamService: EventStreamService,
     private statementService: StatementService) {}
 
   ngOnInit() {
-    this.statement = this.stmtService.getStatement(this.route.snapshot.paramMap.get('deploymentId'));
-    console.log(this.statement);
-    this.subscribeTopics();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.statement && this.statement) {
+      this.resetTopics();
+      this.subscribeTopics();
+    }
   }
 
   private async subscribeTopics() {
@@ -42,10 +46,15 @@ export class DebuggerComponent implements OnInit {
     }
   }
 
-  private subscribeTopic(statement: Pattern | Schema, position: number) {
-    this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
+  private subscribeTopic(statement: Statement, position: number) {
+    this.subscriptions.push(this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
+      console.log(event);
       this.events[position].unshift({name: statement.name, body: event.jsonString});
-    });
+    }));
   }
 
+  private resetTopics() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.events = [[], [], []];
+  }
 }

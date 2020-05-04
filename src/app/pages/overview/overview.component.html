@@ -20,11 +20,11 @@
           </nb-card-body>
         </nb-card>
       </nb-card-front>
-      <nb-card-back>
+      <nb-card-back class="full-height">
         <nb-card class="full-height" status="success">
-          <nb-card-header>Statement Chart</nb-card-header>
+          <nb-card-header>Debugger</nb-card-header>
           <nb-card-body>
-            Graph
+            <app-debugger [statement]="selectedStatement"></app-debugger>
           </nb-card-body>
         </nb-card>
       </nb-card-back>

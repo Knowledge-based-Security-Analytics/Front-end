@@ -29,6 +29,11 @@ mat-grid-list {
   margin: 8px 0px;
 }
 
+// .debug-card{
+//   top: 10px;
+//   bottom: 10px;
+// }
+
 .event-name {
   font-size: 10px;
   color: #666;
@@ -39,4 +44,12 @@ mat-grid-list {
 .event-body {
   word-break: break-word;
   display: contents;
+}
+
+.debugger-root {
+  padding-bottom: 30px;
+}
+
+.debug-list {
+  height: 10px;
 }

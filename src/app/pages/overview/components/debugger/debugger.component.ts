@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
@@ -20,9 +20,11 @@ export class DebuggerComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  ngOnChanges(){
+  ngOnChanges(changes: SimpleChanges){
+    console.log(changes)
     console.log(this.statement);
-    if(this.statement){
+
+    if(changes.statement && this.statement){
       this.subscribeTopics();
     }
   }

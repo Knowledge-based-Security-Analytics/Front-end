@@ -1,5 +1,5 @@
 
-<div class="row full-height debugger-root">
+<div class="row full-height debugger-root" *ngIf="statement">
   <div class="col-sm" *ngIf="statement.deploymentProperties.dependencies.length >= 2">
     <nb-card class="debug-card full-height">
       <nb-card-header>

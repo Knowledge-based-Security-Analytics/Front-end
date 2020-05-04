@@ -66,8 +66,9 @@ export class ToolboxCallbacks {
     this.blocklyService.workspace.registerToolboxCategoryCallback('ACTION', () => {
       const xmlList = [];
       xmlList.push(Blockly.Xml.textToDom('<block type="action"></block>'));
+      xmlList.push(Blockly.Xml.textToDom('<block type="output_attribute"></block>'));
       xmlList.push(Blockly.Xml.textToDom('<label text="Existing schemas"></label>'));
-      xmlList.push(Blockly.Xml.textToDom('<block type="new_schema"></block>'));
+/*       xmlList.push(Blockly.Xml.textToDom('<block type="new_schema"></block>')); */
       this.blocklyService.eventTypes.map(( eventType: string ) => {
         xmlList.push(Blockly.Xml.textToDom(`<block type="existing_schema"><field name="SCHEMA">${eventType}</field></block>`));
       });

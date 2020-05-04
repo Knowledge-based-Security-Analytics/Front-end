@@ -24,9 +24,24 @@ class DeploymentProperties {
 }
 
 export class Schema extends Statement {
+  static readonly BASIC_ATTRIBUTES = [
+    {name: 'complex', type: 'boolean'},
+    {name: 'id', type: 'string'},
+    {name: 'timestamp', type: 'string'}
+  ];
+  static readonly COMPLEX_ATTRIBUTES = [
+    ...Schema.BASIC_ATTRIBUTES,
+    {name: 'sources', type: 'object[]'}
+  ];
+
   type: 'schema' = 'schema';
   complexEvent = false;
-  attributes: {name: string, type: string}[] = [];
+  attributes: {name: string, type: string}[] = Schema.BASIC_ATTRIBUTES;
+
+  constructor(name?: string) {
+    super();
+    this.name = name ? name : null;
+  }
 
   getObject(): {[key: string]: string} {
     const returnObj = {};
@@ -42,6 +57,7 @@ export class ConditionedEvent {
 
 export class Pattern extends Statement {
   type: 'pattern' = 'pattern';
+  outputSchema: Schema = new Schema();
   outputAttributes: {inputAttribute: string, outputAttribute: string}[] = [];
   events: IEventAlias[] = [];
   eventSequence: (ConditionedEvent | PatternDefinition)[] = [];
@@ -52,49 +68,52 @@ export interface IEventAlias {
   eventType: string;
 }
 
-abstract class PatternDefinition {
-  readonly patternType: 'AND' | 'OR' | 'FOLLOWEDBY' | 'REPEAT' | 'NOT';
+export abstract class PatternDefinition {
+  readonly patternType: 'AND' | 'OR' | 'REPEAT' | 'NOT';
 }
 
 export class AndPattern extends PatternDefinition {
-  patternType: 'AND';
+  patternType: 'AND' = 'AND';
   eventSequenceA: (ConditionedEvent | PatternDefinition)[] = [];
   eventSequenceB: (ConditionedEvent | PatternDefinition)[] = [];
 }
 
 export class OrPattern extends PatternDefinition {
-  patternType: 'OR';
+  patternType: 'OR' = 'OR';
   eventSequenceA: (ConditionedEvent | PatternDefinition)[] = [];
   eventSequenceB: (ConditionedEvent | PatternDefinition)[] = [];
 }
 
 export class RepeatPattern extends PatternDefinition {
-  patternType: 'REPEAT';
+  patternType: 'REPEAT' = 'REPEAT';
   times: number;
   eventSequence: (ConditionedEvent | PatternDefinition)[] = [];
 }
 
 export class NotPattern extends PatternDefinition {
-  patternType: 'NOT';
+  patternType: 'NOT' = 'NOT';
   eventSequence: (ConditionedEvent | PatternDefinition)[] = [];
 }
 
 // TODO: Timer Pattern
 
-abstract class Condition {
+export abstract class Condition {
+  type: 'value' | 'logical';
   value1: any;
   operator: string;
   value2: any;
 }
 
 export class ValueCondition extends Condition {
+  type: 'value' = 'value';
   value1: string | number;
   operator: '<' | '>' | '=' | '!=' | '>=' | '<=';
   value2: string | number;
 }
 
 export class LogicalCondition extends Condition {
-  value1: (LogicalCondition | ValueCondition)[] = [];
+  type: 'logical' = 'logical';
+  value1: (LogicalCondition | ValueCondition) = null;
   operator: 'and' | 'or';
-  value2: (LogicalCondition | ValueCondition)[] = [];
+  value2: (LogicalCondition | ValueCondition) = null;
 }

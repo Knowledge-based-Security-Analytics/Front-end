@@ -55,10 +55,14 @@ export class BlockInitializers {
               const eventType = env.blocklyService.statement.events.find((event: IEventAlias) => event.alias === alias).eventType;
               const schema: Schema = env.stmtService.getSchema(eventType);
               const attributes = [];
-              schema.attributes.map( attribute => attributes.push([attribute.name, attribute.name]));
+              schema.attributes.map( attribute => {
+                if (attribute.name !== 'complex') {
+                  attributes.push([attribute.name, attribute.name]);
+                }
+              });
               return attributes;
             }
-            return [['attributes', 'ATTRIBUTES']];
+            return [['No attributes available', 'null']];
           }),  BLOCKS.eventAlias.fields.attribute);
         this.setOutput(true, BLOCKS.eventAlias.name);
         this.setColour( THEME_VARIABLES.success[600] );
@@ -72,6 +76,9 @@ export class BlockInitializers {
     Blockly.Blocks.event = {
       init() {
         const dropDownData = env.blocklyService.eventTypes.map((type: any) => [type, type]);
+        if (dropDownData.length === 0) {
+          dropDownData.push(['No schemas available', 'null']);
+        }
         this.appendDummyInput()
           .appendField('Event')
           .appendField(new Blockly.FieldDropdown(dropDownData), BLOCKS.sequencePattern.fields.type)
@@ -170,7 +177,7 @@ export class BlockInitializers {
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.appendDummyInput()
           .appendField('OR');
-        this.appendStatementInput(BLOCKS.orCondition.statements.expression1)
+        this.appendStatementInput(BLOCKS.orCondition.statements.expression2)
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.setInputsInline(true);
         this.setPreviousStatement(true, [
@@ -189,7 +196,7 @@ export class BlockInitializers {
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.appendDummyInput()
           .appendField('AND');
-        this.appendStatementInput(BLOCKS.andCondition.statements.expression1)
+        this.appendStatementInput(BLOCKS.andCondition.statements.expression2)
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.setInputsInline(true);
         this.setPreviousStatement(true, [
@@ -236,7 +243,7 @@ export class BlockInitializers {
         this.appendDummyInput()
             .appendField(new Blockly.FieldTextInput('text'), BLOCKS.conditionTextInput.fields.textInput);
         this.setOutput(true, BLOCKS.conditionTextInput.name);
-        this.setColour( THEME_VARIABLES.success[500] );
+        this.setColour( THEME_VARIABLES.success[600] );
         this.setTooltip('');
       }
     };
@@ -246,7 +253,7 @@ export class BlockInitializers {
         this.appendDummyInput()
             .appendField(new Blockly.FieldNumber(0), BLOCKS.conditionNumberInput.fields.numberInput);
         this.setOutput(true, BLOCKS.conditionNumberInput.name);
-        this.setColour( THEME_VARIABLES.success[500] );
+        this.setColour( THEME_VARIABLES.success[600] );
         this.setTooltip('');
       }
     };
@@ -256,14 +263,57 @@ export class BlockInitializers {
     const env: any = this;
     Blockly.Blocks.action = {
       init() {
+        const dropDownData = env.blocklyService.eventTypes.map((type: any) => [type, type]);
         this.appendDummyInput()
           .appendField('to event schema');
         this.appendValueInput(BLOCKS.action.fields.outputSchema)
           .setCheck(BLOCKS.outputSchema.name);
         this.appendStatementInput(BLOCKS.action.statements.outputVariables)
-          .setCheck('test');
+          .setCheck('output_attribute');
         this.setInputsInline(true);
         this.setPreviousStatement(true, BLOCKS.action.name);
+        this.setColour( THEME_VARIABLES.warning[500] );
+        this.setTooltip('');
+      }
+    };
+
+    Blockly.Blocks.output_attribute = {
+      init() {
+        const inputDropdownData = [];
+        env.blocklyService.statement.events.map(( event: IEventAlias ) => {
+          env.stmtService.getSchema(event.eventType).attributes.map( (attribute: any) => {
+            if (attribute.name !== 'timestamp' && attribute.name !== 'complex') {
+              inputDropdownData.push([event.alias + '.' + attribute.name, event.alias + '.' + attribute.name]);
+            }
+          });
+        });
+        if (inputDropdownData.length === 0 ) {
+          inputDropdownData.push(['No attributes available', 'null']);
+        }
+
+        const outputDropdownData = [];
+        if (env.blocklyService.statement.outputSchema) {
+          env.blocklyService.statement.outputSchema.attributes.map( (attribute: any) => {
+            if (attribute.name !== 'complex' && attribute.name !== 'id' && attribute.name !== 'timestamp') {
+              outputDropdownData.push([attribute.name, attribute.name]);
+            }
+          });
+        }
+        if (outputDropdownData.length === 0) {
+          outputDropdownData.push(['No attributes available', 'null'])
+        }
+
+        this.appendDummyInput()
+          .appendField('attribute');
+        this.appendDummyInput()
+          .appendField(new Blockly.FieldDropdown(inputDropdownData), 'input');
+        this.appendDummyInput()
+          .appendField('as');
+        this.appendDummyInput()
+          .appendField(new Blockly.FieldDropdown(outputDropdownData), 'output');
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, [BLOCKS.action.name, 'output_attribute']);
+        this.setNextStatement(true, [ 'output_attribute' ]);
         this.setColour( THEME_VARIABLES.warning[500] );
         this.setTooltip('');
       }
@@ -279,7 +329,7 @@ export class BlockInitializers {
       }
     };
 
-    Blockly.Blocks.new_schema = {
+/*     Blockly.Blocks.new_schema = {
       init() {
         this.appendDummyInput()
             .appendField(new Blockly.FieldTextInput('newSchema'), BLOCKS.outputSchema.fields.schema);
@@ -287,6 +337,6 @@ export class BlockInitializers {
         this.setColour( THEME_VARIABLES.warning[600] );
         this.setTooltip('');
       }
-    };
+    }; */
   }
 }

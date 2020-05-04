@@ -1,6 +1,6 @@
 
 <div class="row full-height debugger-root">
-  <div class="col-sm">
+  <div class="col-sm" *ngIf="statement.deploymentProperties.dependencies.length >= 2">
     <nb-card class="debug-card full-height">
       <nb-card-header>
         Logs
@@ -12,7 +12,7 @@
       </nb-list>
     </nb-card>
   </div>
-  <div class="col-sm">
+  <div class="col-sm" *ngIf="statement.deploymentProperties.dependencies.length >= 1">
     <nb-card class="debug-card full-height">
       <nb-card-header>
         Events

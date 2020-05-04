@@ -22,6 +22,10 @@ export class InfoCardComponent {
     production ? this.statement.deploymentProperties.mode = 'prod' : this.statement.deploymentProperties.mode = 'dev';
   }
 
+  public onChangeStatementName(newStatementName: string) {
+    this.statement.name = newStatementName.replace(/\s/gi, '_');
+  }
+
   public onCreateStatement(): void {
     this.statementChanged.emit(this.statement);
   }

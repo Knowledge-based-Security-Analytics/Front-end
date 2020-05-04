@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 
@@ -9,21 +9,22 @@ import { EventStreamService } from 'src/app/shared/services/event-stream.service
   templateUrl: './debugger.component.html',
   styleUrls: ['./debugger.component.scss']
 })
-export class DebuggerComponent implements OnInit {
-
-  private statement: Pattern | Schema;
+export class DebuggerComponent implements OnInit, OnChanges {
+  @Input() statement: Statement;
   public events: {name: string, body: string}[][] = [[], [], []];
 
   constructor(
-    private route: ActivatedRoute,
-    private stmtService: StatementService,
     private eventStreamService: EventStreamService,
     private statementService: StatementService) {}
 
   ngOnInit() {
-    this.statement = this.stmtService.getStatement(this.route.snapshot.paramMap.get('deploymentId'));
+  }
+
+  ngOnChanges(){
     console.log(this.statement);
-    this.subscribeTopics();
+    if(this.statement){
+      this.subscribeTopics();
+    }
   }
 
   private async subscribeTopics() {
@@ -42,8 +43,11 @@ export class DebuggerComponent implements OnInit {
     }
   }
 
-  private subscribeTopic(statement: Pattern | Schema, position: number) {
+  private subscribeTopic(statement: Statement, position: number) {
+    console.log(statement)
+    console.log(this.events)
     this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
+      console.log(event)
       this.events[position].unshift({name: statement.name, body: event.jsonString});
     });
   }

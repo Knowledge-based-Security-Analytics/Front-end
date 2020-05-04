@@ -3,6 +3,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-debugger',
@@ -12,6 +13,8 @@ import { EventStreamService } from 'src/app/shared/services/event-stream.service
 export class DebuggerComponent implements OnInit, OnChanges {
   @Input() statement: Statement;
   public events: {name: string, body: string}[][] = [[], [], []];
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private eventStreamService: EventStreamService,
@@ -25,6 +28,7 @@ export class DebuggerComponent implements OnInit, OnChanges {
     console.log(this.statement);
 
     if(changes.statement && this.statement){
+      this.resetTopics();
       this.subscribeTopics();
     }
   }
@@ -48,10 +52,14 @@ export class DebuggerComponent implements OnInit, OnChanges {
   private subscribeTopic(statement: Statement, position: number) {
     console.log(statement)
     console.log(this.events)
-    this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
+    this.subscriptions.push(this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
       console.log(event)
       this.events[position].unshift({name: statement.name, body: event.jsonString});
-    });
+    }));
   }
 
+  private resetTopics() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.events = [[], [], []];
+  }
 }

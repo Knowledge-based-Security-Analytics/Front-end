@@ -23,11 +23,8 @@ export class DebuggerComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  ngOnChanges(changes: SimpleChanges){
-    console.log(changes)
-    console.log(this.statement);
-
-    if(changes.statement && this.statement){
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.statement && this.statement) {
       this.resetTopics();
       this.subscribeTopics();
     }
@@ -50,10 +47,8 @@ export class DebuggerComponent implements OnInit, OnChanges {
   }
 
   private subscribeTopic(statement: Statement, position: number) {
-    console.log(statement)
-    console.log(this.events)
     this.subscriptions.push(this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
-      console.log(event)
+      console.log(event);
       this.events[position].unshift({name: statement.name, body: event.jsonString});
     }));
   }

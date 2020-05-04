@@ -152,11 +152,13 @@ export class BlockParsers {
     Blockly.EPL.condition_or = (block: any): string => {
       const logicalCondition = new LogicalCondition();
       logicalCondition.operator = 'or';
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.orCondition.statements.expression1)}]`) ) {
-        logicalCondition.value1.push(condition);
+      const value1 = Blockly.EPL.statementToCode(block, BLOCKS.orCondition.statements.expression1);
+      const value2 = Blockly.EPL.statementToCode(block, BLOCKS.orCondition.statements.expression2);
+      if (value1 !== '') {
+        logicalCondition.value1 = JSON.parse(value1);
       }
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.orCondition.statements.expression2)}]`) ) {
-        logicalCondition.value2.push(condition);
+      if (value2 !== '') {
+        logicalCondition.value2 = JSON.parse(value2);
       }
       return JSON.stringify(logicalCondition);
     };
@@ -164,20 +166,22 @@ export class BlockParsers {
     Blockly.EPL.condition_and = (block: any): string => {
       const logicalCondition = new LogicalCondition();
       logicalCondition.operator = 'and';
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.andCondition.statements.expression1)}]`) ) {
-        logicalCondition.value1.push(condition);
+      const value1 = Blockly.EPL.statementToCode(block, BLOCKS.andCondition.statements.expression1);
+      const value2 = Blockly.EPL.statementToCode(block, BLOCKS.andCondition.statements.expression2);
+      if (value1 !== '') {
+        logicalCondition.value1 = JSON.parse(value1);
       }
-      for (const condition of JSON.parse(`[${Blockly.EPL.statementToCode(block, BLOCKS.andCondition.statements.expression2)}]`) ) {
-        logicalCondition.value2.push(condition);
+      if (value2 !== '') {
+        logicalCondition.value2 = JSON.parse(value2);
       }
       return JSON.stringify(logicalCondition);
     };
 
     Blockly.EPL.condition = (block: any): string => {
       const valueCondition = new ValueCondition();
-      valueCondition.value1 = Blockly.EPL.statementToCode(block, BLOCKS.condition.fields.leftInput);
+      valueCondition.value1 = Blockly.EPL.statementToCode(block, BLOCKS.condition.fields.leftInput).trim();
       valueCondition.operator = block.getFieldValue(BLOCKS.condition.fields.operator);
-      valueCondition.value2 = Blockly.EPL.statementToCode(block, BLOCKS.condition.fields.rightInput);
+      valueCondition.value2 = Blockly.EPL.statementToCode(block, BLOCKS.condition.fields.rightInput).trim();
       return JSON.stringify(valueCondition);
     };
 

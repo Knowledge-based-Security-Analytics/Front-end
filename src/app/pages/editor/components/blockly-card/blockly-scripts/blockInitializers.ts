@@ -177,7 +177,7 @@ export class BlockInitializers {
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.appendDummyInput()
           .appendField('OR');
-        this.appendStatementInput(BLOCKS.orCondition.statements.expression1)
+        this.appendStatementInput(BLOCKS.orCondition.statements.expression2)
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.setInputsInline(true);
         this.setPreviousStatement(true, [
@@ -196,7 +196,7 @@ export class BlockInitializers {
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.appendDummyInput()
           .appendField('AND');
-        this.appendStatementInput(BLOCKS.andCondition.statements.expression1)
+        this.appendStatementInput(BLOCKS.andCondition.statements.expression2)
           .setCheck([BLOCKS.condition.name, BLOCKS.andCondition.name, BLOCKS.orCondition.name]);
         this.setInputsInline(true);
         this.setPreviousStatement(true, [

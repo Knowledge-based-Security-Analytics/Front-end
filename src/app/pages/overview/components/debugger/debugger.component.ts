@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 export class DebuggerComponent implements OnInit, OnChanges {
   @Input() statement: Statement;
   public events: {name: string, body: string}[][] = [[], [], []];
+  public eventSubscribed = [false, false, true];
 
   private subscriptions: Subscription[] = [];
 
@@ -40,13 +41,16 @@ export class DebuggerComponent implements OnInit, OnChanges {
       if (statementToSubscribe.deploymentProperties.dependencies && statementToSubscribe.deploymentProperties.dependencies.length > 0) {
         statementIDs = statementIDs.concat(statementToSubscribe.deploymentProperties.dependencies);
         this.subscribeTopic(statementToSubscribe, 1);
+        this.eventSubscribed[1] = true;
       } else {
         this.subscribeTopic(statementToSubscribe, 0);
+        this.eventSubscribed[0] = true;
       }
     }
   }
 
   private subscribeTopic(statement: Statement, position: number) {
+    console.log('subscribing to: ' + statement.name);
     this.subscriptions.push(this.eventStreamService.subscribeTopic(statement.name).subscribe((event) => {
       console.log(event);
       this.events[position].unshift({name: statement.name, body: event.jsonString});
@@ -56,5 +60,6 @@ export class DebuggerComponent implements OnInit, OnChanges {
   private resetTopics() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.events = [[], [], []];
+    this.eventSubscribed = [false, false, true];
   }
 }

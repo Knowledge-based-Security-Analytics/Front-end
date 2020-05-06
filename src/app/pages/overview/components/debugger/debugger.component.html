@@ -6,7 +6,7 @@
         Logs
       </nb-card-header>
       <nb-list class="debug-list">
-        <nb-list-item  *ngFor="let event of events[0]">
+        <nb-list-item  *ngFor="let event of events[0]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
           <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
         </nb-list-item>
       </nb-list>
@@ -18,7 +18,7 @@
         Events
       </nb-card-header>
       <nb-list class="debug-list">
-        <nb-list-item  *ngFor="let event of events[1]">
+        <nb-list-item  *ngFor="let event of events[1]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
           <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
         </nb-list-item>
       </nb-list>
@@ -30,7 +30,7 @@
         Incidents
       </nb-card-header>
       <nb-list class="debug-list">
-        <nb-list-item  *ngFor="let event of events[2]">
+        <nb-list-item  *ngFor="let event of events[2]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
           <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
         </nb-list-item>
       </nb-list>

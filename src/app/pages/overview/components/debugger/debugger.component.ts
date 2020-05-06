@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class DebuggerComponent implements OnInit, OnChanges {
   @Input() statement: Statement;
-  public events: {name: string, body: string}[][] = [[], [], []];
+  public events: {name: string, body: string, id: number, highlighted: boolean}[][] = [[], [], []];
   public eventSubscribed = [false, false, true];
 
   private subscriptions: Subscription[] = [];
@@ -53,8 +53,7 @@ export class DebuggerComponent implements OnInit, OnChanges {
     const topic: string = this.getOutputTopic(statement);
     console.log('subscribing to: ' + topic);
     this.subscriptions.push(this.eventStreamService.subscribeTopic(topic).subscribe((event) => {
-      console.log(event);
-      this.events[position].unshift({name: topic, body: event.jsonString});
+      this.events[position].unshift({name: topic, body: event.jsonString, id: JSON.parse(event.jsonString).id, highlighted: false});
     }));
   }
 
@@ -72,5 +71,34 @@ export class DebuggerComponent implements OnInit, OnChanges {
         .slice(14, -2);
     }
     return topic;
+  }
+
+  mouseoverEvent(id: number) {
+    this.resetHighlights();
+    this.highlightEvents(id);
+  }
+
+  private highlightEvents(id: number) {
+    this.events.forEach(eventPosition => {
+      eventPosition.forEach(event => {
+        if (id === event.id && !event.highlighted) {
+          event.highlighted = true;
+          let sources = JSON.parse(event.body).sources;
+          if(sources) {
+            sources.forEach(source => {
+              this.highlightEvents(source.id);
+            });
+          }
+        }
+      });
+    });
+  }
+
+  private resetHighlights() {
+    this.events.forEach(eventPosition => {
+      eventPosition.forEach(event => {
+        event.highlighted = false;
+      });
+    });
   }
 }

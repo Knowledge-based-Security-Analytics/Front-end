@@ -35,17 +35,18 @@
     "blockly": "^3.20200123.1",
     "bootstrap": "^4.4.1",
     "component": "^1.1.0",
+    "d3": "5.15.0",
     "eva-icons": "^1.1.2",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "hammerjs": "^2.0.8",
     "jquery": "3.4.1",
     "ngx-highlightjs": "^4.1.0-beta",
+    "ngx-json-viewer": "^2.4.0",
     "rxjs": "^6.5.4",
     "subscriptions-transport-ws": "^0.9.16",
     "tslib": "^1.11.1",
-    "zone.js": "^0.10.2",
-    "d3": "5.15.0"
+    "zone.js": "^0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.900.6",

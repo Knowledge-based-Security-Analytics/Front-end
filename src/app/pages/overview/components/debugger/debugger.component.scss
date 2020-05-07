@@ -52,8 +52,13 @@ mat-grid-list {
 
 .debug-list {
   height: 10px;
+  overflow-x: hidden;
 }
 
-.event-highlighted{
+.event-highlighted {
   background-color: beige;
+}
+
+.w-33 {
+ width: 33%!important;
 }

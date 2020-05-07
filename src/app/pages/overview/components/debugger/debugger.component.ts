@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class DebuggerComponent implements OnInit, OnChanges {
   @Input() statement: Statement;
-  public events: {name: string, body: string, id: number, highlighted: boolean}[][] = [[], [], []];
+  public events: {name: string, body: any, id: number, highlighted: boolean}[][] = [[], [], []];
   public eventSubscribed = [false, false, true];
 
   private subscriptions: Subscription[] = [];
@@ -53,7 +53,10 @@ export class DebuggerComponent implements OnInit, OnChanges {
     const topic: string = this.getOutputTopic(statement);
     console.log('subscribing to: ' + topic);
     this.subscriptions.push(this.eventStreamService.subscribeTopic(topic).subscribe((event) => {
-      this.events[position].unshift({name: topic, body: event.jsonString, id: JSON.parse(event.jsonString).id, highlighted: false});
+      const parsedEvent = JSON.parse(event.jsonString);
+      const body = {};
+      body[topic] = parsedEvent;
+      this.events[position].unshift({name: topic, body, id: parsedEvent.id, highlighted: false});
     }));
   }
 
@@ -83,8 +86,8 @@ export class DebuggerComponent implements OnInit, OnChanges {
       eventPosition.forEach(event => {
         if (id === event.id && !event.highlighted) {
           event.highlighted = true;
-          let sources = JSON.parse(event.body).sources;
-          if(sources) {
+          const sources = event.body[event.name].sources;
+          if (sources) {
             sources.forEach(source => {
               this.highlightEvents(source.id);
             });

@@ -1,37 +1,40 @@
 
 <div class="row full-height debugger-root" *ngIf="statement">
-  <div class="col-sm" *ngIf="eventSubscribed[0]">
+  <div class="col-sm w-33" *ngIf="eventSubscribed[0]">
     <nb-card class="debug-card full-height">
       <nb-card-header>
         Logs
       </nb-card-header>
       <nb-list class="debug-list">
         <nb-list-item  *ngFor="let event of events[0]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
-          <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
+          <ngx-json-viewer [json]="event.body" [expanded]="false" class="w-100"></ngx-json-viewer>
+          <!-- <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div> -->
         </nb-list-item>
       </nb-list>
     </nb-card>
   </div>
-  <div class="col-sm" *ngIf="eventSubscribed[1]">
+  <div class="col-sm w-33" *ngIf="eventSubscribed[1]">
     <nb-card class="debug-card full-height">
       <nb-card-header>
         Events
       </nb-card-header>
       <nb-list class="debug-list">
         <nb-list-item  *ngFor="let event of events[1]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
-          <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
+          <ngx-json-viewer [json]="event.body" [expanded]="false" class="w-100"></ngx-json-viewer>
+          <!-- <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div> -->
         </nb-list-item>
       </nb-list>
     </nb-card>
   </div>
-  <div class="col-sm" *ngIf="eventSubscribed[2]">
+  <div class="col-sm w-33" *ngIf="eventSubscribed[2]">
     <nb-card class="debug-card full-height">
       <nb-card-header>
         Incidents
       </nb-card-header>
       <nb-list class="debug-list">
         <nb-list-item  *ngFor="let event of events[2]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
-          <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div>
+          <ngx-json-viewer [json]="event.body" [expanded]="false" class="w-100"></ngx-json-viewer>
+          <!-- <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div> -->
         </nb-list-item>
       </nb-list>
     </nb-card>

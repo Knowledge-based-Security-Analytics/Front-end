@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { StatementService } from 'src/app/shared/services/statement.service';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './debugger.component.html',
   styleUrls: ['./debugger.component.scss']
 })
-export class DebuggerComponent implements OnInit, OnChanges {
+export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() statement: Statement;
   public events: {name: string, body: any, id: number, highlighted: boolean}[][] = [[], [], []];
   public eventSubscribed = [false, false, true];
@@ -29,6 +29,10 @@ export class DebuggerComponent implements OnInit, OnChanges {
       this.resetTopics();
       this.subscribeTopics();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeTopics();
   }
 
   private async subscribeTopics() {
@@ -53,6 +57,7 @@ export class DebuggerComponent implements OnInit, OnChanges {
     const topic: string = this.getOutputTopic(statement);
     console.log('subscribing to: ' + topic);
     this.subscriptions.push(this.eventStreamService.subscribeTopic(topic).subscribe((event) => {
+      console.log(event);
       const parsedEvent = JSON.parse(event.jsonString);
       const body = {};
       body[topic] = parsedEvent;
@@ -61,7 +66,7 @@ export class DebuggerComponent implements OnInit, OnChanges {
   }
 
   private resetTopics() {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.unsubscribeTopics();
     this.events = [[], [], []];
     this.eventSubscribed = [false, false, true];
   }
@@ -103,5 +108,10 @@ export class DebuggerComponent implements OnInit, OnChanges {
         event.highlighted = false;
       });
     });
+  }
+
+  private unsubscribeTopics() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions = [];
   }
 }

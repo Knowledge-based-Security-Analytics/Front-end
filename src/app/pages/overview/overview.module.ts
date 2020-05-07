@@ -15,6 +15,7 @@ import {
   NbSpinnerModule,
   NbFormFieldModule,
   NbLayoutModule,
+  NbToggleModule,
 } from '@nebular/theme';
 
 import { OverviewRoutingModule } from './overview-routing.module';
@@ -39,6 +40,7 @@ const NB_MODULES = [
   NbButtonModule,
   NbSpinnerModule,
   NbFormFieldModule,
+  NbToggleModule
 ];
 
 

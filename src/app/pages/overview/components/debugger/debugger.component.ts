@@ -14,6 +14,7 @@ export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() statement: Statement;
   public events: {name: string, body: any, id: number, highlighted: boolean}[][] = [[], [], []];
   public eventSubscribed = [false, false, true];
+  public expanded = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -113,5 +114,9 @@ export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
   private unsubscribeTopics() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.subscriptions = [];
+  }
+
+  toggleExpanded() {
+    this.expanded = !this.expanded;
   }
 }

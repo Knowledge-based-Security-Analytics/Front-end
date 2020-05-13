@@ -96,6 +96,12 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
       yAxisCtx: d3.axisLeft(scales.yCtx).ticks(1)
     };
 
+    // variables for live functionality
+    let data = [];
+    let eventBins = [];
+    const roundTo = 5000; // 5 seconds
+    const barWidth = Math.ceil((roundTo / (scales.xCtx.domain()[1].getTime() - scales.xCtx.domain()[0].getTime())) * width);
+
     const svg = d3.select(parentDiv.nativeElement)
       .append('svg')
       .attr('width', dimensions.width)
@@ -116,7 +122,6 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
           offset = 0;
         }
 
-        // TODO update displayed events
         scales.xFoc.domain([startTimeFoc, endTimeFoc]);
         focus.select('.axis--x').call(axes.xAxisFoc);
       });
@@ -139,70 +144,78 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
       .call(axes.xAxisFoc);
 
     // init small nav chart covering the maximum timeline
-    const context = svg.append('g')
+    const contextGroup = svg.append('g')
       .attr('class', 'context')
       .attr('transform', `translate(${marginCtx.left}, ${marginCtx.top})`)
 
-    context.append('g')
+    const contextBarChartGroup = contextGroup.append('g')
       .attr('class', 'context-chart')
       .attr('width', width)
       .attr('height', heightCtx)
       .attr('clip-path', 'url(#clip)');
 
-    context.append('g')
+    contextGroup.append('g')
       .attr('class', 'axis axis--x')
       .attr('transform', `translate(0, ${heightCtx})`)
       .call(axes.xAxisCtx);
 
-/*     context.append('g')
-      .attr('class', 'axis axis--y')
-      .call(axes.yAxisCtx); */
-
-    context.append('g')
+    contextGroup.append('g')
       .attr('class', 'brush')
       .call(brush)
-      .call(brush.move, [scales.xCtx(startTimeFoc), scales.xCtx(endTimeFoc)]);
-
-    let data = [];
-    let counts = [];
-    const roundTo = 5000; // 5 seconds
-    const barWidth = Math.ceil((roundTo / (scales.xCtx.domain()[1].getTime() - scales.xCtx.domain()[0].getTime())) * width);
+      .call(brush.move, [scales.xCtx(startTimeFoc), scales.xCtx(endTimeFoc)])
+      .selectAll('.selection')
+        .attr('fill', THEME_VARIABLES.basic[600])
+        .attr('stroke', THEME_VARIABLES.basic[600]);
 
     const refresh = () => {
       data = this.events.filter((event: Event) =>
         event.timestamp.getTime() > startTimeCtx.getTime() && event.timestamp.getTime() < endTimeCtx.getTime()
       );
 
-      const temp = {};
+      const eventsRoundedToTiming = {};
       let maxCount = 0;
-      counts = [];
+      eventBins = [];
       data.map((event: Event) => {
         const rounded = Math.floor(event.timestamp.getTime() / roundTo) * roundTo;
-        temp[rounded] = temp[rounded] + 1 || 1;
+        eventsRoundedToTiming[rounded] = eventsRoundedToTiming[rounded] + 1 || 1;
       });
-
-      for (const k in temp) {
+      for (const k in eventsRoundedToTiming) {
         if (k) {
           const tempDate = new Date();
           tempDate.setTime(+k);
-          if (temp[k] > maxCount) { maxCount = temp[k]; }
-          counts.push({date: tempDate, count: temp[k]});
+          if (eventsRoundedToTiming[k] > maxCount) { maxCount = eventsRoundedToTiming[k]; }
+          eventBins.push({date: tempDate, count: eventsRoundedToTiming[k]});
         }
       }
 
       scales.yCtx.domain([0, maxCount]);
-      // context.select('.axis--y').call(axes.yAxisCtx);
 
-      const contextUpdateSel = context.selectAll('.context-bar')
-        .data(counts);
+      const focusUpdateSel = focus.selectAll('.focus-drop')
+        .data(data);
+
+      focusUpdateSel.exit().remove();
+
+      focusUpdateSel.enter().append('circle')
+        .attr('class', 'focus-drop')
+        .attr('r', 7)
+        .attr('fill', THEME_VARIABLES.danger[600])
+        .attr('cx', (d: any) => scales.xFoc(d.timestamp))
+        .attr('cy', height / 2);
+
+      focusUpdateSel
+        .attr('cx', (d: any) => scales.xFoc(d.timestamp))
+        .attr('cy', height / 2);
+
+      const contextUpdateSel = contextBarChartGroup.selectAll('.context-bar')
+        .data(eventBins);
 
       contextUpdateSel.exit().remove();
 
-      contextUpdateSel.enter().append('rect')
+      contextUpdateSel.enter().insert('rect')
         .attr('class', 'context-bar')
         .attr('width', barWidth)
         .attr('fill', THEME_VARIABLES.primary[300])
-        .attr('stroke', THEME_VARIABLES.primary[800]);
+        .attr('stroke', THEME_VARIABLES.basic[100]);
 
       contextUpdateSel
         .attr('x', (d: any) => scales.xCtx(d.date))
@@ -224,9 +237,9 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
       scales.xCtx.domain([startTimeCtx, endTimeCtx]);
 
       focus.select('.axis--x').call(axes.xAxisFoc);
-      context.select('.axis--x').call(axes.xAxisCtx);
+      contextGroup.select('.axis--x').call(axes.xAxisCtx);
 
       refresh();
-    }, 200);
+    }, 50);
   }
 }

@@ -59,16 +59,16 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
 
   private async initD3(parentDiv: ElementRef) {
     // Dimensions, margins, etc.
-    const dimensions = {width: 960, height: 500};
-    const margin = {top: 20, right: 20, bottom: 110, left: 40};
-    const marginCtx = {top: 430, right: 20, bottom: 30, left: 40};
+    const dimensions = {width: 960, height: 500, xFocTitle: 33};
+    const margin = {top: 20, right: 20, bottom: 90, left: 40};
+    const marginCtx = {top: 430, right: 20, bottom: 0, left: 40};
     const width = dimensions.width - margin.left - margin.right;
-    const height = dimensions.height - margin.top - margin.bottom;
-    const heightCtx = dimensions.height - marginCtx.top - marginCtx.bottom;
+    const height = dimensions.height - margin.top - margin.bottom - dimensions.xFocTitle;
+    const heightCtx = dimensions.height - marginCtx.top - marginCtx.bottom - dimensions.xFocTitle;
 
     // Times for context and focus
     const timeToDisplay = {
-      maxSeconds: 300,
+      maxSeconds: 600,
       pixelsPerSecond: 10
     };
     const initialTime = new Date().getTime();
@@ -85,6 +85,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
     // timescales for focus and context x axes
     const scales = {
       xFoc: d3.scaleTime().domain([startTimeFoc, endTimeFoc]).range([0, width]),
+      yFoc: d3.scalePoint().domain([this.statement.name]).range([height, 0]),
       xCtx: d3.scaleTime().domain([startTimeCtx, endTimeCtx]).range([0, width]),
       yCtx: d3.scaleLinear().domain([-1, 1]).range([heightCtx, 0])
     };
@@ -92,6 +93,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
     // x axes for focus and context
     const axes = {
       xAxisFoc: d3.axisBottom(scales.xFoc),
+      yAxisFoc: d3.axisLeft(scales.yFoc),
       xAxisCtx: d3.axisBottom(scales.xCtx),
       yAxisCtx: d3.axisLeft(scales.yCtx).ticks(1)
     };
@@ -123,7 +125,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
         }
 
         scales.xFoc.domain([startTimeFoc, endTimeFoc]);
-        focus.select('.axis--x').call(axes.xAxisFoc);
+        focusGroup.select('.axis--x').call(axes.xAxisFoc);
       });
 
     svg.append('defs')
@@ -134,19 +136,34 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
         .attr('height', height);
 
     // init main chart
-    const focus = svg.append('g')
+    const focusGroup = svg.append('g')
       .attr('class', 'focus')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    focus.append('g')
+    focusGroup.append('g')
       .attr('class', 'axis axis--x')
       .attr('transform', `translate(0, ${height})`)
       .call(axes.xAxisFoc);
 
+    svg.append('text')
+      .attr('class', 'focx-axis-title')
+      .attr('text-anchor', 'middle')
+      .attr('x', width)
+      .attr('y', height + margin.top + dimensions.xFocTitle)
+      .text('Time selection');
+
+    const focusYAxisGroup = focusGroup.append('g')
+      .attr('class', 'axis axis--y')
+      .call(axes.yAxisFoc);
+
+    focusYAxisGroup.selectAll('text')
+      .attr('transform', 'translate(-10, 10)rotate(90)')
+      .style('text-anchor', 'middle');
+
     // init small nav chart covering the maximum timeline
     const contextGroup = svg.append('g')
       .attr('class', 'context')
-      .attr('transform', `translate(${marginCtx.left}, ${marginCtx.top})`)
+      .attr('transform', `translate(${marginCtx.left}, ${marginCtx.top})`);
 
     const contextBarChartGroup = contextGroup.append('g')
       .attr('class', 'context-chart')
@@ -159,6 +176,13 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
       .attr('transform', `translate(0, ${heightCtx})`)
       .call(axes.xAxisCtx);
 
+    svg.append('text')
+      .attr('class', 'ctxx-axis-title')
+      .attr('text-anchor', 'middle')
+      .attr('x', width)
+      .attr('y', heightCtx + marginCtx.top + dimensions.xFocTitle)
+      .text('Last 10 min');
+
     contextGroup.append('g')
       .attr('class', 'brush')
       .call(brush)
@@ -167,7 +191,36 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
         .attr('fill', THEME_VARIABLES.basic[600])
         .attr('stroke', THEME_VARIABLES.basic[600]);
 
-    const refresh = () => {
+    const tooltip = d3.select(parentDiv.nativeElement).append('div')
+      .style('opacity', 0)
+      .attr('class', 'tooltip')
+      .style('background-color', 'white')
+      .style('border', 'solid')
+      .style('border-width', '2px')
+      .style('border-radius', '5px')
+      .style('padding', '5px');
+
+    // hover functions for the event drops on the focus group
+    const onMouseOverFocusDrop = (d: any) => {
+      tooltip
+        .style('opacity', 1);
+      focusGroup.selectAll('.focus-drop')
+        .transition().duration(100)
+        .attr('r', (e: any) => (d.object.id === e.object.id) ? 14 : 7);
+    };
+    const onMouseMoveFocusDrop = function(d: any) {
+      tooltip.html(`Event ID: ${d.object.id}`)
+        .style('left', d3.select(this).attr('cx') + 70 + 'px')
+        .style('top', d3.select(this).attr('cy') + 'px');
+    };
+    const onMouseOutFocusDrop = () => {
+      tooltip.style('opacity', 0);
+      focusGroup.selectAll('.focus-drop')
+      .transition().duration(100)
+      .attr('r', 7);
+    };
+
+    const tick = () => {
       data = this.events.filter((event: Event) =>
         event.timestamp.getTime() > startTimeCtx.getTime() && event.timestamp.getTime() < endTimeCtx.getTime()
       );
@@ -190,17 +243,21 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
 
       scales.yCtx.domain([0, maxCount]);
 
-      const focusUpdateSel = focus.selectAll('.focus-drop')
+      const focusUpdateSel = focusGroup.selectAll('.focus-drop')
         .data(data);
 
       focusUpdateSel.exit().remove();
 
       focusUpdateSel.enter().append('circle')
+        .attr('id', (d: any) => d.object.id)
         .attr('class', 'focus-drop')
         .attr('r', 7)
         .attr('fill', THEME_VARIABLES.danger[600])
         .attr('cx', (d: any) => scales.xFoc(d.timestamp))
-        .attr('cy', height / 2);
+        .attr('cy', (d: any) => scales.yFoc(this.statement.name))
+        .on('mouseover', onMouseOverFocusDrop)
+        .on('mousemove', onMouseMoveFocusDrop)
+        .on('mouseout', onMouseOutFocusDrop);
 
       focusUpdateSel
         .attr('cx', (d: any) => scales.xFoc(d.timestamp))
@@ -223,7 +280,7 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
         .attr('height', (d: any) => heightCtx - scales.yCtx(d.count));
     };
 
-    refresh();
+    tick();
 
     // live updating the chart
     setInterval(() => {
@@ -236,10 +293,14 @@ export class DetailCardComponent implements AfterViewInit, OnChanges {
       scales.xFoc.domain([startTimeFoc, endTimeFoc]);
       scales.xCtx.domain([startTimeCtx, endTimeCtx]);
 
-      focus.select('.axis--x').call(axes.xAxisFoc);
+      focusGroup.select('.axis--x').call(axes.xAxisFoc);
       contextGroup.select('.axis--x').call(axes.xAxisCtx);
 
-      refresh();
+      tick();
     }, 50);
+
+    window.addEventListener('resize', () => {
+      console.log(parseInt(d3.select(parentDiv.nativeElement).style('width'), 10));
+    })
   }
 }

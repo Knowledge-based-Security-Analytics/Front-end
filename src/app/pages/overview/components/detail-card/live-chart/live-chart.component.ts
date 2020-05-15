@@ -54,7 +54,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   private eventBins = []; // bins for context bar chart
   private roundTo = 5000; // 5 seconds, equivalent to the size of the bins for context bar chart
   private barWidth = 10;
-  private brush = null;
+  private brushBehavior = null;
 
   private domElementGroups = {
     svg: null,
@@ -68,7 +68,8 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     xAxisFocus: null,
     xAxisFocusTitle: null,
     yAxisFocus: null,
-    tooltip: null
+    tooltip: null,
+    brush: null,
   };
 
   constructor(
@@ -86,28 +87,20 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     window.addEventListener('resize', () => {
-      // this.initD3(domElements.first);
+      this.initVariables(d3.selectAll('#d3Histogram'));
+      this.drawChart();
     });
     this.initD3(d3.selectAll('#d3Histogram'));
   }
 
   private async initD3(parentDiv: any) {
-
-    this.currentWidth = parseInt(parentDiv.style('width'), 10);
-    this.width = this.currentWidth - this.margin.left - this.margin.right;
-
-    this.startTimeFoc = new Date(this.endTimeCtx.getTime() - this.width / this.timeToDisplay.pixelsPerSecond * 1000);
-
-    this.scales.xFoc = d3.scaleTime().domain([this.startTimeFoc, this.endTimeFoc]).range([0, this.width]);
-    this.scales.xCtx = d3.scaleTime().domain([this.startTimeCtx, this.endTimeCtx]).range([0, this.width]);
-    // tslint:disable-next-line: max-line-length
-    this.barWidth = Math.ceil((this.roundTo / (this.scales.xCtx.domain()[1].getTime() - this.scales.xCtx.domain()[0].getTime())) * this.width);
+    this.initVariables(parentDiv);
 
     this.domElementGroups.svg = parentDiv
       .append('svg')
       .attr('height', this.dimensions.height);
 
-    this.brush = d3.brushX()
+    this.brushBehavior = d3.brushX()
       .extent([[0, 0], [this.width, this.heightCtx]])
       .on('brush end', () => {
         this.currentFocusSelection = d3.event.selection;
@@ -126,6 +119,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
         this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
       });
 
+    console.log(this.width);
     this.domElementGroups.svg.append('defs')
       .append('clipPath')
         .attr('id', 'clip')
@@ -174,14 +168,6 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .attr('y', this.heightCtx + this.marginCtx.top + this.dimensions.xFocTitle)
       .text('Last 10 min');
 
-    this.domElementGroups.context.append('g')
-      .attr('class', 'brush')
-      .call(this.brush)
-      .call(this.brush.move, [this.scales.xCtx(this.startTimeFoc), this.scales.xCtx(this.endTimeFoc)])
-      .selectAll('.selection')
-        .attr('fill', THEME_VARIABLES.basic[600])
-        .attr('stroke', THEME_VARIABLES.basic[600]);
-
     this.domElementGroups.tooltip = parentDiv.append('div')
       .style('opacity', 0)
       .attr('class', 'tooltip')
@@ -191,8 +177,31 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .style('border-radius', '5px')
       .style('padding', '5px');
 
+    this.domElementGroups.brush = this.domElementGroups.context.append('g')
+      .attr('class', 'brush');
+
+    this.drawChart();
+    this.tick();
+
+    // live updating the chart
+    setInterval(() => this.moveInterval(), 50);
+  }
+
+  private initVariables(parentDiv: any): void {
+    this.currentWidth = parseInt(parentDiv.style('width'), 10);
+    this.width = this.currentWidth - this.margin.left - this.margin.right;
+
+    this.startTimeFoc = new Date(this.endTimeCtx.getTime() - this.width / this.timeToDisplay.pixelsPerSecond * 1000);
+
+    this.scales.xFoc = d3.scaleTime().domain([this.startTimeFoc, this.endTimeFoc]).range([0, this.width]);
+    this.scales.xCtx = d3.scaleTime().domain([this.startTimeCtx, this.endTimeCtx]).range([0, this.width]);
+    // tslint:disable-next-line: max-line-length
+    this.barWidth = Math.ceil((this.roundTo / (this.scales.xCtx.domain()[1].getTime() - this.scales.xCtx.domain()[0].getTime())) * this.width);
+  }
+
+  private drawChart(): void {
     this.domElementGroups.svg.attr('width', this.currentWidth);
-    this.brush.extent([[0, 0], [this.width, this.heightCtx]]);
+    this.brushBehavior.extent([[0, 0], [this.width, this.heightCtx]]);
 
     this.domElementGroups.xAxisFocusTitle.attr('x', this.width);
     this.domElementGroups.xAxisContextTitle.attr('x', this.width);
@@ -206,10 +215,12 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .attr('transform', 'translate(-10, 10)rotate(90)')
       .style('text-anchor', 'middle');
 
-    this.tick();
-
-    // live updating the chart
-    setInterval(() => this.moveInterval(), 50);
+    this.domElementGroups.brush
+      .call(this.brushBehavior)
+      .call(this.brushBehavior.move, [this.scales.xCtx(this.startTimeFoc), this.scales.xCtx(this.endTimeFoc)])
+      .selectAll('.selection')
+        .attr('fill', THEME_VARIABLES.basic[600])
+        .attr('stroke', THEME_VARIABLES.basic[600]);
   }
 
   private tick(): void {

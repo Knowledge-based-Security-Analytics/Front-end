@@ -1,4 +1,4 @@
-import { Component, Input, ViewChildren, QueryList, ElementRef, OnChanges, AfterViewInit } from '@angular/core';
+import { Component, Input, OnChanges, AfterViewInit } from '@angular/core';
 import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 import { NbThemeService } from '@nebular/theme';
@@ -15,26 +15,72 @@ import * as d3 from 'd3';
 export class LiveChartComponent implements OnChanges, AfterViewInit {
   @Input() statement: Pattern | Schema;
 
-  events = [];
-  colorScheme: any;
-  themeSubscription: any;
-  topicSubscription: Subscription;
+  // Kafka-connection variables
+  private kafkaEvents = [];
+  private kafkaTopicSubscription: Subscription;
+
+  // Dimensions, margins, etc.
+  private currentWidth = 0;
+  private dimensions = {height: 500, xFocTitle: 33};
+  private margin = {top: 20, right: 20, bottom: 90, left: 40};
+  private marginCtx = {top: 430, right: 20, bottom: 0, left: 40};
+  private width = 0;
+  private height = this.dimensions.height - this.margin.top - this.margin.bottom - this.dimensions.xFocTitle;
+  private heightCtx = this.dimensions.height - this.marginCtx.top - this.marginCtx.bottom - this.dimensions.xFocTitle;
+
+  // Times for context and focus
+  private timeToDisplay = {maxSeconds: 600, pixelsPerSecond: 10};
+  private initialTime: number = new Date().getTime();
+  private endTimeCtx: Date = new Date(this.initialTime);
+  private startTimeCtx: Date = new Date(this.endTimeCtx.getTime() - this.timeToDisplay.maxSeconds * 1000);
+  private endTimeFoc: Date = new Date(this.initialTime);
+  private startTimeFoc: Date = new Date(this.initialTime);
+  private interval: number = this.endTimeFoc.getTime() - this.startTimeFoc.getTime();
+  private offset: number = this.startTimeFoc.getTime() - this.startTimeCtx.getTime();
+
+  // d3 Selectionevent for current brushX-selection on context
+  private currentFocusSelection = null;
+
+  // timescales for focus and context x axes
+  private scales = {
+    xFoc: d3.scaleTime(),
+    yFoc: d3.scalePoint(),
+    xCtx: d3.scaleTime(),
+    yCtx: d3.scaleLinear().domain([-1, 1]).range([this.heightCtx, 0])
+  };
+
+  // variables for live functionality
+  private data = []; // data displayed in the live chart
+  private eventBins = []; // bins for context bar chart
+  private roundTo = 5000; // 5 seconds, equivalent to the size of the bins for context bar chart
+  private barWidth = 10;
+  private brush = null;
+
+  private domElementGroups = {
+    svg: null,
+    context: null,
+    contextBarChart: null,
+    xAxisContext: null,
+    xAxisContextTitle: null,
+    yAxisContext: null,
+    focus: null,
+    focusChart: null,
+    xAxisFocus: null,
+    xAxisFocusTitle: null,
+    yAxisFocus: null,
+    tooltip: null
+  };
 
   constructor(
     private eventStreamService: EventStreamService,
     private theme: NbThemeService) { }
 
   ngOnChanges(): void {
-    this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
-      const colors: any = config.variables;
-      this.colorScheme = {
-        domain: [colors.primaryLight, colors.infoLight, colors.successLight, colors.warningLight, colors.dangerLight],
-      };
-    });
     if (this.statement) {
-      this.topicSubscription = this.eventStreamService.subscribeTopic(this.statement.name).subscribe(event => {
-        this.events.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
+      this.kafkaTopicSubscription = this.eventStreamService.subscribeTopic(this.statement.name).subscribe(event => {
+        this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
       });
+      this.scales.yFoc =  d3.scalePoint().domain([this.statement.name]).range([this.height, 0]);
     }
   }
 
@@ -46,141 +92,97 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   }
 
   private async initD3(parentDiv: any) {
-    // Dimensions, margins, etc.
-    const currentWidth = parseInt(parentDiv.style('width'), 10);
-    const dimensions = {height: 500, xFocTitle: 33};
-    const margin = {top: 20, right: 20, bottom: 90, left: 40};
-    const marginCtx = {top: 430, right: 20, bottom: 0, left: 40};
-    const width = currentWidth - margin.left - margin.right;
-    const height = dimensions.height - margin.top - margin.bottom - dimensions.xFocTitle;
-    const heightCtx = dimensions.height - marginCtx.top - marginCtx.bottom - dimensions.xFocTitle;
 
-    // Times for context and focus
-    const timeToDisplay = {
-      maxSeconds: 600,
-      pixelsPerSecond: 10
-    };
-    const initialTime = new Date().getTime();
-    let endTimeCtx = new Date(initialTime);
-    let startTimeCtx = new Date(endTimeCtx.getTime() - timeToDisplay.maxSeconds * 1000);
-    let endTimeFoc = new Date(initialTime);
-    let startTimeFoc = new Date(endTimeCtx.getTime() - width / timeToDisplay.pixelsPerSecond * 1000);
-    let interval = endTimeFoc.getTime() - startTimeFoc.getTime();
-    let offset = startTimeFoc.getTime() - startTimeCtx.getTime();
+    this.currentWidth = parseInt(parentDiv.style('width'), 10);
+    this.width = this.currentWidth - this.margin.left - this.margin.right;
 
-    // d3 Selectionevent for current brushX-selection on context
-    let currentFocusSelection = null;
+    this.startTimeFoc = new Date(this.endTimeCtx.getTime() - this.width / this.timeToDisplay.pixelsPerSecond * 1000);
 
-    // timescales for focus and context x axes
-    const scales = {
-      xFoc: d3.scaleTime().domain([startTimeFoc, endTimeFoc]).range([0, width]),
-      yFoc: d3.scalePoint().domain([this.statement.name]).range([height, 0]),
-      xCtx: d3.scaleTime().domain([startTimeCtx, endTimeCtx]).range([0, width]),
-      yCtx: d3.scaleLinear().domain([-1, 1]).range([heightCtx, 0])
-    };
+    this.scales.xFoc = d3.scaleTime().domain([this.startTimeFoc, this.endTimeFoc]).range([0, this.width]);
+    this.scales.xCtx = d3.scaleTime().domain([this.startTimeCtx, this.endTimeCtx]).range([0, this.width]);
+    // tslint:disable-next-line: max-line-length
+    this.barWidth = Math.ceil((this.roundTo / (this.scales.xCtx.domain()[1].getTime() - this.scales.xCtx.domain()[0].getTime())) * this.width);
 
-    // x axes for focus and context
-    const axes = {
-      xAxisFoc: d3.axisBottom(scales.xFoc),
-      yAxisFoc: d3.axisLeft(scales.yFoc),
-      xAxisCtx: d3.axisBottom(scales.xCtx),
-      yAxisCtx: d3.axisLeft(scales.yCtx).ticks(1)
-    };
-
-    // variables for live functionality
-    let data = [];
-    let eventBins = [];
-    const roundTo = 5000; // 5 seconds
-    const barWidth = Math.ceil((roundTo / (scales.xCtx.domain()[1].getTime() - scales.xCtx.domain()[0].getTime())) * width);
-
-    const svg = parentDiv
+    this.domElementGroups.svg = parentDiv
       .append('svg')
-      .attr('width', currentWidth)
-      .attr('height', dimensions.height);
+      .attr('height', this.dimensions.height);
 
-    const brush = d3.brushX()
-      .extent([[0, 0], [width, heightCtx]])
+    this.brush = d3.brushX()
+      .extent([[0, 0], [this.width, this.heightCtx]])
       .on('brush end', () => {
-        currentFocusSelection = d3.event.selection;
+        this.currentFocusSelection = d3.event.selection;
 
-        startTimeFoc = scales.xCtx.invert(currentFocusSelection[0]);
-        endTimeFoc = scales.xCtx.invert(currentFocusSelection[1]);
-        interval = endTimeFoc.getTime() - startTimeFoc.getTime();
-        offset = startTimeFoc.getTime() - startTimeCtx.getTime();
+        this.startTimeFoc = this.scales.xCtx.invert(this.currentFocusSelection[0]);
+        this.endTimeFoc = this.scales.xCtx.invert(this.currentFocusSelection[1]);
+        this.interval = this.endTimeFoc.getTime() - this.startTimeFoc.getTime();
+        this.offset = this.startTimeFoc.getTime() - this.startTimeCtx.getTime();
 
-        if (interval === 0 ) {
-          interval = 300 * 1000;
-          offset = 0;
+        if (this.interval === 0 ) {
+          this.interval = 300 * 1000;
+          this.offset = 0;
         }
 
-        scales.xFoc.domain([startTimeFoc, endTimeFoc]);
-        focusGroup.select('.axis--x').call(axes.xAxisFoc);
+        this.scales.xFoc.domain([this.startTimeFoc, this.endTimeFoc]);
+        this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
       });
 
-    svg.append('defs')
+    this.domElementGroups.svg.append('defs')
       .append('clipPath')
         .attr('id', 'clip')
       .append('rect')
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', this.width)
+        .attr('height', this.height);
 
     // init main chart
-    const focusGroup = svg.append('g')
+    this.domElementGroups.focus = this.domElementGroups.svg.append('g')
       .attr('class', 'focus')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+      .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 
-    focusGroup.append('g')
+    this.domElementGroups.focusChart = this.domElementGroups.focus.append('g')
+      .attr('height', this.height);
+
+    this.domElementGroups.xAxisFocus = this.domElementGroups.focus.append('g')
       .attr('class', 'axis axis--x')
-      .attr('transform', `translate(0, ${height})`)
-      .call(axes.xAxisFoc);
+      .attr('transform', `translate(0, ${this.height})`);
 
-    svg.append('text')
+    this.domElementGroups.xAxisFocusTitle = this.domElementGroups.svg.append('text')
       .attr('class', 'focx-axis-title')
       .attr('text-anchor', 'middle')
-      .attr('x', width)
-      .attr('y', height + margin.top + dimensions.xFocTitle)
+      .attr('y', this.height + this.margin.top + this.dimensions.xFocTitle)
       .text('Time selection');
 
-    const focusYAxisGroup = focusGroup.append('g')
-      .attr('class', 'axis axis--y')
-      .call(axes.yAxisFoc);
-
-    focusYAxisGroup.selectAll('text')
-      .attr('transform', 'translate(-10, 10)rotate(90)')
-      .style('text-anchor', 'middle');
+    this.domElementGroups.yAxisFocus = this.domElementGroups.focus.append('g')
+      .attr('class', 'axis axis--y');
 
     // init small nav chart covering the maximum timeline
-    const contextGroup = svg.append('g')
+    this.domElementGroups.context = this.domElementGroups.svg.append('g')
       .attr('class', 'context')
-      .attr('transform', `translate(${marginCtx.left}, ${marginCtx.top})`);
+      .attr('transform', `translate(${this.marginCtx.left}, ${this.marginCtx.top})`);
 
-    const contextBarChartGroup = contextGroup.append('g')
+    this.domElementGroups.contextBarChart = this.domElementGroups.context.append('g')
       .attr('class', 'context-chart')
-      .attr('width', width)
-      .attr('height', heightCtx)
+      .attr('height', this.heightCtx)
       .attr('clip-path', 'url(#clip)');
 
-    contextGroup.append('g')
+    this.domElementGroups.xAxisContext = this.domElementGroups.context.append('g')
       .attr('class', 'axis axis--x')
-      .attr('transform', `translate(0, ${heightCtx})`)
-      .call(axes.xAxisCtx);
+      .attr('transform', `translate(0, ${this.heightCtx})`);
 
-    svg.append('text')
+    this.domElementGroups.xAxisContextTitle = this.domElementGroups.svg.append('text')
       .attr('class', 'ctxx-axis-title')
       .attr('text-anchor', 'middle')
-      .attr('x', width)
-      .attr('y', heightCtx + marginCtx.top + dimensions.xFocTitle)
+      .attr('y', this.heightCtx + this.marginCtx.top + this.dimensions.xFocTitle)
       .text('Last 10 min');
 
-    contextGroup.append('g')
+    this.domElementGroups.context.append('g')
       .attr('class', 'brush')
-      .call(brush)
-      .call(brush.move, [scales.xCtx(startTimeFoc), scales.xCtx(endTimeFoc)])
+      .call(this.brush)
+      .call(this.brush.move, [this.scales.xCtx(this.startTimeFoc), this.scales.xCtx(this.endTimeFoc)])
       .selectAll('.selection')
         .attr('fill', THEME_VARIABLES.basic[600])
         .attr('stroke', THEME_VARIABLES.basic[600]);
 
-    const tooltip = parentDiv.append('div')
+    this.domElementGroups.tooltip = parentDiv.append('div')
       .style('opacity', 0)
       .attr('class', 'tooltip')
       .style('background-color', 'white')
@@ -189,104 +191,122 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .style('border-radius', '5px')
       .style('padding', '5px');
 
+    this.domElementGroups.svg.attr('width', this.currentWidth);
+    this.brush.extent([[0, 0], [this.width, this.heightCtx]]);
+
+    this.domElementGroups.xAxisFocusTitle.attr('x', this.width);
+    this.domElementGroups.xAxisContextTitle.attr('x', this.width);
+    this.domElementGroups.contextBarChart.attr('width', this.width);
+
+    this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
+    this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc));
+    this.domElementGroups.xAxisContext.call(d3.axisBottom(this.scales.xCtx));
+
+    this.domElementGroups.yAxisFocus.selectAll('text')
+      .attr('transform', 'translate(-10, 10)rotate(90)')
+      .style('text-anchor', 'middle');
+
+    this.tick();
+
+    // live updating the chart
+    setInterval(() => this.moveInterval(), 50);
+  }
+
+  private tick(): void {
     // hover functions for the event drops on the focus group
+    const tempTooltip = this.domElementGroups.tooltip;
     const onMouseOverFocusDrop = (d: any) => {
-      tooltip
+      tempTooltip
         .style('opacity', 1);
-      focusGroup.selectAll('.focus-drop')
+      this.domElementGroups.focusChart.selectAll('.focus-drop')
         .transition().duration(100)
         .attr('r', (e: any) => (d.object.id === e.object.id) ? 14 : 7);
     };
     const onMouseMoveFocusDrop = function(d: any) {
-      tooltip.html(`Event ID: ${d.object.id}`)
+      tempTooltip.html(`Event ID: ${d.object.id}`)
         .style('left', d3.select(this).attr('cx') + 70 + 'px')
         .style('top', d3.select(this).attr('cy') + 'px');
     };
     const onMouseOutFocusDrop = () => {
-      tooltip.style('opacity', 0);
-      focusGroup.selectAll('.focus-drop')
-      .transition().duration(100)
-      .attr('r', 7);
+      tempTooltip.style('opacity', 0);
+      this.domElementGroups.focusChart.selectAll('.focus-drop')
+        .transition().duration(100)
+        .attr('r', 7);
     };
+    this.data = this.kafkaEvents.filter((event: Event) =>
+      event.timestamp.getTime() > this.startTimeCtx.getTime() && event.timestamp.getTime() < this.endTimeCtx.getTime()
+    );
 
-    const tick = () => {
-      data = this.events.filter((event: Event) =>
-        event.timestamp.getTime() > startTimeCtx.getTime() && event.timestamp.getTime() < endTimeCtx.getTime()
-      );
-
-      const eventsRoundedToTiming = {};
-      let maxCount = 0;
-      eventBins = [];
-      data.map((event: Event) => {
-        const rounded = Math.floor(event.timestamp.getTime() / roundTo) * roundTo;
-        eventsRoundedToTiming[rounded] = eventsRoundedToTiming[rounded] + 1 || 1;
-      });
-      for (const k in eventsRoundedToTiming) {
-        if (k) {
-          const tempDate = new Date();
-          tempDate.setTime(+k);
-          if (eventsRoundedToTiming[k] > maxCount) { maxCount = eventsRoundedToTiming[k]; }
-          eventBins.push({date: tempDate, count: eventsRoundedToTiming[k]});
-        }
+    const eventsRoundedToTiming = {};
+    let maxCount = 0;
+    this.eventBins = [];
+    this.data.map((event: Event) => {
+      const rounded = Math.floor(event.timestamp.getTime() / this.roundTo) * this.roundTo;
+      eventsRoundedToTiming[rounded] = eventsRoundedToTiming[rounded] + 1 || 1;
+    });
+    for (const k in eventsRoundedToTiming) {
+      if (k) {
+        const tempDate = new Date();
+        tempDate.setTime(+k);
+        if (eventsRoundedToTiming[k] > maxCount) { maxCount = eventsRoundedToTiming[k]; }
+        this.eventBins.push({date: tempDate, count: eventsRoundedToTiming[k]});
       }
+    }
 
-      scales.yCtx.domain([0, maxCount]);
+    this.scales.yCtx.domain([0, maxCount]);
 
-      const focusUpdateSel = focusGroup.selectAll('.focus-drop')
-        .data(data);
+    const focusUpdateSel = this.domElementGroups.focusChart.selectAll('.focus-drop')
+      .data(this.data);
 
-      focusUpdateSel.exit().remove();
+    focusUpdateSel.exit().remove();
 
-      focusUpdateSel.enter().append('circle')
-        .attr('id', (d: any) => d.object.id)
-        .attr('class', 'focus-drop')
-        .attr('r', 7)
-        .attr('fill', THEME_VARIABLES.danger[600])
-        .attr('cx', (d: any) => scales.xFoc(d.timestamp))
-        .attr('cy', (d: any) => scales.yFoc(this.statement.name))
-        .on('mouseover', onMouseOverFocusDrop)
-        .on('mousemove', onMouseMoveFocusDrop)
-        .on('mouseout', onMouseOutFocusDrop);
+    focusUpdateSel.enter().append('circle')
+      .attr('id', (d: any) => d.object.id)
+      .attr('class', 'focus-drop')
+      .attr('r', 7)
+      .attr('fill', THEME_VARIABLES.danger[600])
+      .attr('cx', (d: any) => this.scales.xFoc(d.timestamp))
+      .attr('cy', (d: any) => this.scales.yFoc(this.statement.name))
 
-      focusUpdateSel
-        .attr('cx', (d: any) => scales.xFoc(d.timestamp))
-        .attr('cy', height / 2);
+      .on('mouseover', onMouseOverFocusDrop)
+      .on('mousemove', onMouseMoveFocusDrop)
+      .on('mouseout', onMouseOutFocusDrop);
 
-      const contextUpdateSel = contextBarChartGroup.selectAll('.context-bar')
-        .data(eventBins);
+    focusUpdateSel
+      .attr('cx', (d: any) => this.scales.xFoc(d.timestamp))
+      .attr('cy', this.height / 2)
+      .attr('display', (d: any) => this.scales.xFoc(d.timestamp) > 0 ? 'block' : 'none');
 
-      contextUpdateSel.exit().remove();
+    const contextUpdateSel = this.domElementGroups.contextBarChart.selectAll('.context-bar')
+      .data(this.eventBins);
 
-      contextUpdateSel.enter().insert('rect')
-        .attr('class', 'context-bar')
-        .attr('width', barWidth)
-        .attr('fill', THEME_VARIABLES.primary[300])
-        .attr('stroke', THEME_VARIABLES.basic[100]);
+    contextUpdateSel.exit().remove();
 
-      contextUpdateSel
-        .attr('x', (d: any) => scales.xCtx(d.date))
-        .attr('y', (d: any) => scales.yCtx(d.count))
-        .attr('height', (d: any) => heightCtx - scales.yCtx(d.count));
-    };
+    contextUpdateSel.enter().insert('rect')
+      .attr('class', 'context-bar')
+      .attr('width', this.barWidth)
+      .attr('fill', THEME_VARIABLES.primary[300])
+      .attr('stroke', THEME_VARIABLES.basic[100]);
 
-    tick();
-
-    // live updating the chart
-    setInterval(() => {
-      startTimeFoc = scales.xCtx.invert(currentFocusSelection[0]);
-      endTimeFoc = scales.xCtx.invert(currentFocusSelection[1]);
-
-      endTimeCtx = new Date();
-      startTimeCtx = new Date(endTimeCtx.getTime() - timeToDisplay.maxSeconds * 1000);
-
-      scales.xFoc.domain([startTimeFoc, endTimeFoc]);
-      scales.xCtx.domain([startTimeCtx, endTimeCtx]);
-
-      focusGroup.select('.axis--x').call(axes.xAxisFoc);
-      contextGroup.select('.axis--x').call(axes.xAxisCtx);
-
-      tick();
-    }, 50);
+    contextUpdateSel
+      .attr('x', (d: any) => this.scales.xCtx(d.date))
+      .attr('y', (d: any) => this.scales.yCtx(d.count))
+      .attr('height', (d: any) => this.heightCtx - this.scales.yCtx(d.count));
   }
 
+  private moveInterval(): void {
+    this.startTimeFoc = this.scales.xCtx.invert(this.currentFocusSelection[0]);
+    this.endTimeFoc = this.scales.xCtx.invert(this.currentFocusSelection[1]);
+
+    this.endTimeCtx = new Date();
+    this.startTimeCtx = new Date(this.endTimeCtx.getTime() - this.timeToDisplay.maxSeconds * 1000);
+
+    this.scales.xFoc.domain([this.startTimeFoc, this.endTimeFoc]);
+    this.scales.xCtx.domain([this.startTimeCtx, this.endTimeCtx]);
+
+    this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
+    this.domElementGroups.xAxisContext.call(d3.axisBottom(this.scales.xCtx));
+
+    this.tick();
+  }
 }

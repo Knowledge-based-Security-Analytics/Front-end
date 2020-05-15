@@ -22,6 +22,12 @@ class DeploymentProperties {
   dependencies: string[] = [];
   mode: 'prod' | 'dev' = 'dev';
   eplStatement = '';
+
+  get eplStatementWithoutPrefix() {
+    let epl =  this.eplStatement.split(Schema.outputPrefix).join('');
+    epl =  epl.split(Pattern.outputPrefix).join('');
+    return epl;
+  }
 }
 
 export class Schema extends Statement {
@@ -40,12 +46,12 @@ export class Schema extends Statement {
   type: 'schema' = 'schema';
   complexEvent = false;
   attributes: {name: string, type: string}[] = Schema.BASIC_ATTRIBUTES;
-  set name(name: string){
+  set name(name: string) {
     if (name) {
       this.internalName = name.replace(Schema.outputPrefix, '');
     }
   }
-  get name(){
+  get name() {
     return this.internalName;
   }
   get outputName() {
@@ -77,15 +83,15 @@ export class Pattern extends Statement {
   events: IEventAlias[] = [];
   eventSequence: (ConditionedEvent | PatternDefinition)[] = [];
   internalName = '';
-  set name(name: string){
+  set name(name: string) {
     if (name) {
       this.internalName = name.replace(Pattern.outputPrefix, '');
     }
   }
-  get name(){
+  get name() {
     return this.internalName;
   }
-  get outputName(){
+  get outputName() {
     return Pattern.outputPrefix + this.name;
   }
 }

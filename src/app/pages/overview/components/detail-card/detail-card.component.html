@@ -30,10 +30,8 @@
     </div>
   </div>
   <br>
-  <div class="col-md-12">
-    <b class="caption-2 text-hint">Live View</b><br />
-    <div #d3Histogram></div>
-  </div>
+  <app-live-chart [statement]='statement'></app-live-chart>
+
 </ng-template>
 
 <ng-template #noStatementSelected>

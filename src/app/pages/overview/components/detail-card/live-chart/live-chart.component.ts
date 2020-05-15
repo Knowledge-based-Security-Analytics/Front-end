@@ -50,6 +50,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   };
 
   // variables for live functionality
+  public liveViewToggled = true;
   private data = []; // data displayed in the live chart
   private eventBins = []; // bins for context bar chart
   private roundTo = 5000; // 5 seconds, equivalent to the size of the bins for context bar chart
@@ -227,19 +228,19 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     // hover functions for the event drops on the focus group
     const tempTooltip = this.domElementGroups.tooltip;
     const onMouseOverFocusDrop = (d: any) => {
-      tempTooltip
+      d3.selectAll('.tooltip')
         .style('opacity', 1);
       this.domElementGroups.focusChart.selectAll('.focus-drop')
         .transition().duration(100)
         .attr('r', (e: any) => (d.object.id === e.object.id) ? 14 : 7);
     };
     const onMouseMoveFocusDrop = function(d: any) {
-      tempTooltip.html(`Event ID: ${d.object.id}`)
+      d3.selectAll('.tooltip').html(`Event ID: ${d.object.id}`)
         .style('left', d3.select(this).attr('cx') + 70 + 'px')
         .style('top', d3.select(this).attr('cy') + 'px');
     };
     const onMouseOutFocusDrop = () => {
-      tempTooltip.style('opacity', 0);
+      d3.selectAll('.tooltip').style('opacity', 0);
       this.domElementGroups.focusChart.selectAll('.focus-drop')
         .transition().duration(100)
         .attr('r', 7);
@@ -278,7 +279,6 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .attr('fill', THEME_VARIABLES.danger[600])
       .attr('cx', (d: any) => this.scales.xFoc(d.timestamp))
       .attr('cy', (d: any) => this.scales.yFoc(this.statement.name))
-
       .on('mouseover', onMouseOverFocusDrop)
       .on('mousemove', onMouseMoveFocusDrop)
       .on('mouseout', onMouseOutFocusDrop);
@@ -306,14 +306,17 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   }
 
   private moveInterval(): void {
+
     this.startTimeFoc = this.scales.xCtx.invert(this.currentFocusSelection[0]);
     this.endTimeFoc = this.scales.xCtx.invert(this.currentFocusSelection[1]);
 
-    this.endTimeCtx = new Date();
-    this.startTimeCtx = new Date(this.endTimeCtx.getTime() - this.timeToDisplay.maxSeconds * 1000);
+    if (this.liveViewToggled) {
+      this.endTimeCtx = new Date();
+      this.startTimeCtx = new Date(this.endTimeCtx.getTime() - this.timeToDisplay.maxSeconds * 1000);
+      this.scales.xCtx.domain([this.startTimeCtx, this.endTimeCtx]);
+    }
 
     this.scales.xFoc.domain([this.startTimeFoc, this.endTimeFoc]);
-    this.scales.xCtx.domain([this.startTimeCtx, this.endTimeCtx]);
 
     this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
     this.domElementGroups.xAxisContext.call(d3.axisBottom(this.scales.xCtx));

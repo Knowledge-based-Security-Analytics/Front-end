@@ -28,6 +28,11 @@ class DeploymentProperties {
     epl =  epl.split(Pattern.outputPrefix).join('');
     return epl;
   }
+  set eplStatementWithoutPrefix(epl: string) {
+    throw new Error(
+      'Changing eplStatementWithoutPrefix not allowed. Please change eplStatement!'
+    )
+  }
 }
 
 export class Schema extends Statement {
@@ -56,6 +61,9 @@ export class Schema extends Statement {
   }
   get outputName() {
     return Schema.outputPrefix + this.name;
+  }
+  set outputName(name: string) {
+    this.internalName = name.replace(Schema.outputPrefix, '');
   }
 
   constructor(name?: string) {
@@ -93,6 +101,9 @@ export class Pattern extends Statement {
   }
   get outputName() {
     return Pattern.outputPrefix + this.name;
+  }
+  set outputName(name: string) {
+    this.internalName = name.replace(Pattern.outputPrefix, '');
   }
 }
 

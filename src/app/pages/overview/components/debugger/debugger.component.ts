@@ -73,7 +73,7 @@ export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getOutputTopic(statement: Statement): string {
-    let topic: string = statement.name;
+    let topic: string = statement.outputName;
     if (statement.deploymentProperties.eplStatement.includes('@KafkaOutput')) {
       topic = statement.deploymentProperties.eplStatement.match(/@KafkaOutput\('.*?'\)/)[0];
       topic = topic

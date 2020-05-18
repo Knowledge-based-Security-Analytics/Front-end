@@ -56,9 +56,9 @@ export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeTopic(statement: Statement, position: number) {
     const topic: string = this.getOutputTopic(statement);
-    console.log('subscribing to: ' + topic);
+    // console.log('subscribing to: ' + topic);
     this.subscriptions.push(this.eventStreamService.subscribeTopic(topic).subscribe((event) => {
-      console.log(event);
+      // console.log(event);
       const parsedEvent = JSON.parse(event.jsonString);
       const body = {};
       body[topic] = parsedEvent;

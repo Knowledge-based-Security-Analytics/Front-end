@@ -53,9 +53,8 @@ export class BlockInitializers {
               this.getFieldValue( BLOCKS.eventAlias.fields.alias) : null;
             if (alias) {
               const eventType = env.blocklyService.statement.events.find((event: IEventAlias) => event.alias === alias).eventType;
-              const schema: Schema = env.stmtService.getSchema(eventType);
               const attributes = [];
-              schema.attributes.map( attribute => {
+              eventType.attributes.map( attribute => {
                 if (attribute.name !== 'complex') {
                   attributes.push([attribute.name, attribute.name]);
                 }
@@ -75,7 +74,7 @@ export class BlockInitializers {
     const env: any = this;
     Blockly.Blocks.event = {
       init() {
-        const dropDownData = env.blocklyService.eventTypes.map((type: any) => [type, type]);
+        const dropDownData = env.blocklyService.eventTypes.map((type: Schema) => [type.name, type.outputName]);
         if (dropDownData.length === 0) {
           dropDownData.push(['No schemas available', 'null']);
         }
@@ -281,7 +280,7 @@ export class BlockInitializers {
       init() {
         const inputDropdownData = [];
         env.blocklyService.statement.events.map(( event: IEventAlias ) => {
-          env.stmtService.getSchema(event.eventType).attributes.map( (attribute: any) => {
+          event.eventType.attributes.map( (attribute: any) => {
             if (attribute.name !== 'timestamp' && attribute.name !== 'complex') {
               inputDropdownData.push([event.alias + '.' + attribute.name, event.alias + '.' + attribute.name]);
             }

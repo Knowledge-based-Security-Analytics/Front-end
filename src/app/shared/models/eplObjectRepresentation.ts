@@ -109,7 +109,7 @@ export class Pattern extends Statement {
 
 export interface IEventAlias {
   alias: string;
-  eventType: string;
+  eventType: Schema;
 }
 
 export abstract class PatternDefinition {

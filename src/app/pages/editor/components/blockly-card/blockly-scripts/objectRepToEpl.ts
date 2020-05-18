@@ -82,7 +82,8 @@ export class ObjectRepToEpl {
   private static translateConditionedEvent( conditionedEvent: ConditionedEvent): string {
     const condition = this.translateCondition(conditionedEvent.condition);
     const conditionString = `${condition ? '(' + condition + ')' : ''}`;
-    return `${conditionedEvent.event.alias}=${conditionedEvent.event.eventType}${conditionString}`;
+    console.log(`${conditionedEvent.event.eventType.outputName}`);
+    return `${conditionedEvent.event.alias}=${conditionedEvent.event.eventType.outputName}${conditionString}`;
   }
 
   private static translateCondition( condition: Condition ): string {

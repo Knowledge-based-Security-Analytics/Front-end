@@ -20,12 +20,13 @@ export class ObjectRepToEpl {
       attributeString += `${attribute.name} ${attribute.type}`;
       attributeString += ((schema.attributes.indexOf(attribute) + 1) < schema.attributes.length) ? `, ` : ``;
     }
-    return `@name('${schema.name}') @JsonSchema( dynamic=true ) create json schema ${schema.name} as (${attributeString});`;
+    // tslint:disable-next-line: max-line-length
+    return `@name('${schema.outputName}') @JsonSchema( dynamic=true ) create json schema ${schema.outputName} as (${attributeString});`;
   }
 
   public static translatePatternToEpl( pattern: Pattern ): string {
     // console.log(pattern.eventSequence);
-    const kafkaOutput = pattern.outputSchema.name;
+    const kafkaOutput = pattern.outputSchema.outputName;
     let outputAttributesString = '';
 
     for (const event of pattern.events) {
@@ -45,7 +46,7 @@ export class ObjectRepToEpl {
     }
 
     // tslint:disable-next-line: max-line-length
-    return `@name('${pattern.name}') @KafkaOutput('${kafkaOutput}') select ${outputAttributesString} from pattern [every (${this.translateEventSequence(pattern.eventSequence)})]`;
+    return `@name('${pattern.outputName}') @KafkaOutput('${kafkaOutput}') select ${outputAttributesString} from pattern [every (${this.translateEventSequence(pattern.eventSequence)})]`;
   }
 
   private static translateEventSequence(eventSequence: (ConditionedEvent | PatternDefinition)[]) {

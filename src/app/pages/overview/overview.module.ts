@@ -1,5 +1,4 @@
 import { ThemeModule } from './../../@theme/theme.module';
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -27,6 +26,7 @@ import { DetailCardComponent } from './components/detail-card/detail-card.compon
 import { ListCardComponent } from './components/list-card/list-card.component';
 import { StatementTableComponent } from './components/list-card/statement-table/statement-table.component';
 import { LiveChartComponent } from './components/detail-card/live-chart/live-chart.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 const NB_MODULES = [
   NbTabsetModule,
@@ -40,7 +40,7 @@ const NB_MODULES = [
   NbButtonModule,
   NbSpinnerModule,
   NbFormFieldModule,
-  NbToggleModule,
+  NbToggleModule
 ];
 
 
@@ -61,7 +61,8 @@ const NB_MODULES = [
     FormsModule,
     HighlightModule,
     NbLayoutModule,
-    NbListModule
+    NbListModule,
+    NgxJsonViewerModule
   ]
 })
 export class OverviewModule { }

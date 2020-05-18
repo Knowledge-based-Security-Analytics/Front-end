@@ -1,5 +1,6 @@
+import { IEventAlias } from './../../../../../shared/models/eplObjectRepresentation';
 import { Component, Input, OnChanges, AfterViewInit, SimpleChanges } from '@angular/core';
-import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
+import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 import { NbThemeService } from '@nebular/theme';
 import { Subscription } from 'rxjs';
@@ -18,6 +19,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   // Kafka-connection variables
   private kafkaEvents = [];
   private kafkaTopicSubscriptions: Subscription[] = [];
+  private subscribedTopics = [];
 
   // Dimensions, margins, etc.
   private currentWidth = 0;
@@ -82,7 +84,6 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       this.subscribeTopics();
     } else {
       if (changes.statement.currentValue.id !== changes.statement.previousValue.id) {
-        this.kafkaEvents = [];
         this.subscribeTopics();
         this.drawChart();
        }
@@ -90,7 +91,19 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   }
 
   private subscribeTopics(): void {
-    this.kafkaTopicSubscriptions.push(this.eventStreamService.subscribeTopic(this.statement.name).subscribe(event => {
+    this.kafkaTopicSubscriptions.map((subscription: Subscription) => subscription.unsubscribe());
+    this.kafkaEvents = [];
+    this.subscribedTopics = [];
+    this.subscribeTopic(this.statement.name);
+    if (!Statement.isSchema(this.statement)) {
+      console.log(this.statement);
+      this.statement.events.map((event: IEventAlias) => this.subscribeTopic(event.eventType));
+    }
+  }
+
+  private subscribeTopic(topicName: string): void {
+    this.subscribedTopics.push(topicName);
+    this.kafkaTopicSubscriptions.push(this.eventStreamService.subscribeTopic(topicName).subscribe(event => {
       this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
     }));
   }
@@ -213,7 +226,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     this.domElementGroups.svg.attr('width', this.currentWidth);
     this.brushBehavior.extent([[0, 0], [this.width, this.heightCtx]]);
 
-    this.scales.yFoc =  d3.scalePoint().domain([this.statement.name]).range([this.height, 0]);
+    this.scales.yFoc =  d3.scalePoint().domain(this.subscribedTopics).range([this.height, 0]);
 
     this.domElementGroups.xAxisFocusTitle.attr('x', this.width);
     this.domElementGroups.xAxisContextTitle.attr('x', this.width);

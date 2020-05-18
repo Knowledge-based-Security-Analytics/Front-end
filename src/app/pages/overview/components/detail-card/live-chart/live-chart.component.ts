@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, AfterViewInit } from '@angular/core';
+import { Component, Input, OnChanges, AfterViewInit, SimpleChanges } from '@angular/core';
 import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
 import { EventStreamService } from 'src/app/shared/services/event-stream.service';
 import { NbThemeService } from '@nebular/theme';
@@ -17,7 +17,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
 
   // Kafka-connection variables
   private kafkaEvents = [];
-  private kafkaTopicSubscription: Subscription;
+  private kafkaTopicSubscriptions: Subscription[] = [];
 
   // Dimensions, margins, etc.
   private currentWidth = 0;
@@ -77,13 +77,22 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     private eventStreamService: EventStreamService,
     private theme: NbThemeService) { }
 
-  ngOnChanges(): void {
-    if (this.statement) {
-      this.kafkaTopicSubscription = this.eventStreamService.subscribeTopic(this.statement.name).subscribe(event => {
-        this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
-      });
-      this.scales.yFoc =  d3.scalePoint().domain([this.statement.name]).range([this.height, 0]);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.statement.firstChange) {
+      this.subscribeTopics();
+    } else {
+      if (changes.statement.currentValue.id !== changes.statement.previousValue.id) {
+        this.kafkaEvents = [];
+        this.subscribeTopics();
+        this.drawChart();
+       }
     }
+  }
+
+  private subscribeTopics(): void {
+    this.kafkaTopicSubscriptions.push(this.eventStreamService.subscribeTopic(this.statement.name).subscribe(event => {
+      this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
+    }));
   }
 
   ngAfterViewInit() {
@@ -204,6 +213,8 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     this.domElementGroups.svg.attr('width', this.currentWidth);
     this.brushBehavior.extent([[0, 0], [this.width, this.heightCtx]]);
 
+    this.scales.yFoc =  d3.scalePoint().domain([this.statement.name]).range([this.height, 0]);
+
     this.domElementGroups.xAxisFocusTitle.attr('x', this.width);
     this.domElementGroups.xAxisContextTitle.attr('x', this.width);
     this.domElementGroups.contextBarChart.attr('width', this.width);
@@ -226,7 +237,6 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
 
   private tick(): void {
     // hover functions for the event drops on the focus group
-    const tempTooltip = this.domElementGroups.tooltip;
     const onMouseOverFocusDrop = (d: any) => {
       d3.selectAll('.tooltip')
         .style('opacity', 1);

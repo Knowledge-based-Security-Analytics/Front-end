@@ -22,7 +22,7 @@ export class BlocklyService {
     <category name="CONDITION" custom="CONDITION" colour="${THEME_VARIABLES.success[400]}"></category>
     <category name="ACTION" custom="ACTION" colour="${THEME_VARIABLES.warning[400]}"></category>
   </xml>`;
-  public eventTypes: string[] = [];
+  public eventTypes: Schema[] = [];
   public eventAliases: string[] = [];
   public statementType = '';
   public statement: Pattern | Schema;
@@ -30,9 +30,11 @@ export class BlocklyService {
   constructor(private stmtService: StatementService) {
     this.stmtService.statementsObservable.subscribe( newStatements => {
       this.eventTypes = [];
-      newStatements
-        .filter(statement => Statement.isSchema(statement))
-        .map(statement => this.eventTypes.push(statement.name));
+      newStatements.map((statement: Schema | Pattern) => {
+        if (Statement.isSchema(statement)) {
+          this.eventTypes.push(statement);
+        }
+      });
     });
   }
 
@@ -53,12 +55,6 @@ export class BlocklyService {
       }
 
       this.statement.deploymentProperties.eplStatement = eplStatement;
-
-      // if (document.getElementById( 'blocklyOutput' )) {
-      //   document.getElementById( 'blocklyOutput' ).innerHTML = eplStatement;
-      // }
-
-      console.log(this.statement);
     });
   }
 

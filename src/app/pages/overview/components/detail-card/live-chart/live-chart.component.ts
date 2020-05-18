@@ -94,15 +94,15 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     this.kafkaTopicSubscriptions.map((subscription: Subscription) => subscription.unsubscribe());
     this.kafkaEvents = [];
     this.subscribedTopics = [];
-    this.subscribeTopic(this.statement.name);
+    this.subscribeTopic(this.statement.outputName, this.statement.name);
     if (!Statement.isSchema(this.statement)) {
       console.log(this.statement);
-      this.statement.events.map((event: IEventAlias) => this.subscribeTopic(event.eventType));
+      this.statement.events.map((event: IEventAlias) => this.subscribeTopic(event.eventType.outputName, event.eventType.name));
     }
   }
 
-  private subscribeTopic(topicName: string): void {
-    this.subscribedTopics.push(topicName);
+  private subscribeTopic(topicName: string, displayName: string): void {
+    this.subscribedTopics.push(displayName);
     this.kafkaTopicSubscriptions.push(this.eventStreamService.subscribeTopic(topicName).subscribe(event => {
       this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
     }));

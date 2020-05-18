@@ -1,4 +1,4 @@
-import { IEventAlias, Statement } from '../../../../../shared/models/eplObjectRepresentation';
+import { IEventAlias, Statement, Schema } from '../../../../../shared/models/eplObjectRepresentation';
 import { BlocklyService } from './../../../services/blockly.service';
 import { StatementService } from 'src/app/shared/services/statement.service';
 declare var Blockly: any;
@@ -69,8 +69,8 @@ export class ToolboxCallbacks {
       xmlList.push(Blockly.Xml.textToDom('<block type="output_attribute"></block>'));
       xmlList.push(Blockly.Xml.textToDom('<label text="Existing schemas"></label>'));
 /*       xmlList.push(Blockly.Xml.textToDom('<block type="new_schema"></block>')); */
-      this.blocklyService.eventTypes.map(( eventType: string ) => {
-        xmlList.push(Blockly.Xml.textToDom(`<block type="existing_schema"><field name="SCHEMA">${eventType}</field></block>`));
+      this.blocklyService.eventTypes.map(( eventType: Schema ) => {
+        xmlList.push(Blockly.Xml.textToDom(`<block type="existing_schema"><field name="SCHEMA">${eventType.name}</field></block>`));
       });
       return xmlList;
     });

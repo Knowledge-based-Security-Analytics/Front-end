@@ -20,7 +20,7 @@ export class OverviewComponent implements OnInit {
       this.loading = true;
       this.schemaStatements = statements.filter(statement => Statement.isSchema(statement)) as Schema[];
       this.patternStatements = statements.filter(statement => !Statement.isSchema(statement)) as Pattern[];
-      if (this.schemaStatements.length > 0 || this.patternStatements.length > 0) {
+      if (this.schemaStatements.length >= 0 || this.patternStatements.length >= 0) {
         this.loading = false;
       }
     });

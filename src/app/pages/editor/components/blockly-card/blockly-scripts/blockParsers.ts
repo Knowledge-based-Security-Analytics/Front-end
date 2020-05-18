@@ -6,7 +6,6 @@ import {
   RepeatPattern,
   NotPattern,
   ConditionedEvent,
-  IEventAlias,
   OrPattern,
   AndPattern } from 'src/app/shared/models/eplObjectRepresentation';
 import { DOUBLE_SEQUENCE_PATTERN, BLOCKS } from 'src/app/shared/models/strings';
@@ -109,7 +108,11 @@ export class BlockParsers {
       }).name;
 
       const conditionedEvent = new ConditionedEvent();
-      conditionedEvent.event = {alias: eventAlias, eventType: block.getFieldValue(BLOCKS.sequencePattern.fields.type)};
+      conditionedEvent.event = {
+        alias: eventAlias,
+        // tslint:disable-next-line: max-line-length
+        eventType:  this.blocklyService.eventTypes.find((schema: Schema) => schema.outputName === block.getFieldValue(BLOCKS.sequencePattern.fields.type))
+      };
       if (!Statement.isSchema(this.blocklyService.statement)) {
         if (!this.blocklyService.statement.events.find( event => event.alias === conditionedEvent.event.alias)) {
           this.blocklyService.statement.events.push(conditionedEvent.event);
@@ -209,7 +212,7 @@ export class BlockParsers {
         this.blocklyService.statement.outputAttributes.push({
           inputAttribute: block.getFieldValue('input'),
           outputAttribute: block.getFieldValue('output')
-        })
+        });
       }
       return '';
     };

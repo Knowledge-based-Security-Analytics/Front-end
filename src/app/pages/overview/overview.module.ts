@@ -1,5 +1,4 @@
 import { ThemeModule } from './../../@theme/theme.module';
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -26,6 +25,7 @@ import { HighlightModule } from 'ngx-highlightjs';
 import { DetailCardComponent } from './components/detail-card/detail-card.component';
 import { ListCardComponent } from './components/list-card/list-card.component';
 import { StatementTableComponent } from './components/list-card/statement-table/statement-table.component';
+import { LiveChartComponent } from './components/detail-card/live-chart/live-chart.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 const NB_MODULES = [
@@ -50,7 +50,8 @@ const NB_MODULES = [
     OverviewComponent,
     DetailCardComponent,
     ListCardComponent,
-    StatementTableComponent
+    StatementTableComponent,
+    LiveChartComponent
   ],
   imports: [
     ...NB_MODULES,

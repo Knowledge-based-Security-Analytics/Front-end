@@ -1,4 +1,7 @@
-<div *ngIf="statement else noStatement" class="row">
+<ng-container *ngIf="statement then statementSelected else noStatementSelected"></ng-container>
+
+<ng-template #statementSelected>
+  <div class="row">
     <div class="col-md-11 col-sm-9">
       <h3>{{statement.name}}</h3>
     </div>
@@ -14,6 +17,7 @@
         <nb-icon icon="close-outline"></nb-icon>
       </button>
     </div>
+  </div>
   <div class="col-md-12">
     <div>
       <b class="caption-2 text-hint">Deployment ID:</b><br />
@@ -25,9 +29,12 @@
       <code [highlight]="statement.deploymentProperties.eplStatementWithoutPrefix" [languages]="['SQL']"></code>
     </div>
   </div>
-</div>
+  <br>
+  <app-live-chart [statement]='statement'></app-live-chart>
 
-<ng-template #noStatement>
+</ng-template>
+
+<ng-template #noStatementSelected>
   <div class="full-height flex flex-horizontal-center flex-vertical-center">
     <p>No statement currently selected...</p>
   </div>

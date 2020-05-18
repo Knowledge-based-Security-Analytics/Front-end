@@ -31,7 +31,7 @@ class DeploymentProperties {
   set eplStatementWithoutPrefix(epl: string) {
     throw new Error(
       'Changing eplStatementWithoutPrefix not allowed. Please change eplStatement!'
-    )
+    );
   }
 }
 

@@ -1,6 +1,7 @@
 export class Statement {
   type: 'schema' | 'pattern';
   name = '';
+  outputName: string;
   description = '';
   lastModified = '';
   blocklyXml = '';
@@ -21,9 +22,21 @@ class DeploymentProperties {
   dependencies: string[] = [];
   mode: 'prod' | 'dev' = 'dev';
   eplStatement = '';
+
+  get eplStatementWithoutPrefix() {
+    let epl =  this.eplStatement.split(Schema.outputPrefix).join('');
+    epl =  epl.split(Pattern.outputPrefix).join('');
+    return epl;
+  }
+  set eplStatementWithoutPrefix(epl: string) {
+    throw new Error(
+      'Changing eplStatementWithoutPrefix not allowed. Please change eplStatement!'
+    );
+  }
 }
 
 export class Schema extends Statement {
+  static readonly outputPrefix = 'viscep_event_atomic_';
   static readonly BASIC_ATTRIBUTES = [
     {name: 'complex', type: 'boolean'},
     {name: 'id', type: 'string'},
@@ -34,9 +47,24 @@ export class Schema extends Statement {
     {name: 'sources', type: 'object[]'}
   ];
 
+  private internalName = '';
   type: 'schema' = 'schema';
   complexEvent = false;
   attributes: {name: string, type: string}[] = Schema.BASIC_ATTRIBUTES;
+  set name(name: string) {
+    if (name) {
+      this.internalName = name.replace(Schema.outputPrefix, '');
+    }
+  }
+  get name() {
+    return this.internalName;
+  }
+  get outputName() {
+    return Schema.outputPrefix + this.name;
+  }
+  set outputName(name: string) {
+    this.internalName = name.replace(Schema.outputPrefix, '');
+  }
 
   constructor(name?: string) {
     super();
@@ -56,11 +84,27 @@ export class ConditionedEvent {
 }
 
 export class Pattern extends Statement {
+  static readonly outputPrefix = 'viscep_event_complex_';
   type: 'pattern' = 'pattern';
   outputSchema: Schema = new Schema();
   outputAttributes: {inputAttribute: string, outputAttribute: string}[] = [];
   events: IEventAlias[] = [];
   eventSequence: (ConditionedEvent | PatternDefinition)[] = [];
+  internalName = '';
+  set name(name: string) {
+    if (name) {
+      this.internalName = name.replace(Pattern.outputPrefix, '');
+    }
+  }
+  get name() {
+    return this.internalName;
+  }
+  get outputName() {
+    return Pattern.outputPrefix + this.name;
+  }
+  set outputName(name: string) {
+    this.internalName = name.replace(Pattern.outputPrefix, '');
+  }
 }
 
 export interface IEventAlias {

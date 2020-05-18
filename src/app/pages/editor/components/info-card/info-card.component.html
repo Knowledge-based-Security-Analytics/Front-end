@@ -22,7 +22,7 @@
       <div class="row">
         <label for="blocklyOutput" class="col-md-2" style="margin-bottom: 0rem;">EPL </label>
         <div class="col-md-10">
-          <textarea nbInput id="blocklyOutput" class="input" placeholder="EPL statement" disabled fullWidth></textarea>
+          <textarea nbInput id="blocklyOutput" class="input" placeholder="EPL statement" disabled fullWidth [(ngModel)]="statement.deploymentProperties.eplStatementWithoutPrefix"></textarea>
         </div>
       </div>
 

@@ -52,9 +52,11 @@ export class BlocklyService {
         eplStatement = ObjectRepToEpl.translatePatternToEpl(this.statement);
       }
 
-      if (document.getElementById( 'blocklyOutput' )) {
-        document.getElementById( 'blocklyOutput' ).innerHTML = eplStatement;
-      }
+      this.statement.deploymentProperties.eplStatement = eplStatement;
+
+      // if (document.getElementById( 'blocklyOutput' )) {
+      //   document.getElementById( 'blocklyOutput' ).innerHTML = eplStatement;
+      // }
 
       console.log(this.statement);
     });

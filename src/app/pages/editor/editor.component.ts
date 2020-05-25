@@ -36,14 +36,19 @@ export class EditorComponent implements OnInit {
   }
 
   public async saveStatement(statement: Pattern | Schema): Promise<void> {
-    this.blocklyService.statement = statement;
-    this.addEplAndBlocklyXml();
-    this.saving = true;
-    this.blocklyService.statement.deploymentProperties.id = await this.deployStatement();
-    this.blocklyService.clearBlocklyWorkspace();
-    this.saving = false;
-    this.router.navigate(['/']);
-    this.showToast();
+    try {
+      this.blocklyService.statement = statement;
+      this.addEplAndBlocklyXml();
+      this.saving = true;
+      this.blocklyService.statement.deploymentProperties.id = await this.deployStatement();
+      this.blocklyService.clearBlocklyWorkspace();
+      this.saving = false;
+      this.router.navigate(['/']);
+      this.showToast();
+      } catch (error) {
+        this.showErroToast(error.message);
+        this.saving = false;
+      }
   }
 
   private async initStatement() {
@@ -76,7 +81,6 @@ export class EditorComponent implements OnInit {
 
   private deployUpdatedStatement(): Promise<string> {
     return this.stmtService.updateStatement(this.blocklyService.statement);
-
   }
 
   private deployNewStatement(): Promise<string> {
@@ -88,6 +92,15 @@ export class EditorComponent implements OnInit {
       `Deployment ID: ${this.blocklyService.statement.deploymentProperties.id}`,
       `Successfully deployed "${this.blocklyService.statement.name}"`,
       { status: 'success' }
+    );
+  }
+
+  private showErroToast(errorMessage: string) {
+    this.toastrService.show(
+      `Deployment ID: ${this.blocklyService.statement.deploymentProperties.id}`,
+      `${errorMessage}`,
+      { status: 'danger',
+        duration: 6000 }
     );
   }
 }

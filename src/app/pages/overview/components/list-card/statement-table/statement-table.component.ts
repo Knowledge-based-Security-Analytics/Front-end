@@ -6,6 +6,7 @@ import {
    NbDialogService,
    NbSortRequest } from '@nebular/theme';
 import { Pattern, Schema } from 'src/app/shared/models/eplObjectRepresentation';
+import { StatementService } from 'src/app/shared/services/statement.service';
 
 @Component({
   selector: 'app-statement-table',
@@ -35,7 +36,8 @@ export class StatementTableComponent implements OnChanges {
 
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<Pattern | Schema>,
-    private dialogService: NbDialogService) { }
+    private dialogService: NbDialogService,
+    private statementService: StatementService) { }
 
   ngOnChanges() {
     this.statementsTreeNodes = this.statements.map(statement => Object.assign({data: statement}));
@@ -79,6 +81,10 @@ export class StatementTableComponent implements OnChanges {
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+
+  isEditable(deploymentId: string): boolean {
+    return !this.statementService.isDependency(deploymentId);
   }
 }
 

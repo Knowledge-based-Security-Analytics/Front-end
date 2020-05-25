@@ -78,6 +78,7 @@
             nbTooltip="Start editing this rule"
             nbTooltipIcon="edit-outline"
             nbTooltipPlacement="bottom"
+            [disabled]="!isEditable(row.data[actionsColumn])"
             routerLink="/editor/{{schemas ? 'schema' : 'pattern'}}/{{row.data[actionsColumn]}}">
               <nb-icon icon="edit-outline"></nb-icon>
             </button>
@@ -91,6 +92,7 @@
             nbTooltip="Delete this rule"
             nbTooltipIcon="trash-2-outline"
             nbTooltipPlacement="bottom"
+            [disabled]="!isEditable(row.data[actionsColumn])"
             (click)="onDropStatement(row.data[actionsColumn], confirmDeleteDialog)">
               <nb-icon icon="trash-2-outline"></nb-icon>
             </button>

@@ -107,6 +107,17 @@ export class StatementService {
     return this.statements.find( (statement) => Statement.isSchema(statement) && statement.name === name) as Schema;
   }
 
+  public isDependency(deploymentId: string): boolean {
+    if (this.statements.length > 0) {
+      for (const statement of this.statements) {
+        if (statement.deploymentProperties.dependencies.includes(deploymentId)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 /*   private parseStatement(statement: Statement) {
     this.backendToFrontendDataModelConverter(statement);
     if (!statement.eplStatement) {

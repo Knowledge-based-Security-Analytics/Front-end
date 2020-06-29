@@ -19,13 +19,13 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   // Kafka-connection variables
   private kafkaEvents = [];
   private kafkaTopicSubscriptions: Subscription[] = [];
-  private subscribedTopics = [];
+  private yAxisCategories = [];
 
   // Dimensions, margins, etc.
   private currentWidth = 0;
-  private dimensions = {height: 500, xFocTitle: 33};
+  private dimensions = {height: 400, xFocTitle: 33};
   private margin = {top: 20, right: 20, bottom: 90, left: 40};
-  private marginCtx = {top: 430, right: 20, bottom: 0, left: 40};
+  private marginCtx = {top: 330, right: 20, bottom: 0, left: 40};
   private width = 0;
   private height = this.dimensions.height - this.margin.top - this.margin.bottom - this.dimensions.xFocTitle;
   private heightCtx = this.dimensions.height - this.marginCtx.top - this.marginCtx.bottom - this.dimensions.xFocTitle;
@@ -93,16 +93,18 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   private subscribeTopics(): void {
     this.kafkaTopicSubscriptions.map((subscription: Subscription) => subscription.unsubscribe());
     this.kafkaEvents = [];
-    this.subscribedTopics = [];
-    this.subscribeTopic(this.statement.outputName, this.statement.name);
+    this.yAxisCategories = [this.statement.name];
+    this.subscribeTopic(this.statement.outputName);
     if (!Statement.isSchema(this.statement)) {
-      console.log(this.statement);
-      this.statement.events.map((event: IEventAlias) => this.subscribeTopic(event.eventType.outputName, event.eventType.name));
+      const test = this.statement.events[0].eventType as Schema;
+      console.log(test.outputName);
+      this.yAxisCategories = ['1', 'Source Events', this.statement.name, ''];
+      this.statement.events.map((event: IEventAlias) => this.subscribeTopic(event.eventType.outputName));
     }
   }
 
-  private subscribeTopic(topicName: string, displayName: string): void {
-    this.subscribedTopics.push(displayName);
+  private subscribeTopic(topicName: string): void {
+    console.log(topicName);
     this.kafkaTopicSubscriptions.push(this.eventStreamService.subscribeTopic(topicName).subscribe(event => {
       this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
     }));
@@ -142,7 +144,6 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
         this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
       });
 
-    console.log(this.width);
     this.domElementGroups.svg.append('defs')
       .append('clipPath')
         .attr('id', 'clip')
@@ -226,19 +227,26 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     this.domElementGroups.svg.attr('width', this.currentWidth);
     this.brushBehavior.extent([[0, 0], [this.width, this.heightCtx]]);
 
-    this.scales.yFoc =  d3.scalePoint().domain(this.subscribedTopics).range([this.height, 0]);
+    this.scales.yFoc =  d3.scalePoint().domain(this.yAxisCategories).range([this.height, 0]);
 
     this.domElementGroups.xAxisFocusTitle.attr('x', this.width);
     this.domElementGroups.xAxisContextTitle.attr('x', this.width);
     this.domElementGroups.contextBarChart.attr('width', this.width);
 
     this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
-    this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc));
-    this.domElementGroups.xAxisContext.call(d3.axisBottom(this.scales.xCtx));
+    if (this.yAxisCategories.length > 1) {
+      this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc).tickSize(-this.width * 1.3));
+    } else {
+      this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc));
+    }
+    this.domElementGroups.xAxisContext.call(d3.axisBottom(this.scales.xCtx).tickSize(-this.height * 1.3));
 
     this.domElementGroups.yAxisFocus.selectAll('text')
       .attr('transform', 'translate(-10, 10)rotate(90)')
       .style('text-anchor', 'middle');
+
+    this.domElementGroups.yAxisFocus.selectAll('.domain')
+      .remove();
 
     this.domElementGroups.brush
       .call(this.brushBehavior)

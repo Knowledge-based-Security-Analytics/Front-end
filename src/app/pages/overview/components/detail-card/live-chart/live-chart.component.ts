@@ -1,3 +1,4 @@
+import { StatementService } from './../../../../../shared/services/statement.service';
 import { IEventAlias } from './../../../../../shared/models/eplObjectRepresentation';
 import { Component, Input, OnChanges, AfterViewInit, SimpleChanges } from '@angular/core';
 import { Pattern, Schema, Statement } from 'src/app/shared/models/eplObjectRepresentation';
@@ -19,6 +20,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   // Kafka-connection variables
   private kafkaEvents = [];
   private kafkaTopicSubscriptions: Subscription[] = [];
+  private topics = [];
   private yAxisCategories = [];
 
   // Dimensions, margins, etc.
@@ -48,7 +50,8 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     xFoc: d3.scaleTime(),
     yFoc: d3.scalePoint(),
     xCtx: d3.scaleTime(),
-    yCtx: d3.scaleLinear().domain([-1, 1]).range([this.heightCtx, 0])
+    yCtx: d3.scaleLinear().domain([-1, 1]).range([this.heightCtx, 0]),
+    color: d3.scaleOrdinal()
   };
 
   // variables for live functionality
@@ -77,6 +80,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
 
   constructor(
     private eventStreamService: EventStreamService,
+    private statementService: StatementService,
     private theme: NbThemeService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -93,20 +97,30 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
   private subscribeTopics(): void {
     this.kafkaTopicSubscriptions.map((subscription: Subscription) => subscription.unsubscribe());
     this.kafkaEvents = [];
-    this.yAxisCategories = [this.statement.name];
-    this.subscribeTopic(this.statement.outputName);
+    this.yAxisCategories = this.topics = [this.statement.name];
+    this.subscribeTopic((this.getOutputTopic(this.statement)));
     if (!Statement.isSchema(this.statement)) {
-      const test = this.statement.events[0].eventType as Schema;
-      console.log(test.outputName);
+      this.statement.deploymentProperties.dependencies.map((deploymentId: string) => {
+        this.subscribeTopic(this.statementService.getStatement(deploymentId).outputName);
+        this.topics.push(this.statementService.getStatement(deploymentId));
+      });
       this.yAxisCategories = ['1', 'Source Events', this.statement.name, ''];
-      this.statement.events.map((event: IEventAlias) => this.subscribeTopic(event.eventType.outputName));
     }
   }
 
+  private getOutputTopic(statement: Statement): string {
+    let topic: string = statement.outputName;
+    if (statement.deploymentProperties.eplStatement.includes('@KafkaOutput')) {
+      topic = statement.deploymentProperties.eplStatement.match(/@KafkaOutput\('.*?'\)/)[0];
+      topic = topic
+        .slice(14, -2);
+    }
+    return topic;
+  }
+
   private subscribeTopic(topicName: string): void {
-    console.log(topicName);
     this.kafkaTopicSubscriptions.push(this.eventStreamService.subscribeTopic(topicName).subscribe(event => {
-      this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString)});
+      this.kafkaEvents.push({timestamp: event.timestamp, object: JSON.parse(event.jsonString), topic: event.topic});
     }));
   }
 
@@ -227,7 +241,13 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
     this.domElementGroups.svg.attr('width', this.currentWidth);
     this.brushBehavior.extent([[0, 0], [this.width, this.heightCtx]]);
 
-    this.scales.yFoc =  d3.scalePoint().domain(this.yAxisCategories).range([this.height, 0]);
+    this.scales.yFoc =  d3.scalePoint()
+      .domain(this.yAxisCategories)
+      .range([this.height, 0]);
+
+    this.scales.color = d3.scaleOrdinal()
+      .domain(this.topics)
+      .range(d3.schemeSet2);
 
     this.domElementGroups.xAxisFocusTitle.attr('x', this.width);
     this.domElementGroups.xAxisContextTitle.attr('x', this.width);
@@ -235,7 +255,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
 
     this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
     if (this.yAxisCategories.length > 1) {
-      this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc).tickSize(-this.width * 1.3));
+      this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc).tickValues(['Source Events', this.statement.name]));
     } else {
       this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc));
     }
@@ -307,16 +327,16 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .attr('id', (d: any) => d.object.id)
       .attr('class', 'focus-drop')
       .attr('r', 7)
-      .attr('fill', THEME_VARIABLES.danger[600])
+      .attr('fill', (d: any) => this.scales.color(d.topic))
       .attr('cx', (d: any) => this.scales.xFoc(d.timestamp))
-      .attr('cy', (d: any) => this.scales.yFoc(this.statement.name))
+      .attr('cy', (d: any) =>
+        d.topic === this.getOutputTopic(this.statement) ? this.scales.yFoc(this.statement.name) : this.scales.yFoc('Source Events'))
       .on('mouseover', onMouseOverFocusDrop)
       .on('mousemove', onMouseMoveFocusDrop)
       .on('mouseout', onMouseOutFocusDrop);
 
     focusUpdateSel
       .attr('cx', (d: any) => this.scales.xFoc(d.timestamp))
-      .attr('cy', this.height / 2)
       .attr('display', (d: any) => this.scales.xFoc(d.timestamp) > 0 ? 'block' : 'none');
 
     const contextUpdateSel = this.domElementGroups.contextBarChart.selectAll('.context-bar')

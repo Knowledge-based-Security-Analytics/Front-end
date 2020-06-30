@@ -24,8 +24,11 @@ export class GraphQLEventStreamService {
           }`
       }).subscribe(
         data => {
-          subscriber.next({jsonString: (data as any).data.subscribeKafkaTopic.jsonString,
-                           timestamp: new Date((data as any).data.subscribeKafkaTopic.timestamp)});
+          subscriber.next({
+            jsonString: (data as any).data.subscribeKafkaTopic.jsonString,
+            timestamp: new Date((data as any).data.subscribeKafkaTopic.timestamp),
+            topic
+          });
         },
         error => {subscriber.error(error); },
         () => {subscriber.complete(); }

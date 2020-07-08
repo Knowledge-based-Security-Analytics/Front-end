@@ -104,7 +104,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
         this.subscribeTopic(this.statementService.getStatement(deploymentId).outputName);
         this.topics.push(this.statementService.getStatement(deploymentId));
       });
-      this.yAxisCategories = ['1', 'Source Events', this.statement.name, ''];
+      this.yAxisCategories = ['1', 'Sources', this.statement.name, ''];
     }
   }
 
@@ -255,7 +255,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
 
     this.domElementGroups.xAxisFocus.call(d3.axisBottom(this.scales.xFoc));
     if (this.yAxisCategories.length > 1) {
-      this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc).tickValues(['Source Events', this.statement.name]));
+      this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc).tickValues(['Sources', this.statement.name]));
     } else {
       this.domElementGroups.yAxisFocus.call(d3.axisLeft(this.scales.yFoc));
     }
@@ -330,7 +330,7 @@ export class LiveChartComponent implements OnChanges, AfterViewInit {
       .attr('fill', (d: any) => this.scales.color(d.topic))
       .attr('cx', (d: any) => this.scales.xFoc(d.timestamp))
       .attr('cy', (d: any) =>
-        d.topic === this.getOutputTopic(this.statement) ? this.scales.yFoc(this.statement.name) : this.scales.yFoc('Source Events'))
+        d.topic === this.getOutputTopic(this.statement) ? this.scales.yFoc(this.statement.name) : this.scales.yFoc('Sources'))
       .on('mouseover', onMouseOverFocusDrop)
       .on('mousemove', onMouseMoveFocusDrop)
       .on('mouseout', onMouseOutFocusDrop);

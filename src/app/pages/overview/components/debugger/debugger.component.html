@@ -6,7 +6,7 @@
   <div class="col w-33" *ngIf="eventSubscribed[0]">
     <nb-card class="debug-card full-height">
       <nb-card-header>
-        Logs
+        Observables
       </nb-card-header>
       <nb-list class="debug-list">
         <nb-list-item  *ngFor="let event of events[0]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
@@ -19,7 +19,7 @@
   <div class="col w-33" *ngIf="eventSubscribed[1]">
     <nb-card class="debug-card full-height">
       <nb-card-header>
-        Events
+        Indicators
       </nb-card-header>
       <nb-list class="debug-list">
         <nb-list-item  *ngFor="let event of events[1]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
@@ -32,7 +32,7 @@
   <div class="col w-33" *ngIf="eventSubscribed[2]">
     <nb-card class="debug-card full-height">
       <nb-card-header>
-        Incidents
+        {{statement.name}}
       </nb-card-header>
       <nb-list class="debug-list">
         <nb-list-item  *ngFor="let event of events[2]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">

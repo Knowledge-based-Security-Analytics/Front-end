@@ -9,28 +9,39 @@
     </nb-card>
   </div>
   <div class="col-sm-12 col-md-7 full-height">
-    <nb-reveal-card class="full-height">
-      <nb-card-front>
-        <nb-card class="full-height" status="primary">
-          <nb-card-header>
-            Statement Details
-          </nb-card-header>
-          <nb-card-body>
-            <app-detail-card [statement]="selectedStatement" (statementUnselect)="statementUnselect()"></app-detail-card>
-          </nb-card-body>
-        </nb-card>
-      </nb-card-front>
-      <nb-card-back class="full-height">
-        <nb-card class="full-height" status="success">
-          <nb-card-header>Debugger</nb-card-header>
-          <nb-card-body>
-            <app-debugger [statement]="selectedStatement"></app-debugger>
-          </nb-card-body>
-        </nb-card>
-      </nb-card-back>
-    </nb-reveal-card>
+    <ng-container *ngIf="selectedStatement then selection else noSelection"></ng-container>
+
   </div>
 </div>
+
+<ng-template #selection>
+  <nb-reveal-card class="full-height">
+    <nb-card-front>
+      <nb-card class="full-height" status="primary">
+        <nb-card-header>
+          Statement Details
+        </nb-card-header>
+        <nb-card-body>
+          <app-detail-card [statement]="selectedStatement" (statementUnselect)="statementUnselect()"></app-detail-card>
+        </nb-card-body>
+      </nb-card>
+    </nb-card-front>
+    <nb-card-back class="full-height">
+      <nb-card class="full-height" status="success">
+        <nb-card-header>Debugger</nb-card-header>
+        <nb-card-body>
+          <app-debugger [statement]="selectedStatement"></app-debugger>
+        </nb-card-body>
+      </nb-card>
+    </nb-card-back>
+  </nb-reveal-card>
+</ng-template>
+
+<ng-template #noSelection>
+  <div class="full-height flex flex-horizontal-center flex-vertical-center">
+    <p>No statement currently selected...</p>
+  </div>
+</ng-template>
 
 <!-- <div class="statement-overview mat-typography">
   <button mat-icon-button class="filter-button" (click)="openSortFilterDialog()"><mat-icon>filter_list</mat-icon></button>

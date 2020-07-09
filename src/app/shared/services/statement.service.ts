@@ -118,6 +118,26 @@ export class StatementService {
     return false;
   }
 
+  public getStatementsWithOutput( name: string ): Statement[] {
+    const outputStatements: Statement[] = [];
+    this.statements.forEach(statement => {
+      if (this.getOutputTopic(statement) === name) {
+        outputStatements.push(statement);
+      }
+    });
+    return outputStatements;
+  }
+
+  public getOutputTopic(statement: Statement): string {
+    let topic = '';
+    if (statement.deploymentProperties.eplStatement.includes('@KafkaOutput')) {
+      topic = statement.deploymentProperties.eplStatement.match(/@KafkaOutput\('.*?'\)/)[0];
+      topic = topic
+        .slice(14, -2);
+    }
+    return topic;
+  }
+
 /*   private parseStatement(statement: Statement) {
     this.backendToFrontendDataModelConverter(statement);
     if (!statement.eplStatement) {

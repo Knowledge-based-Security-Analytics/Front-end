@@ -58,11 +58,10 @@ export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
     const topic: string = this.getOutputTopic(statement);
     // console.log('subscribing to: ' + topic);
     this.subscriptions.push(this.eventStreamService.subscribeTopic(topic).subscribe((event) => {
-      // console.log(event);
       const parsedEvent = JSON.parse(event.jsonString);
       const body = {};
-      body[topic] = parsedEvent;
-      this.events[position].unshift({name: topic, body, id: parsedEvent.id, highlighted: false});
+      body[topic.slice(20)] = parsedEvent;
+      this.events[position].unshift({name: topic.slice(20), body, id: parsedEvent.id, highlighted: false});
     }));
   }
 
@@ -103,7 +102,7 @@ export class DebuggerComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  private resetHighlights() {
+  resetHighlights() {
     this.events.forEach(eventPosition => {
       eventPosition.forEach(event => {
         event.highlighted = false;

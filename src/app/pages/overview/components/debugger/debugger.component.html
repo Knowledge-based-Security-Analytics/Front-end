@@ -3,39 +3,39 @@
   <nb-toggle [(ngModel)]="expanded"></nb-toggle>
 </div> -->
 <div class="row full-height debugger-root">
-  <div class="col w-33" *ngIf="eventSubscribed[0]">
-    <nb-card class="debug-card full-height">
+  <div *ngIf="eventSubscribed[0]" [class.col-md-4]="eventSubscribed[1]" [class.col-md-6]="!eventSubscribed[1]">
+    <nb-card class="full-height">
       <nb-card-header>
         Observables
       </nb-card-header>
       <nb-list class="debug-list">
-        <nb-list-item  *ngFor="let event of events[0]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
+        <nb-list-item  *ngFor="let event of events[0]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)" (mouseout)="resetHighlights()">
           <ngx-json-viewer [json]="event.body" [expanded]="expanded" class="w-100"></ngx-json-viewer>
           <!-- <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div> -->
         </nb-list-item>
       </nb-list>
     </nb-card>
   </div>
-  <div class="col w-33" *ngIf="eventSubscribed[1]">
-    <nb-card class="debug-card full-height">
+  <div class="col-md-4" *ngIf="eventSubscribed[1]">
+    <nb-card class="full-height">
       <nb-card-header>
         Indicators
       </nb-card-header>
       <nb-list class="debug-list">
-        <nb-list-item  *ngFor="let event of events[1]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
+        <nb-list-item  *ngFor="let event of events[1]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)" (mouseout)="resetHighlights()">
           <ngx-json-viewer [json]="event.body" [expanded]="expanded" class="w-100"></ngx-json-viewer>
           <!-- <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div> -->
         </nb-list-item>
       </nb-list>
     </nb-card>
   </div>
-  <div class="col w-33" *ngIf="eventSubscribed[2]">
-    <nb-card class="debug-card full-height">
+  <div *ngIf="eventSubscribed[2]" [class.col-md-4]="eventSubscribed[1]" [class.col-md-6]="!eventSubscribed[1]" [class.col-md-12]="!eventSubscribed[0]">
+    <nb-card class="full-height">
       <nb-card-header>
         {{statement.name}}
       </nb-card-header>
       <nb-list class="debug-list">
-        <nb-list-item  *ngFor="let event of events[2]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)">
+        <nb-list-item  *ngFor="let event of events[2]" [ngClass]="{'event-highlighted': event.highlighted}" (mouseover)="mouseoverEvent(event.id)" (mouseout)="resetHighlights()">
           <ngx-json-viewer [json]="event.body" [expanded]="expanded" class="w-100"></ngx-json-viewer>
           <!-- <div class="event-name">{{event.name}}:</div> <div class="event-body">{{event.body}}</div> -->
         </nb-list-item>

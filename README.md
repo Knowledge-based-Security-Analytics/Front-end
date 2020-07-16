@@ -8,15 +8,14 @@ The PoC uses [Google Blockly](https://developers.google.com/blockly/) with compl
 
 ## Usage
 ### Visual pattern building
+<img src="./misc/builder_frontend.png" alt="Debugger" width="250" align="right">
 This component is used to create new statements or edit existing ones. The visual code editor [Google Blockly](https://developers.google.com/blockly/) is used for this purpose. The implemented blocks allow the construction of Esper EPL statements. The main parts of these statements are event patterns (blue blocks), conditions (green blocks), and actions (yellow blocks). The following figure shows a simple statement built with Blockly.
-
-<img src="./misc/builder_frontend.png" alt="Debugger" width="300">
 
 ### Pattern debugging
 
 Pattern debugging allows to test the created patterns by providing a detailed view on the data of the events and their relationships. The hierarchical order of complex events is represented within the pattern debugger. Therefore, this view displays three columns. The first column shows all observables, which are the source for any pattern related to the one to debug. The second column shows all indicators, which lead to this pattern and the third column shows the output (indicators or incidents) of the pattern itself.
 
-<img src="./misc/debugger_frontend.png" alt="Debugger" width="450">
+<p align="center"><img src="./misc/debugger_frontend.png" alt="Debugger" width="450"></p>
 
 ## Development server
 
